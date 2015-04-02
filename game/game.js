@@ -1,5 +1,12 @@
 // http://blog.sethladd.com/2011/08/box2d-orientation-for-javascript.html
 
+/*
+- Global med BitmapData (Loading...)
+- Smartare GameObjects som extendar Sprite() (som han rekommenderar)
+- Hur hantera collection av GameObjects?
+	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
+*/
+
 var Game = {
 	canvas: false, 
 	gravity: 20, 
@@ -7,12 +14,18 @@ var Game = {
 	world: false, 
 	player: false, 
 	ground: false, 
-	pickups: [], 
-	clouds: [], 
+	pickups: false, 
+	clouds: false, 
 	camera: false, 
 	pxPerM: 100, 
 	lastTime: 0, 
 	ui: false, 
+
+	categories: {
+		PLAYER: 2, 
+		GROUND: 4, 
+		PICKUPS: 8
+	}, 
 
 	run: function (canvas, debug) {
 		Game.canvas = canvas;
@@ -44,24 +57,30 @@ var Game = {
 
 		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
 
+		// Create camera
+		Game.camera = new Camera();
+
 		// Background
 		Game.addSky();
 
 		// Add clouds
 		Game.clouds = new Clouds(6);
+	//	Game.addClouds(6);
 
-		// Create camera
-		Game.camera = new Camera();
+		// Add some pickups
+		Game.pickups = new Pickups(10);
 
 		// Create the player
 		Game.player = new Player(4, 4, 1);
 
 	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
 
+		// Flap
 		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
 			Game.player.flap();
 		});
 
+		// DEV only
 		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {
 			if (e.keyCode == 37) {
 				Game.player.goBackward();
@@ -76,10 +95,6 @@ var Game = {
 
 		// Create the ground
 		Game.ground = new Ground();
-
-		// Add player and ground to stage
-		Game.stage.addChild(Game.player.actor);
-		Game.stage.addChild(Game.ground.actor);
 
 		// Handle collisions
 		var contactListener = b2ContactListener;
@@ -103,11 +118,9 @@ var Game = {
 		};
 
 		contactListener.PreSolve = function (contact, impulse) {
-
 		};
 
 		contactListener.PostSolve = function (contact, oldManifold) {
-
 		};
 
 		Game.world.SetContactListener(contactListener);
@@ -121,13 +134,14 @@ var Game = {
 
 		// Update physics engine
 		Game.world.Step(1 / 60, 3, 3);
-		Game.world.DrawDebugData(); // TODO: If debug
+	//	Game.world.DrawDebugData(); // TODO: Only if debug
 		Game.world.ClearForces();
 
 		// Update positions of game objects
 		Game.player.updatePosition();
 		Game.ground.updatePosition();
 		Game.clouds.updatePosition();
+		Game.pickups.updatePosition();
 
 		// Refill player's energy
 		Game.player.refillEnergy(dt);
@@ -145,8 +159,8 @@ var Game = {
 
 		var bg = new Bitmap(new BitmapData('gfx/sky.png'));
 
-		bg.scaleX = 100000;
-		bg.x = -500000;
+		bg.scaleX = 200000;
+		bg.x = -100000;
 		bg.y = -(4000 - Game.stage.stageHeight);
 
 		Game.stage.addChild(bg);

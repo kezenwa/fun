@@ -6,6 +6,8 @@ var Ground = function () {
 	groundShape.SetAsBox(groundWidth / 2, groundHeight / 2);
 
 	GameObject.call(this, 0, (Game.stage.stageHeight / Game.pxPerM) - (groundHeight / 2), {
+		name: 'ground', 
+		category: Game.categories.GROUND, 
 		type: b2Body.b2_staticBody, 
 		shape: groundShape, 
 		size: false, 
@@ -17,7 +19,4 @@ var Ground = function () {
 			height: 200
 		}
 	});
-
-	this.body.SetUserData('ground');
-	this.fixture.SetUserData('ground');
 };

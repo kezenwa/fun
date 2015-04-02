@@ -4,8 +4,8 @@ var Camera = function () {
 	this.follow = function (gameObj) {
 		var paddingTop		= .2 * Game.stage.stageHeight;
 		var paddingBottom	= .2 * Game.stage.stageHeight;
-		var paddingRight	= .5 * Game.stage.stageWidth;
-		var paddingLeft		= .2 * Game.stage.stageWidth;
+		var paddingRight	= .7 * Game.stage.stageWidth;
+		var paddingLeft		= .1 * Game.stage.stageWidth;
 
 		var objX	= gameObj.actor.x;
 		var objY	= gameObj.actor.y;

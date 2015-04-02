@@ -2,6 +2,9 @@ var Player = function (x, y, s) {
 	this.energy = 1;
 
 	GameObject.call(this, x, y, {
+		name: 'player', 
+		category: Game.categories.PLAYER, 
+		mask: Game.categories.GROUND | Game.categories.PICKUPS, 
 		type: b2Body.b2_dynamicBody, 
 		shape: new b2CircleShape(s / 2), 
 		density: 1, 
@@ -18,8 +21,6 @@ var Player = function (x, y, s) {
 	});
 
 	this.body.SetLinearDamping(0);
-	this.body.SetUserData('player');
-	this.fixture.SetUserData('player');
 
 	// Flap, flaaaaaap
 	this.flap = function () {
@@ -45,17 +46,39 @@ var Player = function (x, y, s) {
 
 	// Handles collisions
 	this.handleCollision = function (fixture) {
+		var objType = fixture.GetUserData();
+
 		// Slow down quicker if touching ground
-		if (fixture.GetUserData() == 'ground') {
+		if (objType == 'ground') {
 			this.body.SetLinearDamping(2);
 		}
 		else {
 			this.body.SetLinearDamping(0);
+		}
+
+		// Check if touched a pickup
+		if (objType == 'wind') {
+			this.body.ApplyImpulse(new b2Vec2(0, -10), this.body.GetWorldCenter());
+		}
+		else if (objType == 'speed') {
+			this.body.ApplyImpulse(new b2Vec2(15, -2), this.body.GetWorldCenter());	
+		}
+		else if (objType == 'ball') {
+			this.hasBall = true;
+			this.fixture.SetRestitution(2);
+		}
+		else if (objType == 'bounce') {
+			this.body.ApplyImpulse(new b2Vec2(15, -15), this.body.GetWorldCenter());	
 		}
 	};
 
 	// Handles separations
 	this.handleSeparation = function (fixture) {
 		this.body.SetLinearDamping(0);
+
+		if (fixture.GetUserData() == 'ground' && this.hasBall) {
+			this.fixture.SetRestitution(0.2);
+			this.hasBall = false;
+		}
 	};
 };

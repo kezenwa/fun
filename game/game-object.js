@@ -20,6 +20,9 @@ var GameObject = function (x, y, conf) {
 		if (conf.restitution) {
 			this.fixtureDef.restitution = conf.restitution;
 		}
+		if (conf.isSensor) {
+			this.fixtureDef.isSensor = true;
+		}
 
 		// Create body and fixture
 		this.body		= Game.world.CreateBody(this.bodyDef);
@@ -50,7 +53,40 @@ var GameObject = function (x, y, conf) {
 		this.actor.scaleY = (Game.pxPerM / conf.bitmap.height) * conf.height;
 	}
 
-	// Updates position
+	// Add to stage
+	Game.stage.addChild(this.actor);
+
+	// So we recognize it later
+	if (conf.name) {
+		this.body.SetUserData(conf.name);
+		this.fixture.SetUserData(conf.name);
+	}
+
+	// Give it a category / mask
+	if (conf.category && conf.mask) {
+		var filterData = new b2FilterData();
+
+		filterData.categoryBits = conf.category;
+		filterData.maskBits = conf.mask;
+
+		this.fixture.SetFilterData(filterData);
+	}
+	else if (conf.category) {
+		var filterData = new b2FilterData();
+
+		filterData.categoryBits = conf.category;
+
+		this.fixture.SetFilterData(filterData);
+	}
+	else if (conf.mask) {
+		var filterData = new b2FilterData();
+
+		filterData.maskBits = conf.mask;
+
+		this.fixture.SetFilterData(filterData);
+	}
+
+	// Updates position based on Box2D calculations
 	var self = this;
 
 	this.updatePosition = function () {

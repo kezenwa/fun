@@ -9,5 +9,5 @@ game/game-object.js
 game/global.js
 game/ground.js
 game/launcher.js
-game/pickup.js
+game/pickups.js
 game/player.js

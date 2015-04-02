@@ -2,7 +2,7 @@ var Clouds = function (num) {
 	this.clouds = [];
 	this.cloudWidth = 450; // W/h of bitmap
 	this.cloudHeight = 300;
-	this.bitmapdata = [
+	this.bitmapData = [
 		new BitmapData('gfx/cloud1.png'), 
 		new BitmapData('gfx/cloud2.png'), 
 		new BitmapData('gfx/cloud3.png')
@@ -10,7 +10,7 @@ var Clouds = function (num) {
 
 	for (var i = 0; i < num; i++) {
 		var rand = Math.floor(Math.random() * 3);
-		var cloud = new Bitmap(this.bitmapdata[rand]);
+		var cloud = new Bitmap(this.bitmapData[rand]);
 
 		cloud.x = i * (Math.random() * 500 + 500);
 		cloud.y = Math.random() * 300 - 100;
