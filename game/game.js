@@ -6,8 +6,11 @@ var Game = {
 	player: false, 
 	ground: false, 
 	pickups: [], 
+	clouds: [], 
 	camera: false, 
 	pxPerM: 100, 
+	lastTime: 0, 
+	ui: false, 
 
 	run: function (canvas, debug) {
 		Game.canvas = canvas;
@@ -18,15 +21,10 @@ var Game = {
 		Game.canvas.width = canvasSize.width;
 		Game.canvas.height = canvasSize.height;
 
-		// Create IvanK stage
-		Game.stage = new Stage(Game.canvas.id);
-
-		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
-
 		// Create Box2D World
 		Game.world = new b2World(new b2Vec2(0, Game.gravity), true);
 
-		// Setup Debug
+		// Setup Debug Box2D renderer
 		if (debug) {
 			var debugSize = debug.getBoundingClientRect();
 
@@ -35,6 +33,17 @@ var Game = {
 
 			Game.setupB2Renderer(debug);
 		}
+
+		// Keep track of time
+		Game.lastTime = new Date().getTime();
+
+		// Create IvanK stage
+		Game.stage = new Stage(Game.canvas.id);
+
+		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
+
+		// Background
+		Game.addSky();
 
 		// TMP Clouds for reference
 		for (var i = 0; i < 10; i++) {
@@ -46,14 +55,11 @@ var Game = {
 			Game.stage.addChild(cloud);
 		}
 
-		// Background
-		Game.addBG();
-
 		// Create camera
 		Game.camera = new Camera();
 
 		// Create the player
-		Game.player = new Player(1, 4, 1);
+		Game.player = new Player(4, 4, 1);
 
 		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
 			Game.player.flap();
@@ -71,8 +77,6 @@ var Game = {
 			}
 		});
 
-	//	Game.player.body.SetLinearVelocity(new b2Vec2(5, -1));
-
 		// Create the ground
 		Game.ground = new Ground();
 
@@ -83,6 +87,9 @@ var Game = {
 
 	// On every frame
 	onEnterFrame: function (event) {
+		var time = new Date().getTime();
+		var dt = (time - Game.lastTime) / 1000;
+
 		// Update physics engine
 		Game.world.Step(1 / 60, 3, 3);
 		Game.world.DrawDebugData();
@@ -92,13 +99,26 @@ var Game = {
 		Game.player.updatePosition();
 		Game.ground.updatePosition();
 
+		// Refill player's energy
+		Game.player.refillEnergy(dt);
+
 		// Update camera position
 		Game.camera.follow(Game.player);
+
+		Game.lastTime = time;
 	}, 
 
 	// Gradient BG
-	addBG: function () {
-		console.dir(Game.stage);
+	addSky: function () {
+		Game.canvas.style.backgroundColor = '#01182f';
+
+		var bg = new Bitmap(new BitmapData('gfx/sky.png'));
+
+		bg.scaleX = 100000;
+		bg.x = -500000;
+		bg.y = -(4000 - Game.stage.stageHeight);
+
+		Game.stage.addChild(bg);
 	}, 
 
 	// Debug renderer
