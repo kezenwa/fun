@@ -1,0 +1,12 @@
+CACHE MANIFEST
+lib/ivank.js
+lib/Box2dWeb-2.1.a.3.js
+lib/Box2dWeb-2.1.a.3.min.js
+game/camera.js
+game/game.js
+game/game-object.js
+game/global.js
+game/ground.js
+game/launcher.js
+game/pickup.js
+game/player.js
