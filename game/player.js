@@ -18,14 +18,14 @@ var Player = function (x, y, s) {
 	this.body.SetLinearDamping(0.4);
 
 	this.flap = function () {
-		this.body.ApplyImpulse(new b2Vec2(0, -4), this.body.GetWorldCenter());
+		this.body.ApplyImpulse(new b2Vec2(0, -2), this.body.GetWorldCenter());
 	};
 
 	this.goForward = function () {
-		this.body.ApplyImpulse(new b2Vec2(4, 0), this.body.GetWorldCenter());
+		this.body.ApplyImpulse(new b2Vec2(1, 0), this.body.GetWorldCenter());
 	};
 
 	this.goBackward = function () {
-		this.body.ApplyImpulse(new b2Vec2(-4, 0), this.body.GetWorldCenter());
+		this.body.ApplyImpulse(new b2Vec2(-1, 0), this.body.GetWorldCenter());
 	};
 };

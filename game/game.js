@@ -71,7 +71,7 @@ var Game = {
 			}
 		});
 
-		Game.player.body.SetLinearVelocity(new b2Vec2(5, -1));
+	//	Game.player.body.SetLinearVelocity(new b2Vec2(5, -1));
 
 		// Create the ground
 		Game.ground = new Ground();
