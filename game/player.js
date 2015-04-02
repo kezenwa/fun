@@ -4,7 +4,7 @@ var Player = function (x, y, s) {
 	GameObject.call(this, x, y, {
 		type: b2Body.b2_dynamicBody, 
 		shape: new b2CircleShape(s / 2), 
-		density: 2, 
+		density: 1, 
 		friction: 1, 
 		restitution: 0.5, 
 		size: s, 

@@ -1,6 +1,6 @@
 var Game = {
 	canvas: false, 
-	gravity: 10, 
+	gravity: 20, 
 	stage: false, 
 	world: false, 
 	player: false, 
@@ -45,15 +45,8 @@ var Game = {
 		// Background
 		Game.addSky();
 
-		// TMP Clouds for reference
-		for (var i = 0; i < 10; i++) {
-			var cloud = new Bitmap(new BitmapData('gfx/cloud.png'));
-
-			cloud.x = i * 1000;
-			cloud.y = Math.random() * 20;
-
-			Game.stage.addChild(cloud);
-		}
+		// Add clouds
+		Game.clouds = new Clouds(6);
 
 		// Create camera
 		Game.camera = new Camera();
@@ -87,17 +80,19 @@ var Game = {
 
 	// On every frame
 	onEnterFrame: function (event) {
+		// Keep track of time
 		var time = new Date().getTime();
 		var dt = (time - Game.lastTime) / 1000;
 
 		// Update physics engine
 		Game.world.Step(1 / 60, 3, 3);
-		Game.world.DrawDebugData();
+		Game.world.DrawDebugData(); // TODO: If debug
 		Game.world.ClearForces();
 
 		// Update positions of game objects
 		Game.player.updatePosition();
 		Game.ground.updatePosition();
+		Game.clouds.updatePosition();
 
 		// Refill player's energy
 		Game.player.refillEnergy(dt);
@@ -105,6 +100,7 @@ var Game = {
 		// Update camera position
 		Game.camera.follow(Game.player);
 
+		// Keep track of time
 		Game.lastTime = time;
 	}, 
 
