@@ -6,7 +6,7 @@ var Player = function (x, y, s) {
 		shape: new b2CircleShape(s / 2), 
 		density: 1, 
 		friction: 1, 
-		restitution: 0.5, 
+		restitution: 0.2, 
 		size: s, 
 		width: false, 
 		height: false, 
@@ -17,15 +17,15 @@ var Player = function (x, y, s) {
 		}
 	});
 
-	this.body.SetLinearDamping(0.1);
+	this.body.SetLinearDamping(0);
 	this.body.SetUserData('player');
 	this.fixture.SetUserData('player');
 
 	// Flap, flaaaaaap
 	this.flap = function () {
-		this.body.ApplyImpulse(new b2Vec2(0, -10 * this.energy), this.body.GetWorldCenter());
+		this.body.ApplyImpulse(new b2Vec2(0, -8 * this.energy), this.body.GetWorldCenter());
 
-		this.energy = this.energy / 4;
+		this.energy = this.energy / 5;
 	};
 
 	// Moves right
@@ -50,12 +50,12 @@ var Player = function (x, y, s) {
 			this.body.SetLinearDamping(2);
 		}
 		else {
-			this.body.SetLinearDamping(0.1);
+			this.body.SetLinearDamping(0);
 		}
 	};
 
 	// Handles separations
 	this.handleSeparation = function (fixture) {
-		this.body.SetLinearDamping(0.1);
+		this.body.SetLinearDamping(0);
 	};
 };
