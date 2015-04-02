@@ -17,4 +17,7 @@ var Ground = function () {
 			height: 200
 		}
 	});
+
+	this.body.SetUserData('ground');
+	this.fixture.SetUserData('ground');
 };

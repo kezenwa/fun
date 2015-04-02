@@ -1,3 +1,5 @@
+// http://blog.sethladd.com/2011/08/box2d-orientation-for-javascript.html
+
 var Game = {
 	canvas: false, 
 	gravity: 20, 
@@ -54,6 +56,8 @@ var Game = {
 		// Create the player
 		Game.player = new Player(4, 4, 1);
 
+	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
+
 		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
 			Game.player.flap();
 		});
@@ -76,6 +80,37 @@ var Game = {
 		// Add player and ground to stage
 		Game.stage.addChild(Game.player.actor);
 		Game.stage.addChild(Game.ground.actor);
+
+		// Handle collisions
+		var contactListener = b2ContactListener;
+
+		contactListener.BeginContact = function (contact) {
+			if (contact.m_fixtureA.GetUserData() == 'player') {
+				Game.player.handleCollision(contact.m_fixtureB);
+			}
+			else if (contact.m_fixtureB.GetUserData() == 'player') {
+				Game.player.handleCollision(contact.m_fixtureA);
+			}
+		};
+
+		contactListener.EndContact = function (contact) {
+			if (contact.m_fixtureA.GetUserData() == 'player') {
+				Game.player.handleSeparation(contact.m_fixtureB);
+			}
+			else if (contact.m_fixtureB.GetUserData() == 'player') {
+				Game.player.handleSeparation(contact.m_fixtureA);
+			}
+		};
+
+		contactListener.PreSolve = function (contact, impulse) {
+
+		};
+
+		contactListener.PostSolve = function (contact, oldManifold) {
+
+		};
+
+		Game.world.SetContactListener(contactListener);
 	}, 
 
 	// On every frame

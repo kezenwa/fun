@@ -48,13 +48,13 @@ var Clouds = function (num) {
 
 			// The cloud is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (cloudX + cloudW) < (stageX)) {
-				this.clouds[i].x = (Math.random() * (stageW * 3) + stageW + stageX);
-				this.clouds[i].y = Math.random() * 600 - 500;
+				this.clouds[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
+				this.clouds[i].y = Math.random() * 1000 - 800;
 			}
 			// The cloud is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && cloudX > (stageW + stageX)) {
-				this.clouds[i].x = (-(Math.random() * (stageW * 3) + stageW) + stageX);
-				this.clouds[i].y = Math.random() * 600 - 500;
+				this.clouds[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
+				this.clouds[i].y = Math.random() * 1000 - 800;
 			}
 		}
 

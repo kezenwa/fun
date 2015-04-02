@@ -17,23 +17,45 @@ var Player = function (x, y, s) {
 		}
 	});
 
-	this.body.SetLinearDamping(0.6);
+	this.body.SetLinearDamping(0.1);
+	this.body.SetUserData('player');
+	this.fixture.SetUserData('player');
 
+	// Flap, flaaaaaap
 	this.flap = function () {
 		this.body.ApplyImpulse(new b2Vec2(0, -10 * this.energy), this.body.GetWorldCenter());
 
 		this.energy = this.energy / 4;
 	};
 
+	// Moves right
 	this.goForward = function () {
 		this.body.ApplyImpulse(new b2Vec2(1, 0), this.body.GetWorldCenter());
 	};
 
+	// Moves left
 	this.goBackward = function () {
 		this.body.ApplyImpulse(new b2Vec2(-1, 0), this.body.GetWorldCenter());
 	};
 
+	// Regills energy
 	this.refillEnergy = function (dt) {
 		this.energy = this.energy > 1 ? 1 : this.energy + (1 * dt);
+	};
+
+	// Handles collisions
+	this.handleCollision = function (fixture) {
+		// Slow down quicker if touching ground
+		if (fixture.GetUserData() == 'ground') {
+			this.body.SetLinearDamping(2);
+		}
+		else {
+			this.body.SetLinearDamping(0.1);
+		}
+	};
+
+	// Handles separations
+	this.handleSeparation = function (fixture) {
+		this.body.SetLinearDamping(0.1);
 	};
 };
