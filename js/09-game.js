@@ -1,7 +1,19 @@
 // http://blog.sethladd.com/2011/08/box2d-orientation-for-javascript.html
 
 /*
-- Global med BitmapData (Loading...)
+Todo:
+- Slumpa typ av pickup när den flyttas också
+	- Sprid ut bättre också - och i närheten av player så även om han är i rymden
+- Vid för låg hastighet ska man inte kunna flappa
+- Grafik
+	- Stjärnor (3d :D)
+	- Måne ashögt upp
+- Ljud
+- UI
+- Launchpad
+
+Nästa (TIM):
+- Global med BitmapData och Sounds osv (alla assets) (Loading...)
 - Smartare GameObjects som extendar Sprite() (som han rekommenderar)
 - Hur hantera collection av GameObjects?
 	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
@@ -163,7 +175,7 @@ var Game = {
 	addSky: function () {
 		Game.canvas.style.backgroundColor = '#01182f';
 
-		var bg = new Bitmap(new BitmapData('gfx/sky.png'));
+		var bg = new Bitmap(new BitmapData('gfx/sky.jpg'));
 
 		bg.scaleX = 200000;
 		bg.x = -100000;

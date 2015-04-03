@@ -20,7 +20,7 @@ var Player = function (x, y, s) {
 		}
 	});
 
-	this.body.SetLinearDamping(0);
+	this.body.SetLinearDamping(0.2);
 
 	// Flap, flaaaaaap
 	this.flap = function () {
@@ -50,25 +50,25 @@ var Player = function (x, y, s) {
 
 		// Slow down quicker if touching ground
 		if (objType == 'ground') {
-			this.body.SetLinearDamping(2);
+			this.body.SetLinearDamping(4);
 		}
 		else {
-			this.body.SetLinearDamping(0);
+			this.body.SetLinearDamping(0.2);
 		}
 
 		// Check if touched a pickup
 		if (objType == 'wind') {
-			this.body.ApplyImpulse(new b2Vec2(0, -10), this.body.GetWorldCenter());
+			this.body.ApplyImpulse(new b2Vec2(0, -15), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
-			this.body.ApplyImpulse(new b2Vec2(15, -2), this.body.GetWorldCenter());	
+			this.body.SetLinearVelocity(new b2Vec2(35, -2));
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;
 			this.fixture.SetRestitution(2);
 		}
 		else if (objType == 'bounce') {
-			this.body.ApplyImpulse(new b2Vec2(15, -15), this.body.GetWorldCenter());	
+			this.body.SetLinearVelocity(new b2Vec2(35, -15));
 		}
 	};
 

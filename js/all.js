@@ -1,0 +1,647 @@
+// 00-global.js
+b2Body = Box2D.Dynamics.b2Body,
+b2BodyDef = Box2D.Dynamics.b2BodyDef,
+b2ContactFilter = Box2D.Dynamics.b2ContactFilter,
+b2ContactImpulse = Box2D.Dynamics.b2ContactImpulse,
+b2ContactListener = Box2D.Dynamics.b2ContactListener,
+b2ContactManager = Box2D.Dynamics.b2ContactManager,
+b2DebugDraw = Box2D.Dynamics.b2DebugDraw,
+b2DestructionListener = Box2D.Dynamics.b2DestructionListener,
+b2FilterData = Box2D.Dynamics.b2FilterData,
+b2Fixture = Box2D.Dynamics.b2Fixture,
+b2FixtureDef = Box2D.Dynamics.b2FixtureDef,
+b2Island = Box2D.Dynamics.b2Island,
+b2TimeStep = Box2D.Dynamics.b2TimeStep,
+b2World = Box2D.Dynamics.b2World,
+b2Mat22 = Box2D.Common.Math.b2Mat22,
+b2Mat33 = Box2D.Common.Math.b2Mat33,
+b2Math = Box2D.Common.Math.b2Math,
+b2Sweep = Box2D.Common.Math.b2Sweep,
+b2Transform = Box2D.Common.Math.b2Transform,
+b2Vec2 = Box2D.Common.Math.b2Vec2,
+b2Vec3 = Box2D.Common.Math.b2Vec3,
+b2Color = Box2D.Common.b2Color,
+b2internal = Box2D.Common.b2internal,
+b2Settings = Box2D.Common.b2Settings,
+b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
+b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef,
+b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape,
+b2MassData = Box2D.Collision.Shapes.b2MassData,
+b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape,
+b2Shape = Box2D.Collision.Shapes.b2Shape,
+b2BuoyancyController = Box2D.Dynamics.Controllers.b2BuoyancyController,
+b2ConstantAccelController = Box2D.Dynamics.Controllers.b2ConstantAccelController,
+b2ConstantForceController = Box2D.Dynamics.Controllers.b2ConstantForceController,
+b2Controller = Box2D.Dynamics.Controllers.b2Controller,
+b2ControllerEdge = Box2D.Dynamics.Controllers.b2ControllerEdge,
+b2GravityController = Box2D.Dynamics.Controllers.b2GravityController,
+b2TensorDampingController = Box2D.Dynamics.Controllers.b2TensorDampingController;
+// 01-game-object.js
+var GameObject = function (x, y, conf) {
+	// Box2D object
+	if (typeof(conf.type) != 'undefined') {
+		// Body definition
+		this.bodyDef			= new b2BodyDef;
+		this.bodyDef.type		= conf.type;
+		this.bodyDef.position.x	= x;
+		this.bodyDef.position.y	= y;
+
+		// Fixture definition
+		this.fixtureDef			= new b2FixtureDef;
+		this.fixtureDef.shape	= conf.shape;
+
+		if (conf.density) {
+			this.fixtureDef.density = conf.density;
+		}
+		if (conf.friction) {
+			this.fixtureDef.friction = conf.friction;
+		}
+		if (conf.restitution) {
+			this.fixtureDef.restitution = conf.restitution;
+		}
+		if (conf.isSensor) {
+			this.fixtureDef.isSensor = true;
+		}
+
+		// Create body and fixture
+		this.body		= Game.world.CreateBody(this.bodyDef);
+		this.fixture	= this.body.CreateFixture(this.fixtureDef);
+	}
+
+	// Sprite
+	var tmpBM	= new Bitmap(conf.bitmap.data);
+		tmpBM.x	= -(conf.bitmap.width / 2);
+		tmpBM.y	= -(conf.bitmap.height / 2);
+
+	this.actor	= new Sprite();
+
+	this.actor.addChild(tmpBM);
+
+	// Scale sprite
+	if (conf.size) {
+		this.size = conf.size;
+
+		this.actor.scaleX = (Game.pxPerM / conf.bitmap.width) * conf.size;
+		this.actor.scaleY = (Game.pxPerM / conf.bitmap.height) * conf.size;
+	}
+	else if (conf.width && conf.height) {
+		this.width = conf.width;
+		this.height = conf.height;
+
+		this.actor.scaleX = (Game.pxPerM / conf.bitmap.width) * conf.width;
+		this.actor.scaleY = (Game.pxPerM / conf.bitmap.height) * conf.height;
+	}
+
+	// Add to stage
+	Game.stage.addChild(this.actor);
+
+	// So we recognize it later
+	if (conf.name) {
+		this.body.SetUserData(conf.name);
+		this.fixture.SetUserData(conf.name);
+	}
+
+	// Give it a category / mask
+	if (conf.category && conf.mask) {
+		var filterData = new b2FilterData();
+
+		filterData.categoryBits = conf.category;
+		filterData.maskBits = conf.mask;
+
+		this.fixture.SetFilterData(filterData);
+	}
+	else if (conf.category) {
+		var filterData = new b2FilterData();
+
+		filterData.categoryBits = conf.category;
+
+		this.fixture.SetFilterData(filterData);
+	}
+	else if (conf.mask) {
+		var filterData = new b2FilterData();
+
+		filterData.maskBits = conf.mask;
+
+		this.fixture.SetFilterData(filterData);
+	}
+
+	// Updates position based on Box2D calculations
+	var self = this;
+
+	this.updatePosition = function () {
+		var b2dPos = self.body.GetPosition();
+		var b2dRot = self.body.GetAngle() * 180 / Math.PI; // Radians to degrees
+
+		self.actor.x = b2dPos.x * Game.pxPerM;
+		self.actor.y = b2dPos.y * Game.pxPerM;
+		self.actor.rotation = b2dRot;
+	};
+};
+// 02-camera.js
+var Camera = function () {
+	var self = this;
+
+	this.follow = function (gameObj) {
+		var paddingTop		= .2 * Game.stage.stageHeight;
+		var paddingBottom	= .4 * Game.stage.stageHeight;
+		var paddingRight	= .7 * Game.stage.stageWidth;
+		var paddingLeft		= .1 * Game.stage.stageWidth;
+
+		var objX	= gameObj.actor.x;
+		var objY	= gameObj.actor.y;
+		var objW	= gameObj.size ? gameObj.size * Game.pxPerM : gameObj.width * Game.pxPerM;
+		var objH	= gameObj.size ? gameObj.size * Game.pxPerM : gameObj.height * Game.pxPerM;
+		var stageX	= -Game.stage.x;
+		var stageY	= -Game.stage.y;
+		var stageW	= Game.stage.stageWidth;
+		var stageH	= Game.stage.stageHeight;
+
+		// http://bostongamejams.com/akihabara-tutorials/akihabara-tutorial-part-4-scrolling-map/
+		// Right
+		if ((objX - stageX) > (stageW - paddingRight)) {
+			Game.stage.x = -((stageX + (objX - stageX)) - (stageW - paddingRight));
+		}
+		// Left
+		if ((objX - stageX) < paddingLeft) {
+			Game.stage.x = -((stageX + (objX - stageX)) - paddingLeft);
+		}
+		// Down
+		if ((objY - stageY) > (stageH - paddingBottom)) {
+			Game.stage.y = -((stageY + (objY - stageY)) - (stageH - paddingBottom));
+		}
+		// Up
+		if ((objY - stageY) < paddingTop) {
+			Game.stage.y = -((stageY + (objY - stageY)) - paddingTop);
+		}
+
+		// Center camera on top of target
+	//	Game.stage.x = -gameObj.actor.x + Game.stage.stageWidth / 2;
+	//	Game.stage.y = -gameObj.actor.y + Game.stage.stageHeight / 2;
+
+		// Prevent showing beneath the ground
+		if (Game.stage.y < 0) {
+			Game.stage.y = 0;
+		}
+	};
+};
+// 02-ground.js
+var Ground = function () {
+	var groundWidth = 100000;
+	var groundHeight = 1;
+	var groundShape = new b2PolygonShape;
+
+	groundShape.SetAsBox(groundWidth / 2, groundHeight / 2);
+
+	GameObject.call(this, 0, (Game.stage.stageHeight / Game.pxPerM) - (groundHeight / 2), {
+		name: 'ground', 
+		category: Game.categories.GROUND, 
+		type: b2Body.b2_staticBody, 
+		shape: groundShape, 
+		size: false, 
+		width: groundWidth, 
+		height: groundHeight, 
+		bitmap: {
+			data: new BitmapData('gfx/ground.png'), 
+			width: 200, 
+			height: 200
+		}
+	});
+};
+// 02-launcher.js
+// 02-pickup.js
+var Pickup = function (x, y, conf) {
+	GameObject.call(this, x, y, {
+		name: conf.type, 
+		type: b2Body.b2_staticBody, 
+		isSensor: true, 
+		shape: new b2CircleShape(0.5), 
+		size: 1, 
+		width: false, 
+		height: false, 
+		category: Game.categories.PICKUPS, 
+		bitmap: {
+			data: conf.bitmapData, 
+			width: 100, 
+			height: 100
+		}
+	});
+};
+// 02-player.js
+var Player = function (x, y, s) {
+	this.energy = 1;
+
+	GameObject.call(this, x, y, {
+		name: 'player', 
+		category: Game.categories.PLAYER, 
+		mask: Game.categories.GROUND | Game.categories.PICKUPS, 
+		type: b2Body.b2_dynamicBody, 
+		shape: new b2CircleShape(s / 2), 
+		density: 1, 
+		friction: 1, 
+		restitution: 0.2, 
+		size: s, 
+		width: false, 
+		height: false, 
+		bitmap: {
+			data: new BitmapData('gfx/player.png'), 
+			width: 200, 
+			height: 200
+		}
+	});
+
+	this.body.SetLinearDamping(0.2);
+
+	// Flap, flaaaaaap
+	this.flap = function () {
+		this.body.ApplyImpulse(new b2Vec2(0, -12 * this.energy), this.body.GetWorldCenter());
+
+		this.energy = this.energy / 2;
+	};
+
+	// Moves right
+	this.goForward = function () {
+		this.body.ApplyImpulse(new b2Vec2(1, 0), this.body.GetWorldCenter());
+	};
+
+	// Moves left
+	this.goBackward = function () {
+		this.body.ApplyImpulse(new b2Vec2(-1, 0), this.body.GetWorldCenter());
+	};
+
+	// Refills energy
+	this.refillEnergy = function (dt) {
+		this.energy = this.energy > 1 ? 1 : this.energy + (0.5 * dt);
+	};
+
+	// Handles collisions
+	this.handleCollision = function (fixture) {
+		var objType = fixture.GetUserData();
+
+		// Slow down quicker if touching ground
+		if (objType == 'ground') {
+			this.body.SetLinearDamping(4);
+		}
+		else {
+			this.body.SetLinearDamping(0.2);
+		}
+
+		// Check if touched a pickup
+		if (objType == 'wind') {
+			this.body.ApplyImpulse(new b2Vec2(0, -15), this.body.GetWorldCenter());
+		}
+		else if (objType == 'speed') {
+			this.body.SetLinearVelocity(new b2Vec2(35, -2));
+		}
+		else if (objType == 'ball') {
+			this.hasBall = true;
+			this.fixture.SetRestitution(2);
+		}
+		else if (objType == 'bounce') {
+			this.body.SetLinearVelocity(new b2Vec2(35, -15));
+		}
+	};
+
+	// Handles separations
+	this.handleSeparation = function (fixture) {
+		this.body.SetLinearDamping(0);
+
+		if (fixture.GetUserData() == 'ground' && this.hasBall) {
+			this.fixture.SetRestitution(0.2);
+			this.hasBall = false;
+		}
+	};
+};
+// 03-clouds.js
+var Clouds = function (num) {
+	this.clouds = [];
+	this.cloudWidth = 450; // W/h of bitmap
+	this.cloudHeight = 300;
+	this.bitmapData = [
+		new BitmapData('gfx/cloud1.png'), 
+		new BitmapData('gfx/cloud2.png'), 
+		new BitmapData('gfx/cloud3.png')
+	];
+
+	for (var i = 0; i < num; i++) {
+		var rand = Math.floor(Math.random() * 3);
+		var cloud = new Bitmap(this.bitmapData[rand]);
+
+		cloud.x = i * (Math.random() * 500 + 500);
+		cloud.y = Math.random() * 1500 - 1300;
+		cloud.scaleX = cloud.scaleY = Math.random() * 0.8 + 0.5;
+
+		Game.stage.addChild(cloud);
+
+		this.clouds.push(cloud);
+	}
+
+	var direction = 1;
+	var prevX = 0;
+
+	this.updatePosition = function () {
+		var stageW = Game.stage.stageWidth;
+		var stageH = Game.stage.stageHeight;
+		var stageX = -Game.stage.x;
+		var stageY = -Game.stage.y;
+
+		if (stageX > prevX) {
+			direction = 1;
+		}
+		else {
+			direction = -1;
+		}
+
+		// For every cloud
+		// Check if it's outside the viewport
+		// If so, move it to the left or the right of the viewport
+		for (var i = 0; i < this.clouds.length; i++) {
+			var cloudX = this.clouds[i].x;
+			var cloudY = this.clouds[i].y;
+			var cloudW = this.cloudWidth * this.clouds[i].scaleX;
+			var cloudH = this.cloudHeight * this.clouds[i].scaleY;
+
+			// The cloud is off to the left and we're moving right - respawn it to the right
+			if (direction == 1 && (cloudX + cloudW) < (stageX)) {
+				this.clouds[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
+				this.clouds[i].y = Math.random() * 1500 - 1300;
+			}
+			// The cloud is out to the right and we're moving left - respawn it to the left
+			if (direction == -1 && cloudX > (stageW + stageX)) {
+				this.clouds[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
+				this.clouds[i].y = Math.random() * 1500 - 1300;
+			}
+		}
+
+		prevX = stageX;
+	};
+};
+// 03-pickups.js
+var Pickups = function (num) {
+	this.pickups = [];
+	this.pickupWidth = 100;
+	this.pickupHeight = 100;
+
+	var pickupTypes = ['wind', 'ball', 'speed', 'bounce'];
+	var bitmapData = [
+		new BitmapData('gfx/pickups/wind.png'), 
+		new BitmapData('gfx/pickups/ball.png'), 
+		new BitmapData('gfx/pickups/speed.png'), 
+		new BitmapData('gfx/pickups/bounce.png')
+	];
+
+	for (var i = 0; i < num; i++) {
+		var rand = Math.floor(Math.random() * 4);
+		var y = rand == 3 ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
+
+		var pickup = new Pickup(i * 10, y, {
+			type: pickupTypes[rand], 
+			bitmapData: bitmapData[rand]
+		});
+
+		pickup.updatePosition();
+
+		this.pickups.push(pickup);
+	}
+
+	var direction = 1;
+	var prevX = 0;
+
+	this.updatePosition = function () {
+		var stageW = Game.stage.stageWidth;
+		var stageH = Game.stage.stageHeight;
+		var stageX = -Game.stage.x;
+		var stageY = -Game.stage.y;
+
+		if (stageX > prevX) {
+			direction = 1;
+		}
+		else {
+			direction = -1;
+		}
+
+		// For every pickup
+		// Check if it's outside the viewport
+		// If so, move it to the left or the right of the viewport
+		for (var i = 0; i < this.pickups.length; i++) {
+			var pickupX = this.pickups[i].actor.x;
+			var pickupY = this.pickups[i].actor.y;
+			var pickupW = this.pickupWidth * this.pickups[i].actor.scaleX;
+			var pickupH = this.pickupHeight * this.pickups[i].actor.scaleY;
+			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 10) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
+			var newY	= this.pickups[i].fixture.GetUserData() == 'bounce' ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
+
+			// The pickup is off to the left and we're moving right - respawn it to the right
+			if (direction == 1 && (pickupX + pickupW) < (stageX)) {
+				this.pickups[i].body.SetPosition(new b2Vec2(newX, newY));
+			}
+			// The pickup is out to the right and we're moving left - respawn it to the left
+			if (direction == -1 && pickupX > (stageW + stageX)) {
+				this.pickups[i].body.SetPosition(new b2Vec2(-newX, newY));
+			}
+
+			this.pickups[i].updatePosition();
+		}
+
+		prevX = stageX;
+	};
+};
+// 09-game.js
+// http://blog.sethladd.com/2011/08/box2d-orientation-for-javascript.html
+
+/*
+Todo:
+- LinearVelocity istället för Impulse
+- Slumpa typ av pickup när den flyttas också
+- Vid för låg hastighet ska man inte kunna flappa
+- Grafik
+- Ljud
+- UI
+- Launchpad
+
+Nästa:
+- Global med BitmapData och Sounds osv (alla assets) (Loading...)
+- Smartare GameObjects som extendar Sprite() (som han rekommenderar)
+- Hur hantera collection av GameObjects?
+	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
+*/
+
+var Game = {
+	canvas: false, 
+	debug: false, 
+	gravity: 20, 
+	stage: false, 
+	world: false, 
+	player: false, 
+	ground: false, 
+	pickups: false, 
+	clouds: false, 
+	camera: false, 
+	pxPerM: 100, 
+	lastTime: 0, 
+	ui: false, 
+
+	categories: {
+		PLAYER: 2, 
+		GROUND: 4, 
+		PICKUPS: 8
+	}, 
+
+	run: function (canvas, debug) {
+		Game.canvas = canvas;
+		Game.debug = debug ? debug : false;
+
+		// Set the canvas' size to the same size it's rendered in the browser (because of CSS)
+		var canvasSize = Game.canvas.getBoundingClientRect();
+
+		Game.canvas.width = canvasSize.width;
+		Game.canvas.height = canvasSize.height;
+
+		// Create Box2D World
+		Game.world = new b2World(new b2Vec2(0, Game.gravity), true);
+
+		// Setup Debug Box2D renderer
+		if (debug) {
+			var debugSize = debug.getBoundingClientRect();
+
+			debug.width = debugSize.width;
+			debug.height = debugSize.height;
+
+			Game.setupB2Renderer(debug);
+		}
+
+		// Keep track of time
+		Game.lastTime = new Date().getTime();
+
+		// Create IvanK stage
+		Game.stage = new Stage(Game.canvas.id);
+
+		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
+
+		// Create camera
+		Game.camera = new Camera();
+
+		// Background
+		Game.addSky();
+
+		// Add clouds
+		Game.clouds = new Clouds(4);
+	//	Game.addClouds(6);
+
+		// Add some pickups
+		Game.pickups = new Pickups(6);
+
+		// Create the player
+		Game.player = new Player(4, 4, 1);
+
+	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
+
+		// Flap
+		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
+			Game.player.flap();
+		});
+
+		// DEV only
+		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {
+			if (e.keyCode == 37) {
+				Game.player.goBackward();
+			}
+			if (e.keyCode == 39) {
+				Game.player.goForward();
+			}
+			if (e.keyCode == 38) {
+				Game.player.flap();
+			}
+		});
+
+		// Create the ground
+		Game.ground = new Ground();
+
+		// Handle collisions
+		var contactListener = b2ContactListener;
+
+		contactListener.BeginContact = function (contact) {
+			if (contact.m_fixtureA.GetUserData() == 'player') {
+				Game.player.handleCollision(contact.m_fixtureB);
+			}
+			else if (contact.m_fixtureB.GetUserData() == 'player') {
+				Game.player.handleCollision(contact.m_fixtureA);
+			}
+		};
+
+		contactListener.EndContact = function (contact) {
+			if (contact.m_fixtureA.GetUserData() == 'player') {
+				Game.player.handleSeparation(contact.m_fixtureB);
+			}
+			else if (contact.m_fixtureB.GetUserData() == 'player') {
+				Game.player.handleSeparation(contact.m_fixtureA);
+			}
+		};
+
+		contactListener.PreSolve = function (contact, impulse) {
+		};
+
+		contactListener.PostSolve = function (contact, oldManifold) {
+		};
+
+		Game.world.SetContactListener(contactListener);
+	}, 
+
+	// On every frame
+	onEnterFrame: function (event) {
+		// Keep track of time
+		var time = new Date().getTime();
+		var dt = (time - Game.lastTime) / 1000;
+
+		// Update physics engine
+		Game.world.Step(1 / 60, 3, 3);
+
+		if (Game.debug) {
+			Game.world.DrawDebugData();
+		}
+
+		Game.world.ClearForces();
+
+		// Update positions of game objects
+		Game.player.updatePosition();
+		Game.ground.updatePosition();
+		Game.clouds.updatePosition();
+		Game.pickups.updatePosition();
+
+		// Refill player's energy
+		Game.player.refillEnergy(dt);
+
+		// Update camera position
+		Game.camera.follow(Game.player);
+
+		// Keep track of time
+		Game.lastTime = time;
+	}, 
+
+	// Gradient BG
+	addSky: function () {
+		Game.canvas.style.backgroundColor = '#01182f';
+
+		var bg = new Bitmap(new BitmapData('gfx/sky.jpg'));
+
+		bg.scaleX = 200000;
+		bg.x = -100000;
+		bg.y = -(4000 - Game.stage.stageHeight);
+
+		Game.stage.addChild(bg);
+	}, 
+
+	// Debug renderer
+	setupB2Renderer: function (canvas) {
+		var debugDraw = new b2DebugDraw();
+
+		debugDraw.SetSprite(canvas.getContext('2d'));
+		debugDraw.SetDrawScale(30.0);
+		debugDraw.SetFillAlpha(0.3);
+		debugDraw.SetLineThickness(1.0);
+		debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+
+		Game.world.SetDebugDraw(debugDraw);
+
+		return debugDraw;
+	}
+};
