@@ -1,5 +1,7 @@
 var Pickups = function (num) {
 	this.pickups = [];
+	this.pickupWidth = 100;
+	this.pickupHeight = 100;
 
 	var pickupTypes = ['wind', 'ball', 'speed', 'bounce'];
 	var bitmapData = [
@@ -11,9 +13,9 @@ var Pickups = function (num) {
 
 	for (var i = 0; i < num; i++) {
 		var rand = Math.floor(Math.random() * 4);
-		var y = rand == 3 ? (Game.stage.stageHeight / Game.pxPerM - 1) : Math.random() * 5 - 2;
+		var y = rand == 3 ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
 
-		var pickup = new Pickup(i * 6, y, {
+		var pickup = new Pickup(i * 10, y, {
 			type: pickupTypes[rand], 
 			bitmapData: bitmapData[rand]
 		});
@@ -42,23 +44,25 @@ var Pickups = function (num) {
 		// For every pickup
 		// Check if it's outside the viewport
 		// If so, move it to the left or the right of the viewport
-	/*	for (var i = 0; i < this.pickups.length; i++) {
-			var pickupX = this.pickups[i].x;
-			var pickupY = this.pickups[i].y;
-			var pickupW = this.pickupWidth * this.pickups[i].scaleX;
-			var pickupH = this.pickupHeight * this.pickups[i].scaleY;
+		for (var i = 0; i < this.pickups.length; i++) {
+			var pickupX = this.pickups[i].actor.x;
+			var pickupY = this.pickups[i].actor.y;
+			var pickupW = this.pickupWidth * this.pickups[i].actor.scaleX;
+			var pickupH = this.pickupHeight * this.pickups[i].actor.scaleY;
+			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 10) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
+			var newY	= this.pickups[i].fixture.GetUserData() == 'bounce' ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
 
 			// The pickup is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (pickupX + pickupW) < (stageX)) {
-				this.pickups[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
-				this.pickups[i].y = Math.random() * 1000 - 800;
+				this.pickups[i].body.SetPosition(new b2Vec2(newX, newY));
 			}
 			// The pickup is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && pickupX > (stageW + stageX)) {
-				this.pickups[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
-				this.pickups[i].y = Math.random() * 1000 - 800;
+				this.pickups[i].body.SetPosition(new b2Vec2(-newX, newY));
 			}
-		} */
+
+			this.pickups[i].updatePosition();
+		}
 
 		prevX = stageX;
 	};

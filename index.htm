@@ -40,7 +40,7 @@
 	</head>
 	<body>
 		<canvas id="game"></canvas>
-		<!--<canvas id="debug"></canvas>-->
+		<canvas id="debug"></canvas>
 
 		<script src="lib/Box2dWeb-2.1.a.3.js"></script>
 		<script src="lib/ivank.js"></script>
@@ -55,6 +55,6 @@
 		<script src="game/clouds.js"></script>
 		<script src="game/game.js"></script>
 
-		<script>Game.run(document.getElementById('game'))</script>
+		<script>Game.run(document.getElementById('game'), document.getElementById('debug'))</script>
 	</body>
 </html>

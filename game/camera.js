@@ -3,7 +3,7 @@ var Camera = function () {
 
 	this.follow = function (gameObj) {
 		var paddingTop		= .2 * Game.stage.stageHeight;
-		var paddingBottom	= .2 * Game.stage.stageHeight;
+		var paddingBottom	= .4 * Game.stage.stageHeight;
 		var paddingRight	= .7 * Game.stage.stageWidth;
 		var paddingLeft		= .1 * Game.stage.stageWidth;
 

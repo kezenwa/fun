@@ -9,6 +9,7 @@
 
 var Game = {
 	canvas: false, 
+	debug: false, 
 	gravity: 20, 
 	stage: false, 
 	world: false, 
@@ -29,6 +30,7 @@ var Game = {
 
 	run: function (canvas, debug) {
 		Game.canvas = canvas;
+		Game.debug = debug ? debug : false;
 
 		// Set the canvas' size to the same size it's rendered in the browser (because of CSS)
 		var canvasSize = Game.canvas.getBoundingClientRect();
@@ -64,11 +66,11 @@ var Game = {
 		Game.addSky();
 
 		// Add clouds
-		Game.clouds = new Clouds(6);
+		Game.clouds = new Clouds(4);
 	//	Game.addClouds(6);
 
 		// Add some pickups
-		Game.pickups = new Pickups(10);
+		Game.pickups = new Pickups(6);
 
 		// Create the player
 		Game.player = new Player(4, 4, 1);
@@ -134,7 +136,11 @@ var Game = {
 
 		// Update physics engine
 		Game.world.Step(1 / 60, 3, 3);
-	//	Game.world.DrawDebugData(); // TODO: Only if debug
+
+		if (Game.debug) {
+			Game.world.DrawDebugData();
+		}
+
 		Game.world.ClearForces();
 
 		// Update positions of game objects

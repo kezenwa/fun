@@ -24,9 +24,9 @@ var Player = function (x, y, s) {
 
 	// Flap, flaaaaaap
 	this.flap = function () {
-		this.body.ApplyImpulse(new b2Vec2(0, -8 * this.energy), this.body.GetWorldCenter());
+		this.body.ApplyImpulse(new b2Vec2(0, -12 * this.energy), this.body.GetWorldCenter());
 
-		this.energy = this.energy / 5;
+		this.energy = this.energy / 2;
 	};
 
 	// Moves right
@@ -39,9 +39,9 @@ var Player = function (x, y, s) {
 		this.body.ApplyImpulse(new b2Vec2(-1, 0), this.body.GetWorldCenter());
 	};
 
-	// Regills energy
+	// Refills energy
 	this.refillEnergy = function (dt) {
-		this.energy = this.energy > 1 ? 1 : this.energy + (1 * dt);
+		this.energy = this.energy > 1 ? 1 : this.energy + (0.5 * dt);
 	};
 
 	// Handles collisions

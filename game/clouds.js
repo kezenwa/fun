@@ -13,7 +13,7 @@ var Clouds = function (num) {
 		var cloud = new Bitmap(this.bitmapData[rand]);
 
 		cloud.x = i * (Math.random() * 500 + 500);
-		cloud.y = Math.random() * 300 - 100;
+		cloud.y = Math.random() * 1500 - 1300;
 		cloud.scaleX = cloud.scaleY = Math.random() * 0.8 + 0.5;
 
 		Game.stage.addChild(cloud);
@@ -49,12 +49,12 @@ var Clouds = function (num) {
 			// The cloud is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (cloudX + cloudW) < (stageX)) {
 				this.clouds[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
-				this.clouds[i].y = Math.random() * 1000 - 800;
+				this.clouds[i].y = Math.random() * 1500 - 1300;
 			}
 			// The cloud is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && cloudX > (stageW + stageX)) {
 				this.clouds[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
-				this.clouds[i].y = Math.random() * 1000 - 800;
+				this.clouds[i].y = Math.random() * 1500 - 1300;
 			}
 		}
 
