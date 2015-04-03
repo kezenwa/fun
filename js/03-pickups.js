@@ -52,7 +52,7 @@ var Pickups = function (num) {
 			var pickupW = this.pickupWidth * this.pickups[i].actor.scaleX;
 			var pickupH = this.pickupHeight * this.pickups[i].actor.scaleY;
 			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 1) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
-			var newY	= Math.random() * 40 - (40 - groundLevel);
+			var newY	= Math.random() * 40 - ((40 - groundLevel) + 2);
 			var change	= false;
 			var rand	= Math.round(Math.random() * 3);
 

@@ -83,7 +83,12 @@ var Player = function (x, y, s) {
 			this.fixture.SetRestitution(ballRestitution);
 		}
 		else if (objType == 'bounce') {
-			this.body.SetLinearVelocity(new b2Vec2(35, -15));
+			this.body.SetLinearVelocity(new b2Vec2(60, -30));
+		}
+
+		// Check if was just launched
+		if (objType == 'launcher' && Game.numClicks > 1) {
+			Game.hasLaunched = true;
 		}
 	};
 

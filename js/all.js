@@ -343,7 +343,12 @@ var Player = function (x, y, s) {
 			this.fixture.SetRestitution(ballRestitution);
 		}
 		else if (objType == 'bounce') {
-			this.body.SetLinearVelocity(new b2Vec2(35, -15));
+			this.body.SetLinearVelocity(new b2Vec2(60, -30));
+		}
+
+		// Check if was just launched
+		if (objType == 'launcher' && Game.numClicks > 1) {
+			Game.hasLaunched = true;
 		}
 	};
 
@@ -476,7 +481,7 @@ var Pickups = function (num) {
 			var pickupW = this.pickupWidth * this.pickups[i].actor.scaleX;
 			var pickupH = this.pickupHeight * this.pickups[i].actor.scaleY;
 			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 1) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
-			var newY	= Math.random() * 40 - (40 - groundLevel);
+			var newY	= Math.random() * 40 - ((40 - groundLevel) + 2);
 			var change	= false;
 			var rand	= Math.round(Math.random() * 3);
 
@@ -555,6 +560,7 @@ var Game = {
 	ui: false, 
 	playerStartX: 3, 
 	playerStartY: false, 
+	hasLaunched: false, 
 
 	categories: {
 		PLAYER: 2, 
@@ -615,7 +621,7 @@ var Game = {
 	//	Game.addClouds(6);
 
 		// Add some pickups
-		Game.pickups = new Pickups(8);
+		Game.pickups = new Pickups(3);
 
 		// Create the player
 		Game.playerStartY = (Game.stage.stageHeight / Game.pxPerM - 1.5);
@@ -629,15 +635,15 @@ var Game = {
 		Game.ground = new Ground();
 
 		// Handle input
-		var numClicks = 0;
+		Game.numClicks = 0;
 
 		var handleInput = function () {
-			numClicks++;
+			Game.numClicks++;
 
-			if (numClicks == 1) {
+			if (Game.numClicks == 1) {
 				Game.player.flap();
 			}
-			else if (numClicks == 2) {
+			else if (Game.numClicks == 2) {
 				Game.launcher.launch();
 			}
 			else {
@@ -683,6 +689,15 @@ var Game = {
 
 	// On every frame
 	onEnterFrame: function (event) {
+		// Game Over?
+		var velocity = Game.player.body.GetLinearVelocity();
+
+		if (Game.hasLaunched && !Game.player.body.IsAwake()) {
+			document.body.classList.add('game-over');
+
+			return;
+		}
+
 		// Keep track of time
 		var time = new Date().getTime();
 		var dt = (time - Game.lastTime) / 1000;
@@ -711,13 +726,6 @@ var Game = {
 
 		// Update UI
 		Game.updateUI();
-
-		// Game Over?
-	/*	var velocity = Game.player.GetLinearVelocity();
-
-		if (velocity.x < 0.2 && velocity.y < 0.2) {
-			console.log('Fame Over');
-		} */
 
 		// Keep track of time
 		Game.lastTime = time;

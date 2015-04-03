@@ -29,3 +29,9 @@ body {
 	width: 100%;
 	height: 100%;
 }
+
+#preload {
+	position: absolute;
+	left: -1000000px;
+	top: -1000000px;
+}

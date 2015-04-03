@@ -78,6 +78,40 @@
 
 	// Game over
 	div.game-over {
-		
+		background: rgba(250, 250, 250, .8);
+
+		position: absolute;
+		left: 0;
+		top: 0;
+
+		width: 100%;
+		height: 100%;
+
+		text-align: center;
+
+		h2 {
+			margin-top: 30%;
+			margin-bottom: 0;
+			font-size: 4rem;
+		}
+
+		p {
+			margin: 0 0 20px;
+		}
+
+		a {
+			background: #06c;
+
+			display: inline-block;
+			padding: 10px 30px;
+
+			color: #fefefe;
+			text-shadow: -1px -1px 1px rgba(0, 0, 0, .6);
+			text-decoration: none;
+		}
+	}
+
+	body.game-over & div.game-over {
+		display: block;
 	}
 }
