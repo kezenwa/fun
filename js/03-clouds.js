@@ -14,7 +14,7 @@ var Clouds = function (num) {
 
 		cloud.x = i * (Math.random() * 500 + 500);
 		cloud.y = Math.random() * 2000 - 1800;
-		cloud.scaleX = cloud.scaleY = Math.random() * 0.8 + 0.5;
+		cloud.scaleX = cloud.scaleY = (Math.random() * 0.8 + 0.5) * (Game.pxPerM / 100);
 
 		Game.stage.addChild(cloud);
 
@@ -48,12 +48,12 @@ var Clouds = function (num) {
 
 			// The cloud is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (cloudX + cloudW) < (stageX)) {
-				this.clouds[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
+				this.clouds[i].x = (Math.random() * (stageW) + stageW + stageX);
 				this.clouds[i].y = Math.random() * 2000 - 1800;
 			}
 			// The cloud is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && cloudX > (stageW + stageX)) {
-				this.clouds[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
+				this.clouds[i].x = (-(Math.random() * (stageW) + stageW) + stageX);
 				this.clouds[i].y = Math.random() * 2000 - 1800;
 			}
 		}

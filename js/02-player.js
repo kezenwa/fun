@@ -75,7 +75,8 @@ var Player = function (x, y, s) {
 			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
-			this.body.SetLinearVelocity(new b2Vec2(35, -2));
+			this.body.SetLinearVelocity(new b2Vec2(35, 0));
+			this.body.ApplyImpulse(new b2Vec2(0, -2), this.body.GetWorldCenter());
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;

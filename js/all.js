@@ -335,7 +335,8 @@ var Player = function (x, y, s) {
 			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
-			this.body.SetLinearVelocity(new b2Vec2(35, -2));
+			this.body.SetLinearVelocity(new b2Vec2(35, 0));
+			this.body.ApplyImpulse(new b2Vec2(0, -2), this.body.GetWorldCenter());
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;
@@ -373,7 +374,7 @@ var Clouds = function (num) {
 
 		cloud.x = i * (Math.random() * 500 + 500);
 		cloud.y = Math.random() * 2000 - 1800;
-		cloud.scaleX = cloud.scaleY = Math.random() * 0.8 + 0.5;
+		cloud.scaleX = cloud.scaleY = (Math.random() * 0.8 + 0.5) * (Game.pxPerM / 100);
 
 		Game.stage.addChild(cloud);
 
@@ -407,12 +408,12 @@ var Clouds = function (num) {
 
 			// The cloud is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (cloudX + cloudW) < (stageX)) {
-				this.clouds[i].x = (Math.random() * (stageW * 4) + stageW + stageX);
+				this.clouds[i].x = (Math.random() * (stageW) + stageW + stageX);
 				this.clouds[i].y = Math.random() * 2000 - 1800;
 			}
 			// The cloud is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && cloudX > (stageW + stageX)) {
-				this.clouds[i].x = (-(Math.random() * (stageW * 4) + stageW) + stageX);
+				this.clouds[i].x = (-(Math.random() * (stageW) + stageW) + stageX);
 				this.clouds[i].y = Math.random() * 2000 - 1800;
 			}
 		}
@@ -434,9 +435,11 @@ var Pickups = function (num) {
 		new BitmapData('gfx/pickups/bounce.png')
 	];
 
+	var groundLevel = (Game.stage.stageHeight / Game.pxPerM - 1.5);
+
 	for (var i = 0; i < num; i++) {
 		var rand = Math.floor(Math.random() * 4);
-		var y = rand == 3 ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
+		var y = rand == 3 ? groundLevel : Math.random() * 15 - 13;
 
 		var pickup = new Pickup(i * 10, y, {
 			type: pickupTypes[rand], 
@@ -472,16 +475,38 @@ var Pickups = function (num) {
 			var pickupY = this.pickups[i].actor.y;
 			var pickupW = this.pickupWidth * this.pickups[i].actor.scaleX;
 			var pickupH = this.pickupHeight * this.pickups[i].actor.scaleY;
-			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 10) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
-			var newY	= this.pickups[i].fixture.GetUserData() == 'bounce' ? (Game.stage.stageHeight / Game.pxPerM - 1.5) : Math.random() * 6 - 4;
+			var newX	= (Math.random() * ((stageW / Game.pxPerM) * 1) + (stageW / Game.pxPerM) + (stageX / Game.pxPerM));
+			var newY	= Math.random() * 40 - (40 - groundLevel);
+			var change	= false;
+			var rand	= Math.round(Math.random() * 3);
+
+			// Position the bounce pickup on the ground
+			newY = rand == 3 ? groundLevel : newY;
 
 			// The pickup is off to the left and we're moving right - respawn it to the right
 			if (direction == 1 && (pickupX + pickupW) < (stageX)) {
 				this.pickups[i].body.SetPosition(new b2Vec2(newX, newY));
+				change = true;
 			}
 			// The pickup is out to the right and we're moving left - respawn it to the left
 			if (direction == -1 && pickupX > (stageW + stageX)) {
 				this.pickups[i].body.SetPosition(new b2Vec2(-newX, newY));
+				change = true;
+			}
+
+			if (change) {
+				// Update Box2D user data
+				this.pickups[i].body.SetUserData(pickupTypes[rand]);
+				this.pickups[i].fixture.SetUserData(pickupTypes[rand]);
+
+				// Change bitmap
+				var newBM = new Bitmap(bitmapData[rand]);
+
+				newBM.x -= this.pickupWidth / 2;
+				newBM.y -= this.pickupHeight / 2;
+
+				this.pickups[i].actor.removeChildAt(0);
+				this.pickups[i].actor.addChild(newBM);
 			}
 
 			this.pickups[i].updatePosition();
@@ -514,9 +539,10 @@ Nästa (TIM):
 */
 
 var Game = {
+	gravity: 20, 
+	pxPerM: 60, 
 	canvas: false, 
 	debug: false, 
-	gravity: 20, 
 	stage: false, 
 	world: false, 
 	player: false, 
@@ -525,7 +551,6 @@ var Game = {
 	pickups: false, 
 	clouds: false, 
 	camera: false, 
-	pxPerM: 100, 
 	lastTime: 0, 
 	ui: false, 
 	playerStartX: 3, 
@@ -586,11 +611,11 @@ var Game = {
 		Game.addSky();
 
 		// Add clouds
-		Game.clouds = new Clouds(8);
+		Game.clouds = new Clouds(10);
 	//	Game.addClouds(6);
 
 		// Add some pickups
-		Game.pickups = new Pickups(6);
+		Game.pickups = new Pickups(8);
 
 		// Create the player
 		Game.playerStartY = (Game.stage.stageHeight / Game.pxPerM - 1.5);
@@ -686,6 +711,13 @@ var Game = {
 
 		// Update UI
 		Game.updateUI();
+
+		// Game Over?
+	/*	var velocity = Game.player.GetLinearVelocity();
+
+		if (velocity.x < 0.2 && velocity.y < 0.2) {
+			console.log('Fame Over');
+		} */
 
 		// Keep track of time
 		Game.lastTime = time;

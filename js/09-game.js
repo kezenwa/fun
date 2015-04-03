@@ -21,9 +21,10 @@ Nästa (TIM):
 */
 
 var Game = {
+	gravity: 20, 
+	pxPerM: 60, 
 	canvas: false, 
 	debug: false, 
-	gravity: 20, 
 	stage: false, 
 	world: false, 
 	player: false, 
@@ -32,7 +33,6 @@ var Game = {
 	pickups: false, 
 	clouds: false, 
 	camera: false, 
-	pxPerM: 100, 
 	lastTime: 0, 
 	ui: false, 
 	playerStartX: 3, 
@@ -93,11 +93,11 @@ var Game = {
 		Game.addSky();
 
 		// Add clouds
-		Game.clouds = new Clouds(8);
+		Game.clouds = new Clouds(10);
 	//	Game.addClouds(6);
 
 		// Add some pickups
-		Game.pickups = new Pickups(6);
+		Game.pickups = new Pickups(8);
 
 		// Create the player
 		Game.playerStartY = (Game.stage.stageHeight / Game.pxPerM - 1.5);
@@ -193,6 +193,13 @@ var Game = {
 
 		// Update UI
 		Game.updateUI();
+
+		// Game Over?
+	/*	var velocity = Game.player.GetLinearVelocity();
+
+		if (velocity.x < 0.2 && velocity.y < 0.2) {
+			console.log('Fame Over');
+		} */
 
 		// Keep track of time
 		Game.lastTime = time;
