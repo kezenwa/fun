@@ -46,7 +46,7 @@
 
 				<p>You made it <span class="distance"><b>loading...</b></span> meters!</p>
 
-				<p><a href="javascript:window.location.reload()">Try again!</a></p>
+				<p><a href="index.php">Try again!</a></p>
 
 			</div>
 
