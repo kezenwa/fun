@@ -58,7 +58,7 @@ var Player = function (x, y, s) {
 
 		// Check if touched a pickup
 		if (objType == 'wind') {
-			this.body.ApplyImpulse(new b2Vec2(0, -15), this.body.GetWorldCenter());
+			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
 			this.body.SetLinearVelocity(new b2Vec2(35, -2));
@@ -74,7 +74,7 @@ var Player = function (x, y, s) {
 
 	// Handles separations
 	this.handleSeparation = function (fixture) {
-		this.body.SetLinearDamping(0);
+		this.body.SetLinearDamping(0.2);
 
 		if (fixture.GetUserData() == 'ground' && this.hasBall) {
 			this.fixture.SetRestitution(0.2);

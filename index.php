@@ -27,7 +27,7 @@
 
 			<p class="energy"><b></b></p>
 
-			<p class="distance"><b>Loading...</b></p>
+			<p class="distance"><b>Loading...</b>m</p>
 
 			<div class="game-over">
 

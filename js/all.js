@@ -318,7 +318,7 @@ var Player = function (x, y, s) {
 
 		// Check if touched a pickup
 		if (objType == 'wind') {
-			this.body.ApplyImpulse(new b2Vec2(0, -15), this.body.GetWorldCenter());
+			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
 			this.body.SetLinearVelocity(new b2Vec2(35, -2));
@@ -334,7 +334,7 @@ var Player = function (x, y, s) {
 
 	// Handles separations
 	this.handleSeparation = function (fixture) {
-		this.body.SetLinearDamping(0);
+		this.body.SetLinearDamping(0.2);
 
 		if (fixture.GetUserData() == 'ground' && this.hasBall) {
 			this.fixture.SetRestitution(0.2);
@@ -578,7 +578,11 @@ var Game = {
 		// Create the player
 		Game.player = new Player(Game.playerStartX, 4, 1);
 
-	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
+		// Create the launcher
+		Game.launcher = new Launcher(Game.playerStartX, (Game.stage.stageHeight / Game.pxPerM - 1 + 0.15), -90);
+
+		// Create the ground
+		Game.ground = new Ground();
 
 		// Handle input
 		var numClicks = 0;
@@ -590,7 +594,7 @@ var Game = {
 				Game.player.flap();
 			}
 			else if (numClicks == 2) {
-				Game.launcher.launch(20);
+				Game.launcher.launch();
 			}
 			else {
 				Game.player.flap();
@@ -599,12 +603,6 @@ var Game = {
 
 		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleInput);
 		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
-
-		// Create the launcher
-		Game.launcher = new Launcher(3, (Game.stage.stageHeight / Game.pxPerM - 1 + 0.15), -90);
-
-		// Create the ground
-		Game.ground = new Ground();
 
 		// Handle collisions
 		var contactListener = b2ContactListener;
@@ -685,7 +683,8 @@ var Game = {
 		// Update distance
 		var distance = Math.round(Game.player.body.GetPosition().x - Game.playerStartX);
 
-		Game.ui.distance.childNodes[0].innerHTML = distance + 'm';
+		Game.ui.distance.childNodes[0].innerHTML = distance;
+		Game.ui.gameOverDistance.childNodes[0].innerHTML = distance;
 	}, 
 
 	// Gradient BG
