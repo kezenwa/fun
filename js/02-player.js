@@ -1,4 +1,9 @@
 var Player = function (x, y, s) {
+	var defaultRestitution = 0.05;
+	var defaultDamping = 0.2;
+	var ballRestitution = 2;
+	var groundDamping = 2;
+
 	this.energy = 1;
 
 	GameObject.call(this, x, y, {
@@ -8,8 +13,8 @@ var Player = function (x, y, s) {
 		type: b2Body.b2_dynamicBody, 
 		shape: new b2CircleShape(s / 2), 
 		density: 1, 
-		friction: 1, 
-		restitution: 0.2, 
+		friction: 0.2, 
+		restitution: defaultRestitution, 
 		size: s, 
 		width: false, 
 		height: false, 
@@ -20,13 +25,27 @@ var Player = function (x, y, s) {
 		}
 	});
 
-	this.body.SetLinearDamping(0.2);
+	this.body.SetLinearDamping(defaultDamping);
 
 	// Flap, flaaaaaap
-	this.flap = function () {
-		this.body.ApplyImpulse(new b2Vec2(0, -12 * this.energy), this.body.GetWorldCenter());
+	var lastFlap = new Date().getTime();
 
-		this.energy = this.energy / 2;
+	this.flap = function () {
+		var now = new Date().getTime();
+		var dt = now - lastFlap;
+
+		if (dt > 200) {
+			this.body.ApplyImpulse(new b2Vec2(0, -15 * this.energy), this.body.GetWorldCenter());
+
+			this.energy = this.energy * 0.6;
+
+			lastFlap = now;
+		}
+	};
+
+	// Refills energy
+	this.refillEnergy = function (dt) {
+		this.energy = this.energy > 1 ? 1 : this.energy + (0.25 * dt); // 4s to refill
 	};
 
 	// Moves right
@@ -39,21 +58,16 @@ var Player = function (x, y, s) {
 		this.body.ApplyImpulse(new b2Vec2(-1, 0), this.body.GetWorldCenter());
 	};
 
-	// Refills energy
-	this.refillEnergy = function (dt) {
-		this.energy = this.energy > 1 ? 1 : this.energy + (0.5 * dt);
-	};
-
 	// Handles collisions
 	this.handleCollision = function (fixture) {
 		var objType = fixture.GetUserData();
 
 		// Slow down quicker if touching ground
 		if (objType == 'ground') {
-			this.body.SetLinearDamping(4);
+			this.body.SetLinearDamping(groundDamping);
 		}
 		else {
-			this.body.SetLinearDamping(0.2);
+			this.body.SetLinearDamping(defaultDamping);
 		}
 
 		// Check if touched a pickup
@@ -65,7 +79,7 @@ var Player = function (x, y, s) {
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;
-			this.fixture.SetRestitution(2);
+			this.fixture.SetRestitution(ballRestitution);
 		}
 		else if (objType == 'bounce') {
 			this.body.SetLinearVelocity(new b2Vec2(35, -15));
@@ -74,10 +88,10 @@ var Player = function (x, y, s) {
 
 	// Handles separations
 	this.handleSeparation = function (fixture) {
-		this.body.SetLinearDamping(0.2);
+		this.body.SetLinearDamping(defaultDamping);
 
 		if (fixture.GetUserData() == 'ground' && this.hasBall) {
-			this.fixture.SetRestitution(0.2);
+			this.fixture.SetRestitution(defaultRestitution);
 			this.hasBall = false;
 		}
 	};
