@@ -23,17 +23,17 @@
 
 		<div id="ui">
 
-			<p class="loading">Loading...</p>
+			<p class="loading"><b>Loading...</b></p>
 
-			<p class="energy"><span>Loading...</span></p>
+			<p class="energy"><b></b></p>
 
-			<p class="distance">Loading...</p>
+			<p class="distance"><b>Loading...</b></p>
 
-			<div id="game-over">
+			<div class="game-over">
 
 				<h2>Game Over</h2>
 
-				<p>You made it <span class="distance">loading...</span> meters!</p>
+				<p>You made it <span class="distance"><b>loading...</b></span> meters!</p>
 
 				<p><a href="window.reload()">Try again!</a></p>
 

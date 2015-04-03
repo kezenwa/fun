@@ -27,22 +27,36 @@ var Game = {
 	world: false, 
 	player: false, 
 	ground: false, 
+	launcher: false, 
 	pickups: false, 
 	clouds: false, 
 	camera: false, 
 	pxPerM: 100, 
 	lastTime: 0, 
 	ui: false, 
+	playerStartX: 3, 
 
 	categories: {
 		PLAYER: 2, 
 		GROUND: 4, 
-		PICKUPS: 8
+		PICKUPS: 8, 
+		LAUNCHER: 16
 	}, 
 
 	run: function (canvas, debug) {
 		Game.canvas = canvas;
 		Game.debug = debug ? debug : false;
+
+		// Store all UI buttons for later
+		var uiWrap = document.getElementById('ui');
+
+		Game.ui = {
+			wrap: uiWrap, 
+			loading: uiWrap.querySelector('p.loading'), 
+			energy: uiWrap.querySelector('p.energy'), 
+			distance: uiWrap.querySelector('p.distance'), 
+			gameOverDistance: uiWrap.querySelector('div.game-over').querySelector('span.distance')
+		};
 
 		// Set the canvas' size to the same size it's rendered in the browser (because of CSS)
 		var canvasSize = Game.canvas.getBoundingClientRect();
@@ -69,8 +83,6 @@ var Game = {
 		// Create IvanK stage
 		Game.stage = new Stage(Game.canvas.id);
 
-		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
-
 		// Create camera
 		Game.camera = new Camera();
 
@@ -85,7 +97,7 @@ var Game = {
 		Game.pickups = new Pickups(6);
 
 		// Create the player
-		Game.player = new Player(4, 4, 1);
+		Game.player = new Player(Game.playerStartX, 4, 1);
 
 	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
 
@@ -106,6 +118,9 @@ var Game = {
 				Game.player.flap();
 			}
 		});
+
+		// Create the launcher
+		Game.launcher = new Launcher(1.5, (Game.stage.stageHeight / Game.pxPerM - 3.5), -90);
 
 		// Create the ground
 		Game.ground = new Ground();
@@ -131,13 +146,16 @@ var Game = {
 			}
 		};
 
-		contactListener.PreSolve = function (contact, impulse) {
-		};
-
-		contactListener.PostSolve = function (contact, oldManifold) {
-		};
+		contactListener.PreSolve = function (contact, impulse) {};
+		contactListener.PostSolve = function (contact, oldManifold) {};
 
 		Game.world.SetContactListener(contactListener);
+
+		// Hook up on enter frame callback
+		Game.stage.addEventListener(Event.ENTER_FRAME, Game.onEnterFrame);
+
+		// Remove loading
+		document.body.classList.remove('loading');
 	}, 
 
 	// On every frame
@@ -160,6 +178,7 @@ var Game = {
 		Game.ground.updatePosition();
 		Game.clouds.updatePosition();
 		Game.pickups.updatePosition();
+		Game.launcher.updatePosition();
 
 		// Refill player's energy
 		Game.player.refillEnergy(dt);
@@ -167,8 +186,25 @@ var Game = {
 		// Update camera position
 		Game.camera.follow(Game.player);
 
+		// Update UI
+		Game.updateUI();
+
 		// Keep track of time
 		Game.lastTime = time;
+	}, 
+
+	// Updates the UI
+	updateUI: function () {
+		// Update energy
+		var energyPercent = Math.round(Game.player.energy * 100);
+			energyPercent = energyPercent > 100 ? 100 : energyPercent;
+
+		Game.ui.energy.childNodes[0].style.width = energyPercent + '%';
+
+		// Update distance
+		var distance = Math.round(Game.player.body.GetPosition().x - Game.playerStartX);
+
+		Game.ui.distance.childNodes[0].innerHTML = distance + 'm';
 	}, 
 
 	// Gradient BG

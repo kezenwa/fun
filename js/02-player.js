@@ -4,7 +4,7 @@ var Player = function (x, y, s) {
 	GameObject.call(this, x, y, {
 		name: 'player', 
 		category: Game.categories.PLAYER, 
-		mask: Game.categories.GROUND | Game.categories.PICKUPS, 
+		mask: Game.categories.GROUND | Game.categories.PICKUPS | Game.categories.LAUNCHER, 
 		type: b2Body.b2_dynamicBody, 
 		shape: new b2CircleShape(s / 2), 
 		density: 1, 
