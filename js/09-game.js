@@ -93,7 +93,7 @@ var Game = {
 		Game.addSky();
 
 		// Add clouds
-		Game.clouds = new Clouds(4);
+		Game.clouds = new Clouds(8);
 	//	Game.addClouds(6);
 
 		// Add some pickups
