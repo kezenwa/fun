@@ -27,7 +27,9 @@
 
 			<p class="energy"><b></b></p>
 
-			<p class="distance"><b>Loading...</b>m</p>
+			<p class="distance">Distance: <b>Loading...</b>m</p>
+
+			<p class="altitude">Altitude: <b>Loading...</b>m</p>
 
 			<div class="game-over">
 

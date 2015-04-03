@@ -297,7 +297,7 @@ var Player = function (x, y, s) {
 		if (dt > 200) {
 			this.body.ApplyImpulse(new b2Vec2(0, -15 * this.energy), this.body.GetWorldCenter());
 
-			this.energy = this.energy * 0.6;
+			this.energy = this.energy * 0.65;
 
 			lastFlap = now;
 		}
@@ -508,6 +508,7 @@ Todo:
 Nästa (TIM):
 - Global med BitmapData och Sounds osv (alla assets) (Loading...)
 - Smartare GameObjects som extendar Sprite() (som han rekommenderar)
+	- Game.player.placeOn(Game.ground) tex
 - Hur hantera collection av GameObjects?
 	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
 */
@@ -528,6 +529,7 @@ var Game = {
 	lastTime: 0, 
 	ui: false, 
 	playerStartX: 3, 
+	playerStartY: false, 
 
 	categories: {
 		PLAYER: 2, 
@@ -548,6 +550,7 @@ var Game = {
 			loading: uiWrap.querySelector('p.loading'), 
 			energy: uiWrap.querySelector('p.energy'), 
 			distance: uiWrap.querySelector('p.distance'), 
+			altitude: uiWrap.querySelector('p.altitude'), 
 			gameOverDistance: uiWrap.querySelector('div.game-over').querySelector('span.distance')
 		};
 
@@ -590,7 +593,9 @@ var Game = {
 		Game.pickups = new Pickups(6);
 
 		// Create the player
-		Game.player = new Player(Game.playerStartX, 4, 1);
+		Game.playerStartY = (Game.stage.stageHeight / Game.pxPerM - 1.5);
+
+		Game.player = new Player(Game.playerStartX, Game.playerStartY, 1);
 
 		// Create the launcher
 		Game.launcher = new Launcher(Game.playerStartX, (Game.stage.stageHeight / Game.pxPerM - 1 + 0.15), -90);
@@ -687,18 +692,29 @@ var Game = {
 	}, 
 
 	// Updates the UI
+	topAltitude: 0, 
+
 	updateUI: function () {
 		// Update energy
 		var energyPercent = Math.round(Game.player.energy * 100);
 			energyPercent = energyPercent > 100 ? 100 : energyPercent;
 
-		Game.ui.energy.childNodes[0].style.width = energyPercent + '%';
+		Game.ui.energy.children[0].style.width = energyPercent + '%';
 
 		// Update distance
 		var distance = Math.round(Game.player.body.GetPosition().x - Game.playerStartX);
 
-		Game.ui.distance.childNodes[0].innerHTML = distance;
-		Game.ui.gameOverDistance.childNodes[0].innerHTML = distance;
+		Game.ui.distance.children[0].innerHTML = distance;
+		Game.ui.gameOverDistance.children[0].innerHTML = distance;
+
+		// Update altitude
+		var altitude = -Math.round(Game.player.body.GetPosition().y + -Game.playerStartY);
+
+		if (altitude > Game.topAltitude) {
+			Game.topAltitude = altitude;
+		}
+
+		Game.ui.altitude.children[0].innerHTML = Game.topAltitude;
 	}, 
 
 	// Gradient BG

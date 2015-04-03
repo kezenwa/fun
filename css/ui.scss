@@ -62,13 +62,18 @@
 		}
 	}
 
-	// Distance
-	p.distance {
+	// Distance & altitude
+	p.distance, 
+	p.altitude {
 		position: absolute;
 		left: 20px;
 		top: 50px;
 
 		display: block;
+	}
+
+	p.altitude {
+		top: 70px;
 	}
 
 	// Game over

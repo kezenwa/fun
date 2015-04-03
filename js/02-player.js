@@ -37,7 +37,7 @@ var Player = function (x, y, s) {
 		if (dt > 200) {
 			this.body.ApplyImpulse(new b2Vec2(0, -15 * this.energy), this.body.GetWorldCenter());
 
-			this.energy = this.energy * 0.6;
+			this.energy = this.energy * 0.65;
 
 			lastFlap = now;
 		}
