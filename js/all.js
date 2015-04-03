@@ -210,7 +210,7 @@ var Ground = function () {
 // 02-launcher.js
 var Launcher = function (x, y, r) {
 	var width = 0.3;
-	var height = 5;
+	var height = 10;
 	var shape = new b2PolygonShape;
 
 	shape.SetAsBox(width / 2, height / 2);
@@ -218,7 +218,8 @@ var Launcher = function (x, y, r) {
 	GameObject.call(this, x, y, {
 		name: 'launcher', 
 		category: Game.categories.LAUNCHER, 
-		type: b2Body.b2_staticBody, 
+		mask: Game.categories.PLAYER | Game.categories.GROUND, 
+		type: b2Body.b2_kinematicBody, 
 		shape: shape, 
 		density: 1, 
 		friction: 1, 
@@ -228,11 +229,15 @@ var Launcher = function (x, y, r) {
 		bitmap: {
 			data: new BitmapData('gfx/launcher.png'), 
 			width: 30, 
-			height: 300
+			height: 500
 		}
 	});
 
 	this.body.SetAngle(r * Math.PI / 180);
+
+	this.launch = function () {
+		this.body.SetAngularVelocity(10);
+	};
 };
 // 02-pickup.js
 var Pickup = function (x, y, conf) {
@@ -575,26 +580,28 @@ var Game = {
 
 	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
 
-		// Flap
-		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
-			Game.player.flap();
-		});
+		// Handle input
+		var numClicks = 0;
 
-		// DEV only
-		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {
-			if (e.keyCode == 37) {
-				Game.player.goBackward();
-			}
-			if (e.keyCode == 39) {
-				Game.player.goForward();
-			}
-			if (e.keyCode == 38) {
+		var handleInput = function () {
+			numClicks++;
+
+			if (numClicks == 1) {
 				Game.player.flap();
 			}
-		});
+			else if (numClicks == 2) {
+				Game.launcher.launch(20);
+			}
+			else {
+				Game.player.flap();
+			}
+		};
+
+		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleInput);
+		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 
 		// Create the launcher
-		Game.launcher = new Launcher(1.5, (Game.stage.stageHeight / Game.pxPerM - 3.5), -90);
+		Game.launcher = new Launcher(3, (Game.stage.stageHeight / Game.pxPerM - 1 + 0.15), -90);
 
 		// Create the ground
 		Game.ground = new Ground();

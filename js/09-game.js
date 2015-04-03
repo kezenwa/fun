@@ -101,26 +101,28 @@ var Game = {
 
 	//	Game.player.body.SetLinearVelocity(new b2Vec2(30, -10));
 
-		// Flap
-		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, function () {
-			Game.player.flap();
-		});
+		// Handle input
+		var numClicks = 0;
 
-		// DEV only
-		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, function (e) {
-			if (e.keyCode == 37) {
-				Game.player.goBackward();
-			}
-			if (e.keyCode == 39) {
-				Game.player.goForward();
-			}
-			if (e.keyCode == 38) {
+		var handleInput = function () {
+			numClicks++;
+
+			if (numClicks == 1) {
 				Game.player.flap();
 			}
-		});
+			else if (numClicks == 2) {
+				Game.launcher.launch(20);
+			}
+			else {
+				Game.player.flap();
+			}
+		};
+
+		Game.stage.addEventListener(MouseEvent.MOUSE_DOWN, handleInput);
+		Game.stage.addEventListener(KeyboardEvent.KEY_DOWN, handleInput);
 
 		// Create the launcher
-		Game.launcher = new Launcher(1.5, (Game.stage.stageHeight / Game.pxPerM - 3.5), -90);
+		Game.launcher = new Launcher(3, (Game.stage.stageHeight / Game.pxPerM - 1 + 0.15), -90);
 
 		// Create the ground
 		Game.ground = new Ground();
