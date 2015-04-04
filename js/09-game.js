@@ -2,8 +2,9 @@
 
 /*
 Todo:
-- Slumpa typ av pickup när den flyttas också
-	- Sprid ut bättre också - och i närheten av player så även om han är i rymden
+- Gör pickups större (dubbelt så stora i box2d)
+	- Gör wind mycket högre
+- Om pickup alltid spawnade i närheten av player = hade bara behövt en eller två
 - Vid för låg hastighet ska man inte kunna flappa
 - Grafik
 	- Stjärnor (3d :D)
@@ -11,13 +12,21 @@ Todo:
 - Ljud
 - UI
 - Launchpad
+	- Ändra så den är som en pendel istället
+	|
+	|
+	|
+	O  ->  O
 
 Nästa (TIM):
 - Global med BitmapData och Sounds osv (alla assets) (Loading...)
 - Smartare GameObjects som extendar Sprite() (som han rekommenderar)
 	- Game.player.placeOn(Game.ground) tex
+		- Game.player.placeOutsideScreen(1); // -1 = left, 1 = right (top/bottom?)
+	- Game.player.update() // Uppdaterar position och "state" (falling, speeding, etc)
 - Hur hantera collection av GameObjects?
 	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
+	- Eller bara helper funktioner
 */
 
 var Game = {

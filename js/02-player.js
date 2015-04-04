@@ -33,6 +33,7 @@ var Player = function (x, y, s) {
 	this.flap = function () {
 		var now = new Date().getTime();
 		var dt = now - lastFlap;
+	//	var v = this.body.GetLinearVelocity();
 
 		if (dt > 200) {
 			this.body.ApplyImpulse(new b2Vec2(0, -15 * this.energy), this.body.GetWorldCenter());
@@ -75,15 +76,15 @@ var Player = function (x, y, s) {
 			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
-			this.body.SetLinearVelocity(new b2Vec2(35, 0));
-			this.body.ApplyImpulse(new b2Vec2(0, -2), this.body.GetWorldCenter());
+		//	this.body.SetLinearVelocity(new b2Vec2(35, 0));
+			this.body.ApplyImpulse(new b2Vec2(25, -2), this.body.GetWorldCenter());
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;
 			this.fixture.SetRestitution(ballRestitution);
 		}
 		else if (objType == 'bounce') {
-			this.body.SetLinearVelocity(new b2Vec2(60, -30));
+			this.body.SetLinearVelocity(new b2Vec2(40, -25));
 		}
 
 		// Check if was just launched

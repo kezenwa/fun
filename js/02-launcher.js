@@ -26,6 +26,7 @@ var Launcher = function (x, y, r) {
 	this.body.SetAngle(r * Math.PI / 180);
 
 	this.launch = function () {
+		this.body.SetAwake(true);
 		this.body.SetAngularVelocity(10);
 	};
 };

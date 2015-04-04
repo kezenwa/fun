@@ -236,6 +236,7 @@ var Launcher = function (x, y, r) {
 	this.body.SetAngle(r * Math.PI / 180);
 
 	this.launch = function () {
+		this.body.SetAwake(true);
 		this.body.SetAngularVelocity(10);
 	};
 };
@@ -293,6 +294,7 @@ var Player = function (x, y, s) {
 	this.flap = function () {
 		var now = new Date().getTime();
 		var dt = now - lastFlap;
+	//	var v = this.body.GetLinearVelocity();
 
 		if (dt > 200) {
 			this.body.ApplyImpulse(new b2Vec2(0, -15 * this.energy), this.body.GetWorldCenter());
@@ -335,15 +337,15 @@ var Player = function (x, y, s) {
 			this.body.ApplyImpulse(new b2Vec2(0, -20), this.body.GetWorldCenter());
 		}
 		else if (objType == 'speed') {
-			this.body.SetLinearVelocity(new b2Vec2(35, 0));
-			this.body.ApplyImpulse(new b2Vec2(0, -2), this.body.GetWorldCenter());
+		//	this.body.SetLinearVelocity(new b2Vec2(35, 0));
+			this.body.ApplyImpulse(new b2Vec2(25, -2), this.body.GetWorldCenter());
 		}
 		else if (objType == 'ball') {
 			this.hasBall = true;
 			this.fixture.SetRestitution(ballRestitution);
 		}
 		else if (objType == 'bounce') {
-			this.body.SetLinearVelocity(new b2Vec2(60, -30));
+			this.body.SetLinearVelocity(new b2Vec2(40, -25));
 		}
 
 		// Check if was just launched
@@ -525,8 +527,9 @@ var Pickups = function (num) {
 
 /*
 Todo:
-- Slumpa typ av pickup när den flyttas också
-	- Sprid ut bättre också - och i närheten av player så även om han är i rymden
+- Gör pickups större (dubbelt så stora i box2d)
+	- Gör wind mycket högre
+- Om pickup alltid spawnade i närheten av player = hade bara behövt en eller två
 - Vid för låg hastighet ska man inte kunna flappa
 - Grafik
 	- Stjärnor (3d :D)
@@ -534,13 +537,21 @@ Todo:
 - Ljud
 - UI
 - Launchpad
+	- Ändra så den är som en pendel istället
+	|
+	|
+	|
+	O  ->  O
 
 Nästa (TIM):
 - Global med BitmapData och Sounds osv (alla assets) (Loading...)
 - Smartare GameObjects som extendar Sprite() (som han rekommenderar)
 	- Game.player.placeOn(Game.ground) tex
+		- Game.player.placeOutsideScreen(1); // -1 = left, 1 = right (top/bottom?)
+	- Game.player.update() // Uppdaterar position och "state" (falling, speeding, etc)
 - Hur hantera collection av GameObjects?
 	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
+	- Eller bara helper funktioner
 */
 
 var Game = {
