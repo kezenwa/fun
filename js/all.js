@@ -529,6 +529,7 @@ var Pickups = function (num) {
 Todo:
 - Gör pickups större (dubbelt så stora i box2d)
 	- Gör wind mycket högre
+	- Måste lägga in stöd för olika stora Box2D bodies och Sprites....
 - Om pickup alltid spawnade i närheten av player = hade bara behövt en eller två
 - Vid för låg hastighet ska man inte kunna flappa
 - Grafik
@@ -538,10 +539,7 @@ Todo:
 - UI
 - Launchpad
 	- Ändra så den är som en pendel istället
-	|
-	|
-	|
-	O  ->  O
+	- Nej, en boxningshandske som kommer från vänster ----O (bara O är Box2D)
 
 Nästa (TIM):
 - Global med BitmapData och Sounds osv (alla assets) (Loading...)
