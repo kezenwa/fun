@@ -1,30 +1,16 @@
 // http://blog.sethladd.com/2011/08/box2d-orientation-for-javascript.html
 
 /*
-Todo:
 - Gör pickups större (dubbelt så stora i box2d)
-	- Gör wind mycket högre
-	- Måste lägga in stöd för olika stora Box2D bodies och Sprites....
-- Om pickup alltid spawnade i närheten av player = hade bara behövt en eller två
+	- Gör wind mycket högre(?)
 - Vid för låg hastighet ska man inte kunna flappa
+- Ljud
+- Launchpad
+	- En boxningshandske som kommer från vänster
 - Grafik
 	- Stjärnor (3d :D)
 	- Måne ashögt upp
-- Ljud
-- UI
-- Launchpad
-	- Ändra så den är som en pendel istället
-	- Nej, en boxningshandske som kommer från vänster ----O (bara O är Box2D)
-
-Nästa (TIM):
-- Global med BitmapData och Sounds osv (alla assets) (Loading...)
-- Smartare GameObjects som extendar Sprite() (som han rekommenderar)
-	- Game.player.placeOn(Game.ground) tex
-		- Game.player.placeOutsideScreen(1); // -1 = left, 1 = right (top/bottom?)
-	- Game.player.update() // Uppdaterar position och "state" (falling, speeding, etc)
-- Hur hantera collection av GameObjects?
-	- Borde ha wrapper som hanterar det... (både clouds och pickups tex)
-	- Eller bara helper funktioner
+- Om pickup alltid spawnade i närheten av player = hade bara behövt en eller två
 */
 
 var Game = {
