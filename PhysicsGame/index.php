@@ -18,9 +18,10 @@
 
 	<body class="loading">
 
-		<div id="preload">
+		<!-- TODO: Embed all audio and images (and video? etc).. -->
+		<div id="assets">
 			<?php foreach (glob('assets/*.*') as $file) : ?>
-				<img src="gfx/<?php echo basename($file) ?>">
+				<img src="assets/<?php echo basename($file) ?>">
 			<?php endforeach ?>
 		</div>
 
@@ -29,12 +30,22 @@
 
 		<script src="js/lib/Box2dWeb-2.1.a.3.js"></script>
 		<script src="js/lib/ivank.js"></script>
-		<script src="js/game/all.php"></script>
 		<script src="js/all.php"></script>
 		<script>
-			var newGame = new Game(document.getElementById('game'), document.getElementById('debug'));
+			Game.init(document.getElementById('game'), document.getElementById('debug'));
 
-			newGame.start();
+			Game.onInput = function (event) {
+				if (event.keys.ESC) {
+					if (Game.paused) {
+						Game.start();
+					}
+					else {
+						Game.pause();
+					}
+				}
+			};
+
+			Game.start(new Level().loadFromFile('assets/levels/level-1.json'));
 		</script>
 
 	</body>

@@ -33,6 +33,10 @@ var GameObject = function (x, y, conf) {
 		
 	};
 
+	this.loadFromFile = function (path) {
+		
+	};
+
 	// TODO: Too specific??
 	// Positions this object above gameObject (Player.positionAbove(Ground))
 	this.positionAbove = function (gameObject) {

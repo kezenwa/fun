@@ -1,0 +1,28 @@
+{
+	"title": "The first level", 
+	"description": "Bla bla bla", 
+
+	"name": "level-1", 
+	"shape": "assets/levels/level-1/shape.svg", 
+	"texture": "assets/levels/level-1/texture.png", 
+
+	"width": 1000, 
+	"height": 200, 
+
+	"camera": {
+		"follow": "player"
+	}, 
+
+	"gameObjects": [
+		{
+			"path": "assets/game-objects/player/player.js", 
+			"left": "1", 
+			"bottom": "ground"
+		}, 
+		{
+			"path": "assets/game-objects/enemy/enemeny.js", 
+			"left": "10", 
+			"bottom": "ground"
+		}
+	]
+}
