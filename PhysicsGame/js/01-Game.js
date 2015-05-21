@@ -5,11 +5,6 @@ TODO
 
 /**
  * Wrapper class for entire game.
- *
- * @constructor
- *
- * @param {HTMLElement} canvas - Canvas element to draw the game on
- * @param {HTMLElement} debug - (Optional) Canvas element to draw debug data on
  */
 var Game = {
 	// Config

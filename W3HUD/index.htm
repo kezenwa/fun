@@ -1,0 +1,89 @@
+<!doctype html>
+
+<html>
+
+	<head>
+		<title>Witcher 3 HUD</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+
+	<body>
+
+		<section id="player-stats">
+
+			<!--<div class="level bar">Level 8: <strong>832<i>/1200</i></strong></div>-->
+			<div class="hp bar">HP: <strong>3214<i>/3600</i></strong></div>
+			<div class="stamina bar">Stamina: <strong>84<i>/100</i></strong></div>
+			<div class="toxicity bar">Toxicity: <strong>32<i>/100</i></strong></div>
+			<div class="adrenaline">Adrenaline: <strong>I</strong> <strong>I</strong> <i></i></div>
+
+			<ul class="buffs">
+				<li class="quen"><strong>23s</strong> Quen sign</li>
+				<li class="weapons"><strong>13m</strong> Weapon boost</li>
+				<li class="armor"><strong>11m</strong> Armor boost</li>
+			</ul>
+
+		</section>
+
+		<section id="minimap">
+
+			<div class="time">6:05 PM / Clear</div>
+
+			<div class="map">
+				<div class="map"></div>
+				<div class="distance-to-objective">1779</div>
+				<div class="distance-to-marker">347</div>
+			</div>
+
+			<div class="quest">
+				<h2>Brothers in Arms: Skellige</h2>
+
+				<ul>
+					<li>Talk to Ermion</li>
+					<li><del>Talk to Crach</del></li>
+					<li><del>Talk to Hjalmar</del></li>
+				</ul>
+			</div>
+
+		</section>
+
+		<section id="quick-slots">
+
+			<div class="item-1"><strong>1/3</strong> Some potion</div>
+			<div class="item-2"><strong>2/3</strong> Another potion</div>
+			<div class="sign quen">Quen</div>
+			<div class="util xbow"><strong>14</strong> Crossbow</div>
+
+		</section>
+
+		<section id="button-hints">
+
+			<h2>Silver Sword</h2>
+
+			<ul>
+				<li>Fast Attack <span class="x">X</span></li>
+				<li>Strong Attack <span class="y">Y</span></li>
+				<li>Dodge <span class="b">B</span></li>
+				<li>Cast Sign <span class="rt">RT</span></li>
+			</ul>
+
+		</section>
+
+		<script>
+			var bars = document.querySelectorAll('.bar');
+
+			for (var i = 0; i < bars.length; i++) {
+				var bar = bars[i];
+				var val = bar.querySelector('strong');
+				var total = val.querySelector('i');
+				var valNum = parseInt(val.innerHTML, 10);
+				var totalNum = parseInt(total.innerHTML.substr(1), 10);
+				var percent = (valNum / totalNum) * 100;
+
+				val.style.width = percent + '%';
+			}
+		</script>
+
+	</body>
+
+</html>
