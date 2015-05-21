@@ -1,10 +1,10 @@
 $padding: 20px;
 $font-size: 1rem;
-$border-radius: 2px;
+$border-radius: 3px;
 $bar-height: 10px;
-$red: #970313;
-$green: #178539;
-$yellow: #deb71d;
+$red: #ee0313;
+$green: #17cc39;
+$yellow: #ffaa22;
 $blue: #00a6dc;
 
 // Background
@@ -17,6 +17,7 @@ body {
 	height: 100%;
 
 	font: #{$font-size}/1.2 Arial, sans-serif;
+	color: #fefefe;
 }
 
 body {
@@ -29,8 +30,21 @@ body {
 }
 
 // Mixins
+@mixin label {
+	background: rgba(#111, .6);
+
+	display: inline-block;
+	margin: 0 0 10px;
+	padding: 5px 10px;
+
+	font-size: $font-size * .8;
+	text-align: center;
+
+	border-radius: $border-radius;
+}
+
 @mixin inset-area {
-	background: linear-gradient(darken(#222, 10%), #222);
+	background: linear-gradient(darken(#333, 10%), #333);
 	border-radius: $border-radius;
 	box-shadow: inset 1px 1px 1px #111;
 }
@@ -48,7 +62,6 @@ body {
 	padding: 1px;
 
 	font-size: 0;
-	color: #fff;
 
 	// Actual bar
 	strong {
@@ -87,20 +100,18 @@ div.bar {
 
 // Player stats
 #player-stats {
-	opacity: .9;
-
 	position: absolute;
 	left: $padding;
 	top: $padding;
 
-	width: 300px;
+	width: 250px;
 
 	// Level
 	div.level {
 		border-radius: 0;
 
 		strong {
-			background: url(noise.png), linear-gradient(to bottom, #fefefe, darken(#fefefe, 10%));
+			background: url(noise-dark.png), linear-gradient(to bottom, #fefefe, darken(#fefefe, 10%));
 			height: 3px;
 		}
 	}
@@ -108,8 +119,8 @@ div.bar {
 	// HP
 	div.hp {
 		strong {
-			background: url(noise.png), linear-gradient(to bottom, $red, darken($red, 10%));
-			height: $bar-height * 2;
+			background: url(noise-dark.png), linear-gradient(to bottom, $red, darken($red, 10%));
+			height: $bar-height * 1.5;
 		}
 	}
 
@@ -119,7 +130,7 @@ div.bar {
 		float: left;
 
 		strong {
-			background: url(noise.png), linear-gradient(to bottom, $yellow, darken($yellow, 10%));
+			background: url(noise-dark.png), linear-gradient(to bottom, $yellow, darken($yellow, 10%));
 		}
 	}
 
@@ -129,36 +140,34 @@ div.bar {
 		float: right;
 
 		strong {
-			background: url(noise.png), linear-gradient(to bottom, $green, darken($green, 10%));
+			background: url(noise-dark.png), linear-gradient(to bottom, $green, darken($green, 10%));
 		}
 	}
 
 	// Adrenaline
 	div.adrenaline {
 		overflow: hidden;
-		width: 48%;
 		margin: 0 0 5px;
 		clear: both;
 		font-size: 0;
 
 		strong, 
 		i {
-			background: url(noise.png), linear-gradient(to bottom, $red, darken($red, 10%));
+			background: url(noise-dark.png), linear-gradient(to bottom, $red, darken($red, 10%));
 
-			display: block;
-			box-sizing: border-box;
-			float: left;
+			display: inline-block;
+			vertical-align: top;
 
-			width: calc(33.333% - 4px);
-			height: $bar-height * 1.5;
-			margin-right: 6px;
+			margin: 0 5px 0 0;
+			width: $bar-height;
+			height: $bar-height;
 
 			border: 1px solid #111;
-			border-radius: $border-radius;
+			border-radius: 100%;
 		}
 
 		i {
-			@include inset-area;
+			background: url(noise-dark.png), linear-gradient(to bottom, darken(#222, 10%), #222);
 		}
 
 		> *:last-child {
@@ -169,8 +178,8 @@ div.bar {
 	// Buffs
 	ul.buffs {
 		clear: both;
-		margin: 20px 0 0;
-		padding: 0;
+		margin: 0;
+		padding: 15px 0 0;
 		list-style: none;
 
 		li {
@@ -178,13 +187,13 @@ div.bar {
 			margin: 0 0 10px;
 
 			font-size: 0;
+			color: #aaa;
 			font-size: $font-size * .7;
-			color: #fafafa;
 			text-shadow: 1px 1px 1px rgba(0, 0, 0, .8);
 			vertical-align: baseline;
 
 			strong {
-				background: url(noise-dark.png), linear-gradient(to bottom, $red, darken($red, 5%));
+				background: url(noise-dark.png), linear-gradient(to bottom, darken($red, 20%), darken($red, 30%));
 
 				display: inline-block;
 				width: 28px;
@@ -195,7 +204,7 @@ div.bar {
 				text-align: center;
 				text-shadow: none;
 
-				border: 1px solid darken($red, 10%);
+			//	border: 1px solid darken($red, 10%);
 				border-radius: 100%;
 			//	box-shadow: 1px 1px 6px rgba(0, 0, 0, .6);
 			}
@@ -203,21 +212,21 @@ div.bar {
 
 		li.weapons {
 			strong {
-				background: url(noise-dark.png), linear-gradient(to bottom, $red, darken($red, 5%));
+				background: url(noise-dark.png), linear-gradient(to bottom, darken($red, 20%), darken($red, 30%));
 				border-color: darken($red, 10%);
 			}
 		}
 
 		li.armor {
 			strong {
-				background: url(noise-dark.png), linear-gradient(to bottom, $blue, darken($blue, 5%));
+				background: url(noise-dark.png), linear-gradient(to bottom, darken($blue, 20%), darken($blue, 30%));
 				border-color: darken($blue, 10%);
 			}
 		}
 
 		li.quen {
 			strong {
-				background: url(noise-dark.png), linear-gradient(to bottom, $green, darken($green, 5%));
+				background: url(noise-dark.png), linear-gradient(to bottom, darken($green, 20%), darken($green, 30%));
 				border-color: darken($green, 10%);
 			}
 		}
@@ -226,11 +235,86 @@ div.bar {
 
 // Minimap
 #minimap {
+	opacity: .9;
+
 	position: absolute;
 	right: $padding;
 	top: $padding;
 
-	width: 200px;
+	width: 250px;
+	text-align: center;
+
+	div.time, 
+	div.distance-to-objective, 
+	div.distance-to-marker {
+		@include label;
+	}
+
+	div.distance-to-objective {
+		&:before {
+			content: "✪ ";
+		}
+	}
+
+	div.distance-to-marker {
+		&:before {
+			content: "✓ ";
+		}
+	}
+
+	div.map {
+		position: relative;
+		overflow: hidden;
+		opacity: .8;
+
+		margin: 0 0 10px;
+
+		border: 2px solid #222;
+		border-radius: 100%;
+
+		&:before {
+			@include label;
+			content: "N";
+
+			position: absolute;
+			left: 50%;
+			top: 0;
+			margin-left: -15px;
+		}
+
+		img {
+			display: block;
+			width: 100%;
+		}
+	}
+}
+
+// Active quest
+#active-quest {
+	display: none;
+	opacity: .8;
+
+	position: absolute;
+	left: $padding;
+	top: $padding;
+
+	width: 350px;
+
+	h2, 
+	p {
+		margin: 0;
+		font-size: 2.5rem;
+		line-height: 1;
+		letter-spacing: -1px;
+		font-weight: bold;
+		text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
+	}
+
+	p {
+		font-size: 2rem;
+		letter-spacing: 0;
+		font-weight: normal;
+	}
 }
 
 // Quick Slots
@@ -239,7 +323,51 @@ div.bar {
 	left: $padding;
 	bottom: $padding;
 
-	display: none;
+	width: 120px;
+	height: 120px;
+
+	ul {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			position: absolute;
+			display: block;
+			width: 40px;
+			height: 40px;
+
+			img {
+				display: block;
+				width: 100%;
+				height: 100%;
+			}
+
+			&.item-1 {
+				left: 50%;
+				top: 0;
+				margin-left: -20px;
+			}
+
+			&.item-2 {
+				left: 50%;
+				bottom: 0;
+				margin-left: -20px;
+			}
+
+			&.sign {
+				left: 0;
+				top: 50%;
+				margin-top: -20px;
+			}
+
+			&.util {
+				right: 0;
+				top: 50%;
+				margin-top: -20px;
+			}
+		}
+	}
 }
 
 // Button hints

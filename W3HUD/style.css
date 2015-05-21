@@ -1,10 +1,12 @@
+@charset "UTF-8";
 html,
 body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100%;
-  font: 1rem/1.2 Arial, sans-serif; }
+  font: 1rem/1.2 Arial, sans-serif;
+  color: #fefefe; }
 
 body {
   background: url(http://gearnuke.com/wp-content/uploads/2014/02/witcher04.jpg) no-repeat center center;
@@ -13,8 +15,8 @@ body {
   background-position: cover; }
 
 div.bar {
-  background: linear-gradient(#090909, #222222);
-  border-radius: 2px;
+  background: linear-gradient(#1a1a1a, #333333);
+  border-radius: 3px;
   box-shadow: inset 1px 1px 1px #111;
   overflow: hidden;
   position: relative;
@@ -22,75 +24,69 @@ div.bar {
   display: block;
   margin: 0 0 5px;
   padding: 1px;
-  font-size: 0;
-  color: #fff; }
+  font-size: 0; }
   div.bar strong {
     background: green;
     display: block;
     height: 10px; }
 
 #player-stats {
-  opacity: .9;
   position: absolute;
   left: 20px;
   top: 20px;
-  width: 300px; }
+  width: 250px; }
   #player-stats div.level {
     border-radius: 0; }
     #player-stats div.level strong {
-      background: url(noise.png), linear-gradient(to bottom, #fefefe, #e5e5e5);
+      background: url(noise-dark.png), linear-gradient(to bottom, #fefefe, #e5e5e5);
       height: 3px; }
   #player-stats div.hp strong {
-    background: url(noise.png), linear-gradient(to bottom, #970313, #65020d);
-    height: 20px; }
+    background: url(noise-dark.png), linear-gradient(to bottom, #ee0313, #bc020f);
+    height: 15px; }
   #player-stats div.stamina {
     width: 48%;
     float: left; }
     #player-stats div.stamina strong {
-      background: url(noise.png), linear-gradient(to bottom, #deb71d, #b19217); }
+      background: url(noise-dark.png), linear-gradient(to bottom, #ffaa22, #ee9200); }
   #player-stats div.toxicity {
     width: 48%;
     float: right; }
     #player-stats div.toxicity strong {
-      background: url(noise.png), linear-gradient(to bottom, #178539, #0f5a26); }
+      background: url(noise-dark.png), linear-gradient(to bottom, #17cc39, #129e2c); }
   #player-stats div.adrenaline {
     overflow: hidden;
-    width: 48%;
     margin: 0 0 5px;
     clear: both;
     font-size: 0; }
     #player-stats div.adrenaline strong,
     #player-stats div.adrenaline i {
-      background: url(noise.png), linear-gradient(to bottom, #970313, #65020d);
-      display: block;
-      box-sizing: border-box;
-      float: left;
-      width: calc(33.333% - 4px);
-      height: 15px;
-      margin-right: 6px;
+      background: url(noise-dark.png), linear-gradient(to bottom, #ee0313, #bc020f);
+      display: inline-block;
+      vertical-align: top;
+      margin: 0 5px 0 0;
+      width: 10px;
+      height: 10px;
       border: 1px solid #111;
-      border-radius: 2px; }
+      border-radius: 100%; }
     #player-stats div.adrenaline i {
-      background: linear-gradient(#090909, #222222);
-      border-radius: 2px;
-      box-shadow: inset 1px 1px 1px #111; }
+      background: url(noise-dark.png), linear-gradient(to bottom, #090909, #222222); }
     #player-stats div.adrenaline > *:last-child {
       margin-right: 0; }
   #player-stats ul.buffs {
     clear: both;
-    margin: 20px 0 0;
-    padding: 0;
+    margin: 0;
+    padding: 15px 0 0;
     list-style: none; }
     #player-stats ul.buffs li {
       display: block;
       margin: 0 0 10px;
       font-size: 0;
+      color: #aaa;
       font-size: 0.7rem;
-      color: #fafafa;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.8);
       vertical-align: baseline; }
       #player-stats ul.buffs li strong {
-        background: url(noise-dark.png), linear-gradient(to bottom, #970313, #7e0310);
+        background: url(noise-dark.png), linear-gradient(to bottom, #89020b, #570107);
         display: inline-block;
         width: 28px;
         height: 28px;
@@ -98,29 +94,117 @@ div.bar {
         line-height: 28px;
         text-align: center;
         text-shadow: none;
-        border: 1px solid #65020d;
         border-radius: 100%; }
     #player-stats ul.buffs li.weapons strong {
-      background: url(noise-dark.png), linear-gradient(to bottom, #970313, #7e0310);
-      border-color: #65020d; }
+      background: url(noise-dark.png), linear-gradient(to bottom, #89020b, #570107);
+      border-color: #bc020f; }
     #player-stats ul.buffs li.armor strong {
-      background: url(noise-dark.png), linear-gradient(to bottom, #00a6dc, #0093c3);
+      background: url(noise-dark.png), linear-gradient(to bottom, #005976, #003343);
       border-color: #0080a9; }
     #player-stats ul.buffs li.quen strong {
-      background: url(noise-dark.png), linear-gradient(to bottom, #178539, #136f30);
-      border-color: #0f5a26; }
+      background: url(noise-dark.png), linear-gradient(to bottom, #0d701f, #074313);
+      border-color: #129e2c; }
 
 #minimap {
+  opacity: .9;
   position: absolute;
   right: 20px;
   top: 20px;
-  width: 200px; }
+  width: 250px;
+  text-align: center; }
+  #minimap div.time,
+  #minimap div.distance-to-objective,
+  #minimap div.distance-to-marker {
+    background: rgba(17, 17, 17, 0.6);
+    display: inline-block;
+    margin: 0 0 10px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    text-align: center;
+    border-radius: 3px; }
+  #minimap div.distance-to-objective:before {
+    content: "✪ "; }
+  #minimap div.distance-to-marker:before {
+    content: "✓ "; }
+  #minimap div.map {
+    position: relative;
+    overflow: hidden;
+    opacity: .8;
+    margin: 0 0 10px;
+    border: 2px solid #222;
+    border-radius: 100%; }
+    #minimap div.map:before {
+      background: rgba(17, 17, 17, 0.6);
+      display: inline-block;
+      margin: 0 0 10px;
+      padding: 5px 10px;
+      font-size: 0.8rem;
+      text-align: center;
+      border-radius: 3px;
+      content: "N";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      margin-left: -15px; }
+    #minimap div.map img {
+      display: block;
+      width: 100%; }
+
+#active-quest {
+  display: none;
+  opacity: .8;
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 350px; }
+  #active-quest h2,
+  #active-quest p {
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1;
+    letter-spacing: -1px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.4); }
+  #active-quest p {
+    font-size: 2rem;
+    letter-spacing: 0;
+    font-weight: normal; }
 
 #quick-slots {
   position: absolute;
   left: 20px;
   bottom: 20px;
-  display: none; }
+  width: 120px;
+  height: 120px; }
+  #quick-slots ul {
+    margin: 0;
+    padding: 0;
+    list-style: none; }
+    #quick-slots ul li {
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 40px; }
+      #quick-slots ul li img {
+        display: block;
+        width: 100%;
+        height: 100%; }
+      #quick-slots ul li.item-1 {
+        left: 50%;
+        top: 0;
+        margin-left: -20px; }
+      #quick-slots ul li.item-2 {
+        left: 50%;
+        bottom: 0;
+        margin-left: -20px; }
+      #quick-slots ul li.sign {
+        left: 0;
+        top: 50%;
+        margin-top: -20px; }
+      #quick-slots ul li.util {
+        right: 0;
+        top: 50%;
+        margin-top: -20px; }
 
 #button-hints {
   position: absolute;
