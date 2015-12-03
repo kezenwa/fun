@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Slideshow</title>
+        <style>
+            body {
+                background: #fefefe;
+                width: 90%;
+                max-width: 960px;
+                margin: 2rem auto;
+                font: 1rem/1.4 Helvetica, Arial, sans-serif;
+                color: #111;
+            }
+        </style>
+        <link rel="stylesheet" href="slideshow.css">
+        <script>
+            document.documentElement.className += 'js';
+        </script>
+    </head>
+    <body>
+        <h1>Simple Slideshow</h1>
+        <div class="slideshow">
+            <!-- weird li/li indentation to avoid letter-spacing with inline-block elements (TODO: compress HTML before output to avoid this) -->
+            <ul>
+                <li>
+                    <img src="http://lorempixel.com/800/600/sports">
+                </li><li>
+                    <img src="http://lorempixel.com/800/600/abstract">
+                </li><li>
+                    <img src="http://lorempixel.com/800/600/food">
+                </li><li>
+                    <img src="http://lorempixel.com/800/600/animals">
+                </li><li>
+                    <img src="http://lorempixel.com/800/600/cats">
+                </li>
+            </ul>
+        </div>
+        <script src="slideshow.js"></script>
+        <script>
+            (function () {
+                var slideshows = document.querySelectorAll('.slideshow');
+
+                for (var i = 0; i < slideshows.length; i++) {
+                    new Slideshow(slideshows[i]);
+                }
+            })();
+        </script>
+    </body>
+</html>

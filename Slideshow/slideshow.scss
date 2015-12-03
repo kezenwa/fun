@@ -1,0 +1,96 @@
+.slideshow {
+    position: relative; // To position the navigation
+
+    // List of slides
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        white-space: nowrap; // Display all slides on one line
+        overflow: auto; // Hide slides outside
+
+        html.js & {
+            overflow: hidden;
+        }
+
+        // Magic :D
+        scroll-behavior: smooth;
+        scroll-snap-points-x: repeat(100%);
+        scroll-snap-type: mandatory;
+
+        // Each slide
+        li {
+            display: inline-block;
+            vertical-align: top;
+            width: 100%; // Change this to display more slides per page (50%, 25%, 20% for example)
+
+            img {
+                display: block; // Ignore whitespace
+                width: 100%; // Full width
+            }
+        }
+    }
+
+    // Prev/next buttons
+    .prev,
+    .next {
+        display: block;
+        width: 3rem;
+        height: 3rem;
+
+        position: absolute;
+        left: 4%; // Percent because it scales with device width :)
+        top: 50%;
+        margin-top: -1.5rem; // Center vertically (half of height)
+
+        color: white;
+        font-size: 1.5rem;
+        text-align: center;
+        line-height: 3rem; // Same as width/height to vertically center text/icon
+        text-decoration: none;
+
+        border: 2px solid white;
+        border-radius: 50%;
+
+        // Looks :P
+        transition: transform .1s ease-out;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    .next {
+        left: auto;
+        right: 4%;
+    }
+
+    // Bullets
+    .bullets {
+        position: absolute;
+        left: 0;
+        bottom: 2rem;
+        width: 100%;
+        text-align: center;
+
+        a {
+            background: rgba(255, 255, 255, .6);
+
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+
+            margin: 0 .5rem;
+
+            text-indent: -1000rem;
+            border-radius: 50%;
+
+            transition: background .1s ease-out;
+
+            &:hover,
+            &.active {
+                background: white;
+            }
+        }
+    }
+}
