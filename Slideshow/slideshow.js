@@ -68,6 +68,12 @@ var Slideshow = function (el) {
             self.gotoPage(clicked.getAttribute('href'));
         }
     });
+
+    //////////////////////////////////////
+    // Snap to nearest slide on scroll end
+    this.onScrollEnd(function () {
+        self.gotoPage(self.currPage());
+    });
 };
 
 /**
@@ -154,13 +160,6 @@ Slideshow.prototype.lastPage = function () {
 	var info = this.getInfo();
 
 	this.scroll(info.totalWidth - info.pageWidth);
-};
-
-/**
- * Snaps to nearest page (can be run if user scrolls slider manually)
- */
-Slideshow.prototype.snapToPage = function () {
-	this.gotoPage(this.currPage());
 };
 
 /**

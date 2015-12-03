@@ -9,8 +9,11 @@
         white-space: nowrap; // Display all slides on one line
         overflow: auto; // Hide slides outside
 
-        html.js & {
-            overflow: hidden;
+        // Hide scrollbar when JS is enabled in high res
+        @media (min-width: 600px) {
+            html.js & {
+                overflow: hidden;
+            }
         }
 
         // Magic :D
