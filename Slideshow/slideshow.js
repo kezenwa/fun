@@ -54,7 +54,7 @@ var Slideshow = function (el) {
 
     // After going to a page
     this.onScrollEnd(function () {
-        // self.gotoPage(self.currPage());
+        self.gotoPage(self.currPage());
 
         // And update bullet nav active class
         var currSelected = self.nav.querySelector('.active');

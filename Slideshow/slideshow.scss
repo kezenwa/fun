@@ -16,6 +16,9 @@
             }
         }
 
+        // Make iOS scrolling easier
+        -webkit-overflow-scrolling: touch;
+
         // Magic :D
         scroll-behavior: smooth;
         scroll-snap-points-x: repeat(100%);
