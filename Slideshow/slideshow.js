@@ -194,7 +194,7 @@ Slideshow.prototype.currPage = function () {
 	var info = this.getInfo();
 	var left = this.slideshow.scrollLeft;
 
-	return left ? Math.ceil(left / info.pageWidth) + 1 : 1;
+	return left ? Math.round(left / info.pageWidth) + 1 : 1;
 };
 
 /**
