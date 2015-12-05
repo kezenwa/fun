@@ -7,31 +7,15 @@ var Slideshow = function (el) {
     this.wrapper = el;
 	this.slideshow = el.getElementsByTagName('ul')[0];
 
-    /////////////////
-    // Create bullets
+    // Create bullet nav
     this.nav = document.createElement('nav');
     this.nav.className = 'bullets';
 
     this.generateBullets();
-
-    // Add nav to wrapper
     this.wrapper.appendChild(this.nav);
 
-    // Set active slide class
     this.nav.getElementsByTagName('a')[this.currPage() - 1].className = 'active';
 
-    // Update active slide class
-    this.onScrollEnd(function () {
-        var currSelected = self.nav.querySelector('.active');
-
-        if (currSelected) {
-            currSelected.className = '';
-        }
-
-        self.nav.getElementsByTagName('a')[self.currPage() - 1].className = 'active';
-    });
-
-    ///////////////////////////
     // Create prev/next buttons
     this.prev = document.createElement('a');
     this.next = document.createElement('a');
@@ -50,12 +34,10 @@ var Slideshow = function (el) {
     this.wrapper.appendChild(this.prev);
     this.wrapper.appendChild(this.next);
 
-    ///////////////
     // Click events
     this.wrapper.addEventListener('click', function (e) {
         var clicked = e.target;
 
-        // Prev
         if (clicked.className === 'prev') {
             e.preventDefault();
             self.prevPage();
@@ -70,16 +52,21 @@ var Slideshow = function (el) {
         }
     });
 
-    //////////////////////////////////////
-    // Snap to nearest slide on scroll end
+    // After going to a page
     this.onScrollEnd(function () {
-        self.gotoPage(self.currPage());
+        // self.gotoPage(self.currPage());
+
+        // And update bullet nav active class
+        var currSelected = self.nav.querySelector('.active');
+
+        if (currSelected) {
+            currSelected.className = '';
+        }
+
+        self.nav.getElementsByTagName('a')[self.currPage() - 1].className = 'active';
     });
 
-    ///////////////////////////
-    // Regenerate nav on resize
-    // (as number of pages may have changed)
-    // and snap to nearest page
+    // Regenerate nav on resize  (as number of pages may have changed) and snap to nearest page
     window.addEventListener('resize', function () {
         self.gotoPage(self.currPage());
         self.generateBullets();
@@ -127,12 +114,12 @@ Slideshow.prototype.getInfo = function () {
  * Scroll the slider (with or without JS animation depending on CSS support)
  */
 Slideshow.prototype.scroll = function (x, y) {
-	if (!('scrollBehavior' in document.body.style)) {
-		if (typeof createjs != 'undefined' && typeof createjs.Tween != 'undefined') {
-			createjs.Tween.get(this.slideshow).to({scrollLeft: x}, 200);
+	if (!('scrollBehavior' in document.body.style) && typeof smoothScroll != 'undefined') {
+		smoothScroll(x, 200, function () {
+            console.log('SCROLLED');
+        }, this.slideshow, 'Left');
 
-			return;
-		}
+		return;
 	}
 
 	this.slideshow.scrollLeft = x;
