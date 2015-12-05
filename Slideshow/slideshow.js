@@ -7,6 +7,30 @@ var Slideshow = function (el) {
     this.wrapper = el;
 	this.slideshow = el.getElementsByTagName('ul')[0];
 
+    /////////////////
+    // Create bullets
+    this.nav = document.createElement('nav');
+    this.nav.className = 'bullets';
+
+    this.generateBullets();
+
+    // Add nav to wrapper
+    this.wrapper.appendChild(this.nav);
+
+    // Set active slide class
+    this.nav.getElementsByTagName('a')[this.currPage() - 1].className = 'active';
+
+    // Update active slide class
+    this.onScrollEnd(function () {
+        var currSelected = self.nav.querySelector('.active');
+
+        if (currSelected) {
+            currSelected.className = '';
+        }
+
+        self.nav.getElementsByTagName('a')[self.currPage() - 1].className = 'active';
+    });
+
     ///////////////////////////
     // Create prev/next buttons
     this.prev = document.createElement('a');
@@ -25,29 +49,6 @@ var Slideshow = function (el) {
     // Add them to the wrapper
     this.wrapper.appendChild(this.prev);
     this.wrapper.appendChild(this.next);
-
-    /////////////////
-    // Create bullets
-    this.nav = document.createElement('nav');
-    this.nav.className = 'bullets';
-
-    var info = this.getInfo();
-
-    for (var i = 1; i <= info.numPages; i++) {
-        this.nav.innerHTML += '<a href="' + i + '">' + i + '</a>';
-    }
-
-    // Add nav to wrapper
-    this.wrapper.appendChild(this.nav);
-
-    // Set active slide class
-    this.nav.getElementsByTagName('a')[this.currPage() - 1].className = 'active';
-
-    // Update active slide class
-    this.onScrollEnd(function () {
-        self.nav.querySelector('.active').className = '';
-        self.nav.getElementsByTagName('a')[self.currPage() - 1].className = 'active';
-    });
 
     ///////////////
     // Click events
@@ -74,6 +75,30 @@ var Slideshow = function (el) {
     this.onScrollEnd(function () {
         self.gotoPage(self.currPage());
     });
+
+    ///////////////////////////
+    // Regenerate nav on resize
+    // (as number of pages may have changed)
+    // and snap to nearest page
+    window.addEventListener('resize', function () {
+        self.gotoPage(self.currPage());
+        self.generateBullets();
+
+        self.nav.getElementsByTagName('a')[self.currPage() - 1].className = 'active';
+    });
+};
+
+/**
+ * Generates the list of bullets
+ */
+Slideshow.prototype.generateBullets = function () {
+    var info = this.getInfo();
+
+    this.nav.innerHTML = '';
+
+    for (var i = 1; i <= info.numPages; i++) {
+        this.nav.innerHTML += '<a href="' + i + '">' + i + '</a>';
+    }
 };
 
 /**
@@ -85,15 +110,15 @@ Slideshow.prototype.getInfo = function () {
 	var numSlides	= slides.length;
 	var slideWidth	= slides[0].getBoundingClientRect().width; // All slides are assumed to be same width
 	var pageWidth	= this.slideshow.getBoundingClientRect().width;
-	var numPages	= 0;
 	var totalWidth	= numSlides * slideWidth;
+	var numPages	= Math.ceil(totalWidth / pageWidth);
 
 	return {
 		slides:		slides,
 		numSlides:	numSlides,
 		slideWidth:	slideWidth,
 		pageWidth:	pageWidth,
-		numPages:	totalWidth / pageWidth,
+		numPages:	numPages,
 		totalWidth:	totalWidth
 	};
 };
@@ -169,7 +194,7 @@ Slideshow.prototype.currPage = function () {
 	var info = this.getInfo();
 	var left = this.slideshow.scrollLeft;
 
-	return left ? Math.round(left / info.pageWidth) + 1 : 1;
+	return left ? Math.ceil(left / info.pageWidth) + 1 : 1;
 };
 
 /**
@@ -185,9 +210,9 @@ Slideshow.prototype.isFirstPage = function () {
  */
 Slideshow.prototype.isLastPage = function () {
 	var info = this.getInfo();
-	var left = this.slideshow.scrollLeft;
+	var currPage = this.currPage();
 
-	return left == info.totalWidth - info.pageWidth;
+	return currPage === info.numPages;
 };
 
 /**
@@ -201,6 +226,6 @@ Slideshow.prototype.onScrollEnd = function (cb) {
 			clearTimeout(timeout);
 		}
 
-		timeout = setTimeout(cb, 250);
+		timeout = setTimeout(cb, 100);
 	});
 };

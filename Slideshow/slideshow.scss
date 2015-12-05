@@ -51,6 +51,7 @@
         text-align: center;
         line-height: 3rem; // Same as width/height to vertically center text/icon
         text-decoration: none;
+        outline: 0;
 
         border: 2px solid white;
         border-radius: 50%;
@@ -86,6 +87,7 @@
             margin: 0 .5rem;
 
             text-indent: -1000rem;
+            outline: 0;
             border-radius: 50%;
 
             transition: background .1s ease-out;
