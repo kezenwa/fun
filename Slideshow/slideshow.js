@@ -14,6 +14,7 @@ var Slideshow = function (el) {
     this.generateBullets();
     this.wrapper.appendChild(this.nav);
 
+    // Set active class on current page
     this.nav.getElementsByTagName('a')[this.currPage() - 1].className = 'active';
 
     // Create prev/next buttons
@@ -54,6 +55,7 @@ var Slideshow = function (el) {
 
     // After going to a page
     this.onScrollEnd(function () {
+        // Snap to nearest page
         self.gotoPage(self.currPage());
 
         // And update bullet nav active class
@@ -115,9 +117,7 @@ Slideshow.prototype.getInfo = function () {
  */
 Slideshow.prototype.scroll = function (x, y) {
 	if (!('scrollBehavior' in document.body.style) && typeof smoothScroll != 'undefined') {
-		smoothScroll(x, 200, function () {
-            console.log('SCROLLED');
-        }, this.slideshow, 'Left');
+		smoothScroll(x, 200, function () {}, this.slideshow, 'Left');
 
 		return;
 	}
@@ -181,7 +181,7 @@ Slideshow.prototype.currPage = function () {
 	var info = this.getInfo();
 	var left = this.slideshow.scrollLeft;
 
-	return left ? Math.round(left / info.pageWidth) + 1 : 1;
+	return left ? Math.ceil(left / info.pageWidth) + 1 : 1;
 };
 
 /**
@@ -193,7 +193,6 @@ Slideshow.prototype.isFirstPage = function () {
 
 /**
  * Checks whether slider is at the very end
- * (currPage can still return the last page EVEN if the slider isn't exactly at the end)
  */
 Slideshow.prototype.isLastPage = function () {
 	var info = this.getInfo();
