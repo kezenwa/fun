@@ -81,13 +81,14 @@
 				<h2>My Projects</h2>
 				...
 			</section>
-			<section id="contact" data-camera-pos='{"from": {"x": 0, "y": 2.25, "z": 10, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": 0, "y": 20, "z": 10, "rx": 0, "ry": 0, "rz": 0}}'>
+			<section id="contact" data-camera-pos='{"from": {"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": 0, "y": 20, "z": 10, "rx": 0, "ry": 0, "rz": 0}}'>
 				<h2>Contact</h2>
 				...
 			</section>
 		</main>
 		<script src="ThreeJS.js"></script>
 		<script src="GLTFLoader.js"></script>
+		<script src="tween.umd.js"></script>
 		<script>
 			class Bg3d {
 				constructor (el, conf) {
@@ -103,7 +104,6 @@
 					this.init();
 					this.loadScene();
 					this.lights();
-					this.objects();
 				}
 
 				init () {
@@ -133,7 +133,7 @@
 				}
 
 				lights () {
-					this.ambLight = new THREE.AmbientLight(0xffffff, 0.5);
+					this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 					this.scene.add(this.ambLight);
 				}
 
@@ -158,16 +158,7 @@
 					});
 				}
 
-				objects () {
-
-				}
-
-				update () {
-					const delta = this.clock.getDelta();
-				}
-
 				render () {
-					this.update();
 					this.renderer.render(this.scene, this.camera);
 				}
 			}
@@ -175,6 +166,7 @@
 			window.bg = new Bg3d(document.getElementById('bg'));
 
 			function render () {
+				TWEEN.update();
 				window.bg.render();
 				requestAnimationFrame(render);
 			}
@@ -187,8 +179,8 @@
 						if (entry.isIntersecting) {
 							const pos = JSON.parse(entry.target.dataset.cameraPos);
 
-							window.bg.camera.position.set(pos.from.x, pos.from.y, pos.from.z);
-							window.bg.camera.rotation.set(pos.from.rx, pos.from.ry, pos.from.rz);
+							new TWEEN.Tween(window.bg.camera.position).to({x: pos.from.x, y: pos.from.y, z: pos.from.z}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
+							new TWEEN.Tween(window.bg.camera.rotation).to({x: pos.from.rx, y: pos.from.ry, z: pos.from.rz}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
 						}
 					}), {threshold: 0.25}
 				).observe(el);
