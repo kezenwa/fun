@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html class="loading">
 	<head>
 		<meta charset="utf8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,20 @@
 
 			html {
 				font-size: 100%;
+				scroll-snap-type: y mandatory;
+				scroll-behavior: smooth;
+			}
+
+			html.loading::before {
+				content: "Loading...";
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			html.loading * {
+				visibility: hidden;
 			}
 
 			body {
@@ -21,6 +35,8 @@
 			section {
 				padding: 3rem 5vw;
 				min-height: 100vh;
+				scroll-snap-align: start;
+				scroll-snap-stop: always;
 			}
 
 			figure {
@@ -58,10 +74,10 @@
 		<figure id="bg"></figure>
 		<main>
 			<section id="about" data-camera-pos='{"from": {"x": -4.975, "y": 1.12, "z": 0.55, "rx": 0, "ry": -0.4, "rz": 0}, "to": {"x": -4.975, "y": 1.12, "z": 0.65, "rx": 0, "ry": -0.4, "rz": 0}}'>
-				<h1>Hi!<br>I'm Andreas</h1>
+				<h1>Hi! I'm Andreas</h1>
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
 			</section>
-			<section id="projects" data-camera-pos='{"from": {"x": -3, "y": 2.5, "z": 5, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": -3, "y": 2.5, "z": 5, "rx": 0, "ry": 0, "rz": 0}}'>
+			<section id="projects" data-camera-pos='{"from": {"x": -2, "y": 3, "z": 5, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": -3, "y": 2.5, "z": 5, "rx": 0, "ry": 0, "rz": 0}}'>
 				<h2>My Projects</h2>
 				...
 			</section>
@@ -122,7 +138,6 @@
 				}
 
 				loadScene () {
-					document.documentElement.classList.add('loading-scene');
 					this.loader = new THREE.GLTFLoader();
 
 					this.loader.load(this.config.scene, glb => {
@@ -139,7 +154,7 @@
 						});
 
 						this.scene.add(glb.scene);
-						document.documentElement.classList.remove('loading-scene');
+						document.documentElement.classList.remove('loading');
 					});
 				}
 
@@ -175,7 +190,7 @@
 							window.bg.camera.position.set(pos.from.x, pos.from.y, pos.from.z);
 							window.bg.camera.rotation.set(pos.from.rx, pos.from.ry, pos.from.rz);
 						}
-					}), {threshold: 0.5}
+					}), {threshold: 0.25}
 				).observe(el);
 			});
 		</script>
