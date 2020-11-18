@@ -29,14 +29,7 @@
 
 			body {
 				margin: 0;
-				font: 1rem/1.6 Helvetica, sans-serif;
-			}
-
-			section {
-				padding: 3rem 5vw;
-				min-height: 100vh;
-				scroll-snap-align: start;
-				scroll-snap-stop: always;
+				font: 1rem/2 Helvetica, sans-serif;
 			}
 
 			figure {
@@ -47,13 +40,6 @@
 				bottom: 0;
 				z-index: -1;
 				margin: 0;
-			}
-
-			figure::before {
-				pointer-events: none;
-				display: block;
-				content: "";
-				padding-bottom: 56.25%;
 			}
 
 			figure canvas {
@@ -68,20 +54,55 @@
 				object-fit: cover;
 				object-position: center center;
 			}
+
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				font-size: 6rem;
+				line-height: 1.05;
+				margin: 0 0 1rem;
+			}
+
+			section {
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
+				flex-direction: column;
+				padding: 3rem 5vw;
+				min-height: 100vh;
+				scroll-snap-align: start;
+				scroll-snap-stop: always;
+			}
+
+			#about {
+				padding-right: 60%;
+			}
+
+			#projects {
+				padding-left: 50%;
+			}
+
+			#contact {
+				padding-left: 30%;
+				padding-right: 30%;
+			}
 		</style>
 	</head>
 	<body>
 		<figure id="bg"></figure>
 		<main>
-			<section id="about" data-camera-pos='{"from": {"x": -4.975, "y": 1.12, "z": 0.55, "rx": 0, "ry": -0.4, "rz": 0}, "to": {"x": -4.975, "y": 1.12, "z": 0.65, "rx": 0, "ry": -0.4, "rz": 0}}'>
+			<section id="about" data-camera-pos='{"x": -2, "y": 0.075, "z": 0.25, "rx": 0, "ry": 0, "rz": 0}'>
 				<h1>Hi! I'm Andreas</h1>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			</section>
-			<section id="projects" data-camera-pos='{"from": {"x": -2, "y": 3, "z": 5, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": -3, "y": 2.5, "z": 5, "rx": 0, "ry": 0, "rz": 0}}'>
+			<section id="projects" data-camera-pos='{"x": -2, "y": 3, "z": 5, "rx": 0, "ry": 0, "rz": 0}'>
 				<h2>My Projects</h2>
 				...
 			</section>
-			<section id="contact" data-camera-pos='{"from": {"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}, "to": {"x": 0, "y": 20, "z": 10, "rx": 0, "ry": 0, "rz": 0}}'>
+			<section id="contact" data-camera-pos='{"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}'>
 				<h2>Contact</h2>
 				...
 			</section>
@@ -98,7 +119,7 @@
 					this.config = Object.assign({
 						bg: 0x87ceeb,
 						fov: 50,
-						scene: 'scene.glb'
+						scene: 'new.glb'
 					}, conf);
 
 					this.init();
@@ -116,8 +137,9 @@
 					this.el.appendChild(this.renderer.domElement);
 
 					// Initial position
-					this.camera.position.set(-4.975, 1.12, 0.55);
-					this.camera.rotation.set(0, -0.4, 0);
+					const pos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
+					this.camera.position.set(pos.x, pos.y, pos.z);
+					this.camera.rotation.set(pos.rx, pos.ry, pos.rz);
 
 					// Enable shadows and tonemapping
 					this.renderer.shadowMap.enabled = true;
@@ -141,6 +163,8 @@
 					this.loader = new THREE.GLTFLoader();
 
 					this.loader.load(this.config.scene, glb => {
+						console.dir(glb);
+
 						// Cast shadows on all meshes
 						glb.scene.traverse(node => {
 							if (node.isMesh) {
@@ -179,8 +203,8 @@
 						if (entry.isIntersecting) {
 							const pos = JSON.parse(entry.target.dataset.cameraPos);
 
-							new TWEEN.Tween(window.bg.camera.position).to({x: pos.from.x, y: pos.from.y, z: pos.from.z}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
-							new TWEEN.Tween(window.bg.camera.rotation).to({x: pos.from.rx, y: pos.from.ry, z: pos.from.rz}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
+							new TWEEN.Tween(window.bg.camera.position).to({x: pos.x, y: pos.y, z: pos.z}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
+							new TWEEN.Tween(window.bg.camera.rotation).to({x: pos.rx, y: pos.ry, z: pos.rz}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
 						}
 					}), {threshold: 0.25}
 				).observe(el);
