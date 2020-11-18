@@ -114,7 +114,6 @@
 			class Bg3d {
 				constructor (el, conf) {
 					this.clock = new THREE.Clock();
-					this.mousePos = {x: window.innerWidth / 2, y: window.innerHeight / 2};
 
 					this.el = el;
 					this.config = Object.assign({
@@ -127,6 +126,8 @@
 
 					this.init();
 					this.cameraPos();
+					this.scrollCameraPos();
+					this.mousemoveCameraPos();
 					this.loadScene();
 					this.lights();
 				}
@@ -140,12 +141,10 @@
 					this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 					this.el.appendChild(this.renderer.domElement);
 
-					// Enable shadows and tonemapping
 					this.renderer.shadowMap.enabled = true;
 					this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 					this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-					// Resize
 					window.addEventListener('resize', e => {
 						this.camera.aspect = this.el.clientWidth / this.el.clientHeight;
 						this.camera.updateProjectionMatrix();
@@ -155,61 +154,45 @@
 
 				cameraPos () {
 					// Set initial position
-					this.setCameraPos(JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos));
+					const initialPos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
 
+					this.camera.position.set(initialPos.x, initialPos.y, initialPos.z);
+					this.camera.rotation.set(initialPos.rx, initialPos.ry, initialPos.rz);
+				}
+
+				scrollCameraPos () {
 					// Change camera position when entering camera-pos elements
 					document.querySelectorAll('[data-camera-pos]').forEach(el => {
-						new IntersectionObserver(
-							entries => entries.forEach(entry => {
-								if (entry.isIntersecting) {
-									const pos = JSON.parse(entry.target.dataset.cameraPos);
+						new IntersectionObserver(entries => entries.forEach(entry => {
+							if (entry.isIntersecting) {
+								const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
-									this.currentCameraPos = {x: pos.x, y: pos.y, z: pos.z};
-
-									new TWEEN.Tween(this.camera.position).to({
-										x: pos.x,
-										y: pos.y,
-										z: pos.z
-									}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-
-									new TWEEN.Tween(this.camera.rotation).to({
-										x: pos.rx,
-										y: pos.ry,
-										z: pos.rz
-									}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-								}
-							}), {threshold: 0.25}
-						).observe(el);
+								new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+								new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+								new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+							}
+						}), {threshold: 0.25}).observe(el);
 					});
+				}
 
-					// Move with mouse
+				mousemoveCameraPos () {
+					// Move scene on mouse move
 					document.body.addEventListener('mousemove', e => {
-						this.mousePos = {x: e.clientX, y: e.clientY};
+						const mousemoveMax = this.camera.position.z / 50;
+						const halfW = window.innerWidth / 2;
+						const halfH = window.innerHeight / 2;
+						const x = ((e.clientX - halfW) / halfW) * mousemoveMax;
+						const y = ((e.clientY - halfH) / halfH) * mousemoveMax;
 
-						const mousePan = this.calcMousePan();
+						// this.scene.position.x = -x;
+						// this.scene.position.y = y;
 
-						this.camera.position.x = this.currentCameraPos.x + mousePan.x;
-						this.camera.position.y = this.currentCameraPos.y + mousePan.y;
+						new TWEEN.Tween(this.scene.position).to({x: -x, y: y}, 500).easing(this.config.easing).start();
 					});
-				}
-
-				calcMousePan () {
-					const halfW = window.innerWidth / 2;
-					const halfH = window.innerHeight / 2;
-					const x = ((this.mousePos.x - halfW) / halfW) * this.currentCameraPos.z / 50;
-					const y = -((this.mousePos.y - halfH) / halfH) * this.currentCameraPos.z / 50;
-
-					return {x: x, y: y};
-				}
-
-				setCameraPos (pos) {
-					this.currentCameraPos = {x: pos.x, y: pos.y, z: pos.z};
-					this.camera.position.set(pos.x, pos.y, pos.z);
-					this.camera.rotation.set(pos.rx, pos.ry, pos.rz);
 				}
 
 				lights () {
-					this.ambLight = new THREE.AmbientLight(0x00ff00, 1);
+					this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 					this.scene.add(this.ambLight);
 				}
 
@@ -235,7 +218,13 @@
 					});
 				}
 
+				update () {
+					// TODO: Animate elements in the scene
+				}
+
 				render () {
+					this.update();
+					TWEEN.update();
 					this.renderer.render(this.scene, this.camera);
 				}
 			}
@@ -244,7 +233,6 @@
 			window.bg = new Bg3d(document.getElementById('bg'));
 
 			function render () {
-				TWEEN.update();
 				window.bg.render();
 				requestAnimationFrame(render);
 			}
