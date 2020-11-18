@@ -99,7 +99,7 @@
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			</section>
 			<section id="projects" data-camera-pos='{"x": -2, "y": 3, "z": 5, "rx": 0, "ry": 0, "rz": 0}'>
-				<h2>My Projects</h2>
+				<h2>Projects</h2>
 				...
 			</section>
 			<section id="contact" data-camera-pos='{"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}'>
@@ -114,15 +114,19 @@
 			class Bg3d {
 				constructor (el, conf) {
 					this.clock = new THREE.Clock();
+					this.mousePos = {x: window.innerWidth / 2, y: window.innerHeight / 2};
 
 					this.el = el;
 					this.config = Object.assign({
 						bg: 0x87ceeb,
 						fov: 50,
-						scene: 'new.glb'
+						scene: 'new.glb',
+						easing: TWEEN.Easing.Quadratic.InOut,
+						cameraTransitionDuration: 500
 					}, conf);
 
 					this.init();
+					this.cameraPos();
 					this.loadScene();
 					this.lights();
 				}
@@ -135,11 +139,6 @@
 
 					this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 					this.el.appendChild(this.renderer.domElement);
-
-					// Initial position
-					const pos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
-					this.camera.position.set(pos.x, pos.y, pos.z);
-					this.camera.rotation.set(pos.rx, pos.ry, pos.rz);
 
 					// Enable shadows and tonemapping
 					this.renderer.shadowMap.enabled = true;
@@ -154,8 +153,63 @@
 					});
 				}
 
+				cameraPos () {
+					// Set initial position
+					this.setCameraPos(JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos));
+
+					// Change camera position when entering camera-pos elements
+					document.querySelectorAll('[data-camera-pos]').forEach(el => {
+						new IntersectionObserver(
+							entries => entries.forEach(entry => {
+								if (entry.isIntersecting) {
+									const pos = JSON.parse(entry.target.dataset.cameraPos);
+
+									this.currentCameraPos = {x: pos.x, y: pos.y, z: pos.z};
+
+									new TWEEN.Tween(this.camera.position).to({
+										x: pos.x,
+										y: pos.y,
+										z: pos.z
+									}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+
+									new TWEEN.Tween(this.camera.rotation).to({
+										x: pos.rx,
+										y: pos.ry,
+										z: pos.rz
+									}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+								}
+							}), {threshold: 0.25}
+						).observe(el);
+					});
+
+					// Move with mouse
+					document.body.addEventListener('mousemove', e => {
+						this.mousePos = {x: e.clientX, y: e.clientY};
+
+						const mousePan = this.calcMousePan();
+
+						this.camera.position.x = this.currentCameraPos.x + mousePan.x;
+						this.camera.position.y = this.currentCameraPos.y + mousePan.y;
+					});
+				}
+
+				calcMousePan () {
+					const halfW = window.innerWidth / 2;
+					const halfH = window.innerHeight / 2;
+					const x = ((this.mousePos.x - halfW) / halfW) * this.currentCameraPos.z / 50;
+					const y = -((this.mousePos.y - halfH) / halfH) * this.currentCameraPos.z / 50;
+
+					return {x: x, y: y};
+				}
+
+				setCameraPos (pos) {
+					this.currentCameraPos = {x: pos.x, y: pos.y, z: pos.z};
+					this.camera.position.set(pos.x, pos.y, pos.z);
+					this.camera.rotation.set(pos.rx, pos.ry, pos.rz);
+				}
+
 				lights () {
-					this.ambLight = new THREE.AmbientLight(0xffffff, 1);
+					this.ambLight = new THREE.AmbientLight(0x00ff00, 1);
 					this.scene.add(this.ambLight);
 				}
 
@@ -163,14 +217,13 @@
 					this.loader = new THREE.GLTFLoader();
 
 					this.loader.load(this.config.scene, glb => {
-						console.dir(glb);
-
 						// Cast shadows on all meshes
 						glb.scene.traverse(node => {
 							if (node.isMesh) {
 								node.castShadow = true;
 								node.receiveShadow = true;
 
+								// And do this...? Anisotropic Filtering I guess?
 								if (node.material.map) {
 									node.material.map.anisotropy = 16;
 								}
@@ -187,6 +240,7 @@
 				}
 			}
 
+			// Render
 			window.bg = new Bg3d(document.getElementById('bg'));
 
 			function render () {
@@ -196,19 +250,6 @@
 			}
 
 			render();
-
-			document.querySelectorAll('[data-camera-pos]').forEach(el => {
-				new IntersectionObserver(
-					entries => entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							const pos = JSON.parse(entry.target.dataset.cameraPos);
-
-							new TWEEN.Tween(window.bg.camera.position).to({x: pos.x, y: pos.y, z: pos.z}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
-							new TWEEN.Tween(window.bg.camera.rotation).to({x: pos.rx, y: pos.ry, z: pos.rz}, 500).easing(TWEEN.Easing.Quadratic.InOut).start();
-						}
-					}), {threshold: 0.25}
-				).observe(el);
-			});
 		</script>
 	</body>
 </html>
