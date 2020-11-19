@@ -46,6 +46,7 @@
 				font: 8rem/0.9 Raleway, serif;
 				letter-spacing: -0.025em;
 				margin: 0 0 1rem;
+				max-width: 36rem;
 			}
 
 			section {
@@ -84,6 +85,23 @@
 				box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.2);
 			}
 
+			.dialog {
+				position: fixed;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				padding: 2rem;
+				background: white;
+				box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.2);
+				pointer-events: none;
+				opacity: 0;
+			}
+
+			.dialog:target {
+				opacity: 1;
+				pointer-events: all;
+			}
+
 			#bg {
 				position: fixed;
 				left: 0;
@@ -112,7 +130,12 @@
 				padding-right: 55%;
 			}
 
-			#projects {
+			#work {
+				padding-left: 30%;
+				padding-right: 0;
+			}
+
+			#play {
 				padding-left: 30%;
 				padding-right: 0;
 			}
@@ -135,14 +158,31 @@
 				transform: rotateX(90deg);
 				transform-origin: 50% bottom;
 				opacity: 0;
-				transition: transform 1s ease, opacity 0.25s ease;
-				transition-delay: calc(0.05s * var(--char-index) + 0.5s);
 			}
 
 			.in-view h1.splitting .char,
 			.in-view h2.splitting .char {
 				transform: rotateX(0);
 				opacity: 1;
+				transition: transform 1s ease, opacity 0.25s ease;
+				transition-delay: calc(0.05s * var(--char-index) + 0.5s);
+			}
+
+			p.splitting {
+				perspective: 300px;
+			}
+
+			p.splitting .word {
+				transform: translateX(3rem);
+				transform-origin: left 50%;
+				opacity: 0;
+			}
+
+			.in-view p.splitting .word {
+				transform: translateX(0);
+				opacity: 1;
+				transition: transform 1s ease, opacity 0.5s ease;
+				transition-delay: calc(0.05s * (var(--line-index)) + 1.75s);
 			}
 		</style>
 	</head>
@@ -154,18 +194,41 @@
 
 				<h1>Hi! I'm Andreas</h1>
 
-				<p>I'm a self taught computer nerd from the icy cold northern parts of Sweden.</p>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 
 				<ul>
-					<li><a href="https://github.com/powerbuoy/">GitHub</a></li>
-					<li><a href="http://stackoverflow.com/users/1074594/powerbuoy">StackOverflow</a></li>
+					<li><a href="https://github.com/powerbuoy/" target="_blank">GitHub</a></li>
+					<li><a href="https://stackoverflow.com/users/1074594/powerbuoy" target="_blank">StackOverflow</a></li>
 				</ul>
 
 			</section>
 
-			<section id="projects" data-camera-pos='{"x": 0.0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
+			<section id="work" data-camera-pos='{"x": 0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
 
-				<h2>Projects</h2>
+				<h2>Work</h2>
+
+				<div class="slide">
+					<article class="card"><a href="#work-1">Moar</a></article>
+					<article class="card"><a href="#work-2">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+				</div>
+
+				<!-- <div id="work-1" class="dialog" data-camera-pos='{"x": 0, "y": 0, "z": 0}'>
+					<h3>Work 1</h3>
+				</div>
+
+				<div id="work-2" class="dialog" data-camera-pos='{"x": 0, "y": 0, "z": 0}'>
+					<h3>Work 1</h3>
+				</div> -->
+
+			</section>
+
+			<section id="play" data-camera-pos='{"x": 5, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>Play</h2>
 
 				<div class="slide">
 					<article class="card"><a href="#">Moar</a></article>
@@ -178,7 +241,7 @@
 
 			</section>
 
-			<section id="contact" data-camera-pos='{"x": 5, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
+			<section id="contact" data-camera-pos='{"x": 10, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
 
 				<h2>Contact</h2>
 
@@ -219,7 +282,7 @@
 					this.config = Object.assign({
 						fov: 45,
 						scene: 'new.glb',
-						easing: TWEEN.Easing.Quadratic.InOut,
+						easing: TWEEN.Easing.Sinusoidal.InOut,
 						cameraTransitionDuration: 750,
 						mouseTransitionDuration: 1500
 					}, conf);
@@ -262,13 +325,14 @@
 
 				// Change camera position when user scrolls a camera-pos element into view
 				scrollCameraPos () {
-					// Change camera position when entering camera-pos elements
 					document.querySelectorAll('[data-camera-pos]').forEach(el => {
 						new IntersectionObserver(entries => entries.forEach(entry => {
 							if (entry.isIntersecting) {
 								entry.target.classList.add('in-view');
 
 								// TODO: Tailor made transitions for every scene... (move xy first then z etc) (can't store positions in dataset, will require custom code for every transition and also depending on from which scene to whcih scene...)
+								// ALSO: Custom positions in portrait mode
+								// PLUS: Take mousepos into account - don't reset scene position to 0
 								const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
 								new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
@@ -291,12 +355,10 @@
 						const x = ((e.clientX - halfW) / halfW) * mousemoveMax;
 						const y = ((e.clientY - halfH) / halfH) * mousemoveMax;
 
-						// TODO: Performance impact of adding tween every mousemove?!
 						this.scene.position.x = -x;
 						this.scene.position.y = y;
 
-						console.log([x, y]);
-
+						// TODO: Performance impact of adding tween every mousemove?!
 						// new TWEEN.Tween(this.scene.position).to({x: -x, y: y}, this.config.mouseTransitionDuration).easing(this.config.easing).start();
 					});
 				}
