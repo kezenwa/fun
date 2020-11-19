@@ -109,7 +109,7 @@
 			}
 
 			#about {
-				padding-right: 60%;
+				padding-right: 55%;
 			}
 
 			#projects {
@@ -119,6 +119,30 @@
 
 			#contact {
 				padding-left: 25%;
+			}
+
+			#end {
+				padding-left: 50%;
+			}
+
+			h1.splitting,
+			h2.splitting {
+				perspective: 300px;
+			}
+
+			h1.splitting .char,
+			h2.splitting .char {
+				transform: rotateX(90deg);
+				transform-origin: 50% bottom;
+				opacity: 0;
+				transition: transform 1s ease, opacity 0.25s ease;
+				transition-delay: calc(0.05s * var(--char-index) + 0.5s);
+			}
+
+			.in-view h1.splitting .char,
+			.in-view h2.splitting .char {
+				transform: rotateX(0);
+				opacity: 1;
 			}
 		</style>
 	</head>
@@ -140,7 +164,9 @@
 			</section>
 
 			<section id="projects" data-camera-pos='{"x": 0.0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
+
 				<h2>Projects</h2>
+
 				<div class="slide">
 					<article class="card"><a href="#">Moar</a></article>
 					<article class="card"><a href="#">Moar</a></article>
@@ -149,12 +175,25 @@
 					<article class="card"><a href="#">Moar</a></article>
 					<article class="card"><a href="#">Moar</a></article>
 				</div>
+
 			</section>
+
 			<section id="contact" data-camera-pos='{"x": 5, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
+
 				<h2>Contact</h2>
+
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
 			</section>
+
+			<section id="end" data-camera-pos='{"x": 30, "y": 3, "z": 60, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>This is the End</h2>
+
+			</section>
+
 		</main>
+
 		<script src="ThreeJS.js"></script>
 		<script src="GLTFLoader.js"></script>
 		<script src="tween.umd.js"></script>
