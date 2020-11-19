@@ -141,12 +141,12 @@
 			<section id="projects" data-camera-pos='{"x": 0.0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
 				<h2>Projects</h2>
 				<div class="slide">
-					<article class="card"></article>
-					<article class="card"></article>
-					<article class="card"></article>
-					<article class="card"></article>
-					<article class="card"></article>
-					<article class="card"></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
+					<article class="card"><a href="#">Moar</a></article>
 				</div>
 			</section>
 			<section id="contact" data-camera-pos='{"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}'>
@@ -164,7 +164,7 @@
 
 					this.el = el;
 					this.config = Object.assign({
-						fov: 50,
+						fov: 45,
 						scene: 'new.glb',
 						easing: TWEEN.Easing.Quadratic.InOut,
 						cameraTransitionDuration: 1000,
@@ -172,13 +172,14 @@
 					}, conf);
 
 					this.init();
-					this.cameraPos();
+					this.initialCameraPos();
 					this.scrollCameraPos();
 					this.mousemoveCameraPos();
 					this.loadScene();
 					this.lights();
 				}
 
+				// Create scene, renderer etc
 				init () {
 					this.scene = new THREE.Scene();
 					this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
@@ -198,14 +199,15 @@
 					});
 				}
 
-				cameraPos () {
-					// Set initial position
+				// Set initial camera position
+				initialCameraPos () {
 					const initialPos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
 
 					this.camera.position.set(initialPos.x, initialPos.y, initialPos.z);
 					this.camera.rotation.set(initialPos.rx, initialPos.ry, initialPos.rz);
 				}
 
+				// Change camera position when user scrolls a camera-pos element into view
 				scrollCameraPos () {
 					// Change camera position when entering camera-pos elements
 					document.querySelectorAll('[data-camera-pos]').forEach(el => {
@@ -213,6 +215,7 @@
 							if (entry.isIntersecting) {
 								entry.target.classList.add('in-view');
 
+								// TODO: Tailor made transitions for every scene... (move xy first then z etc) (can't store positions in dataset, will require custom code for every transition and also depending on from which scene to whcih scene...)
 								const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
 								new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
@@ -226,8 +229,8 @@
 					});
 				}
 
+				// Move camera (scene actually) on mousemove
 				mousemoveCameraPos () {
-					// Move scene on mouse move
 					document.body.addEventListener('mousemove', e => {
 						const mousemoveMax = this.camera.position.z / 50;
 						const halfW = window.innerWidth / 2;
@@ -240,11 +243,13 @@
 					});
 				}
 
+				// Add lights (TODO: How come Blender lights in the GLB don't work!?)
 				lights () {
 					this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 					this.scene.add(this.ambLight);
 				}
 
+				// Load scene
 				loadScene () {
 					this.loader = new THREE.GLTFLoader();
 
@@ -267,10 +272,13 @@
 					});
 				}
 
+				// Update animations
 				update () {
 					// TODO: Animate elements in the scene
+					const delta = this.clock.getDelta();
 				}
 
+				// Render
 				render () {
 					this.update();
 					TWEEN.update();
