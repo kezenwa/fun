@@ -10,6 +10,8 @@
 			}
 
 			html {
+				background: linear-gradient(to bottom, #4375bb, #bfd7e8) no-repeat;
+				background-attachment: fixed;
 				font-size: 100%;
 				scroll-snap-type: y mandatory;
 				scroll-behavior: smooth;
@@ -38,8 +40,9 @@
 				top: 0;
 				right: 0;
 				bottom: 0;
-				z-index: -1;
+				z-index: 1;
 				margin: 0;
+				pointer-events: none;
 			}
 
 			figure canvas {
@@ -77,17 +80,54 @@
 				scroll-snap-stop: always;
 			}
 
+			section > * {
+				transform: translateY(2rem);
+				opacity: 0;
+				transition: transform 1s ease, opacity 1s ease;
+			}
+
+			section > :nth-child(1) {
+				transition-delay: 1s;
+			}
+
+			section > :nth-child(2) {
+				transition-delay: 1.25s;
+			}
+
+			section.in-view > * {
+				transform: translateY(0);
+				opacity: 1;
+			}
+
 			#about {
 				padding-right: 60%;
 			}
 
 			#projects {
-				padding-left: 50%;
+				padding-left: 30%;
+				padding-right: 0;
 			}
 
 			#contact {
-				padding-left: 30%;
-				padding-right: 30%;
+
+			}
+
+			.slide {
+				max-width: 100%;
+				white-space: nowrap;
+				overflow-x: auto;
+				scroll-snap-type: x mandatory;
+				scroll-behavior: smooth;
+			}
+
+			.card {
+				display: inline-block;
+				background: white;
+				min-height: 24rem;
+				margin-right: 2rem;
+				width: 18rem;
+				scroll-snap-align: start;
+				scroll-snap-stop: always;
 			}
 		</style>
 	</head>
@@ -98,9 +138,16 @@
 				<h1>Hi! I'm Andreas</h1>
 				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
 			</section>
-			<section id="projects" data-camera-pos='{"x": -2, "y": 3, "z": 5, "rx": 0, "ry": 0, "rz": 0}'>
+			<section id="projects" data-camera-pos='{"x": 0.0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
 				<h2>Projects</h2>
-				...
+				<div class="slide">
+					<article class="card"></article>
+					<article class="card"></article>
+					<article class="card"></article>
+					<article class="card"></article>
+					<article class="card"></article>
+					<article class="card"></article>
+				</div>
 			</section>
 			<section id="contact" data-camera-pos='{"x": 0, "y": 2.75, "z": 12.5, "rx": 0, "ry": 0, "rz": 0}'>
 				<h2>Contact</h2>
@@ -117,11 +164,11 @@
 
 					this.el = el;
 					this.config = Object.assign({
-						bg: 0x87ceeb,
 						fov: 50,
 						scene: 'new.glb',
 						easing: TWEEN.Easing.Quadratic.InOut,
-						cameraTransitionDuration: 500
+						cameraTransitionDuration: 1000,
+						mouseTransitionDuration: 500
 					}, conf);
 
 					this.init();
@@ -134,9 +181,8 @@
 
 				init () {
 					this.scene = new THREE.Scene();
-					this.renderer = new THREE.WebGLRenderer({antialias: true});
+					this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
 					this.camera = new THREE.PerspectiveCamera(this.config.fov, this.el.clientWidth / this.el.clientHeight, 0.01, 5000);
-					this.scene.background = new THREE.Color(this.config.bg);
 
 					this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 					this.el.appendChild(this.renderer.domElement);
@@ -165,11 +211,16 @@
 					document.querySelectorAll('[data-camera-pos]').forEach(el => {
 						new IntersectionObserver(entries => entries.forEach(entry => {
 							if (entry.isIntersecting) {
+								entry.target.classList.add('in-view');
+
 								const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
 								new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
 								new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
 								new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+							}
+							else {
+								entry.target.classList.remove('in-view');
 							}
 						}), {threshold: 0.25}).observe(el);
 					});
@@ -184,10 +235,8 @@
 						const x = ((e.clientX - halfW) / halfW) * mousemoveMax;
 						const y = ((e.clientY - halfH) / halfH) * mousemoveMax;
 
-						// this.scene.position.x = -x;
-						// this.scene.position.y = y;
-
-						new TWEEN.Tween(this.scene.position).to({x: -x, y: y}, 500).easing(this.config.easing).start();
+						// TODO: Performance impact of adding tween every mousemove?!
+						new TWEEN.Tween(this.scene.position).to({x: -x, y: y}, this.config.mouseTransitionDuration).easing(this.config.easing).start();
 					});
 				}
 
