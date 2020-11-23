@@ -77,7 +77,7 @@
 					this.config = Object.assign({
 						fov: 50,
 						bg: 0xffffff,
-						scene: 'assets/new_project__4/scene.gltf' // 'assets/the_botanists_greenhouse/scene.gltf' // 'assets/beach_house/scene.gltf'
+						scene: 'new.glb' // 'assets/the_botanists_greenhouse/scene.gltf' // 'assets/beach_house/scene.gltf'
 					}, conf);
 
 					// Set scene
@@ -115,9 +115,9 @@
 
 					this.spotLight.position.set(-50, 50, 50);
 					this.spotLight.castShadow = true;
-					this.spotLight.shadow.bias = -0.0001;
-					this.spotLight.shadow.mapSize.width = 4096;
-					this.spotLight.shadow.mapSize.height = 4096;
+					// this.spotLight.shadow.bias = -0.0001;
+					this.spotLight.shadow.mapSize.width = 512;
+					this.spotLight.shadow.mapSize.height = 512;
 					this.spotLight.shadow.camera.near = 1;
 					this.spotLight.shadow.camera.far = 1000;
 

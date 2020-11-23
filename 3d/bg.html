@@ -108,7 +108,7 @@
 				top: 0;
 				right: 0;
 				bottom: 0;
-				z-index: 1;
+				z-index: -1;
 				margin: 0;
 				pointer-events: none;
 			}
@@ -190,7 +190,7 @@
 		<figure id="bg"></figure>
 		<main>
 
-			<section id="about" data-camera-pos='{"x": -2, "y": 0.075, "z": 0.25, "rx": 0, "ry": 0, "rz": 0}'>
+			<section id="about" data-camera-pos='{"x": -4.75, "y": 1.625, "z": 0.25, "rx": 0, "ry": 0, "rz": 0}'>
 
 				<h1>Hi! I'm Andreas</h1>
 
@@ -203,7 +203,7 @@
 
 			</section>
 
-			<section id="work" data-camera-pos='{"x": 0, "y": 1, "z": 2, "rx": 0, "ry": 0, "rz": 0}'>
+			<section id="work" data-camera-pos='{"x": -1, "y": 3, "z": 4, "rx": 0, "ry": 0, "rz": 0}'>
 
 				<h2>Work</h2>
 
@@ -215,14 +215,6 @@
 					<article class="card"><a href="#">Moar</a></article>
 					<article class="card"><a href="#">Moar</a></article>
 				</div>
-
-				<!-- <div id="work-1" class="dialog" data-camera-pos='{"x": 0, "y": 0, "z": 0}'>
-					<h3>Work 1</h3>
-				</div>
-
-				<div id="work-2" class="dialog" data-camera-pos='{"x": 0, "y": 0, "z": 0}'>
-					<h3>Work 1</h3>
-				</div> -->
 
 			</section>
 
@@ -253,6 +245,10 @@
 
 				<h2>This is the End</h2>
 
+				<p>This site was built using Blender, ThreeJS, TweenJS, SplittingJS and the code you see if you "view source".</p>
+
+				<a href="#about">Go back to the top</a>
+
 			</section>
 
 		</main>
@@ -261,6 +257,7 @@
 		<script src="GLTFLoader.js"></script>
 		<script src="tween.umd.js"></script>
 		<script src="splitting.js"></script>
+		<script src="OrbitControls.js"></script>
 		<script>
 			// Splitting
 			Splitting({
@@ -282,17 +279,24 @@
 					this.config = Object.assign({
 						fov: 45,
 						scene: 'new.glb',
-						easing: TWEEN.Easing.Sinusoidal.InOut,
+						easing: TWEEN.Easing.Quadratic.InOut,
 						cameraTransitionDuration: 750,
-						mouseTransitionDuration: 1500
+						mouseTransitionDuration: 1500,
+						dev: false
 					}, conf);
 
 					this.init();
-					this.initialCameraPos();
-					this.scrollCameraPos();
-					this.mousemoveCameraPos();
 					this.loadScene();
 					this.lights();
+
+					if (this.config.dev) {
+						this.initControls();
+					}
+					else {
+						this.initialCameraPos();
+						this.scrollCameraPos();
+						this.mousemoveCameraPos();
+					}
 				}
 
 				// Create scene, renderer etc
@@ -304,15 +308,28 @@
 					this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 					this.el.appendChild(this.renderer.domElement);
 
+					// Shadows
 					this.renderer.shadowMap.enabled = true;
 					this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 					this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
+					// Resize
 					window.addEventListener('resize', e => {
 						this.camera.aspect = this.el.clientWidth / this.el.clientHeight;
 						this.camera.updateProjectionMatrix();
 						this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 					});
+				}
+
+				initControls () {
+					this.camera.position.set(-10, 5, 45);
+					this.scene.add(new THREE.AxesHelper(500));
+
+					this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+					this.controls.autoRotate = true;
+					this.controls.enableDamping = true;
+					this.controls.dampingFactor = 0.05;
+					this.controls.rotateSpeed = 1;
 				}
 
 				// Set initial camera position
@@ -367,6 +384,22 @@
 				lights () {
 					this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 					this.scene.add(this.ambLight);
+
+					this.spotLight = new THREE.SpotLight(0xffffff, 4);
+
+					this.spotLight.position.set(-50, 50, 50);
+					this.spotLight.castShadow = true;
+					this.spotLight.shadow.bias = -0.0001;
+					this.spotLight.shadow.mapSize.width = 512 * 8;
+					this.spotLight.shadow.mapSize.height = 512 * 8;
+					this.spotLight.shadow.camera.near = 1;
+					this.spotLight.shadow.camera.far = 1000;
+
+					this.scene.add(this.spotLight);
+
+					if (this.config.dev) {
+						this.scene.add(new THREE.SpotLightHelper(this.spotLight));
+					}
 				}
 
 				// Load scene
@@ -394,19 +427,28 @@
 
 				// Update animations
 				update () {
-					// TODO: Animate elements in the scene
 					const delta = this.clock.getDelta();
+					const swing = this.scene.getObjectByName('Swing');
+
+					if (this.controls && this.controls.update) {
+						this.controls.update();
+					}
+
+					TWEEN.update();
+
+					if (swing) {
+						swing.rotation.x = Math.sin(this.clock.getElapsedTime()) / 5;
+					}
 				}
 
 				// Render
 				render () {
 					this.update();
-					TWEEN.update();
 					this.renderer.render(this.scene, this.camera);
 				}
 			}
 
-			// Render
+			// Kick off
 			window.bg = new Bg3d(document.getElementById('bg'));
 
 			function render () {
