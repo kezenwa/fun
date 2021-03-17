@@ -58,8 +58,8 @@ class Bg3d {
 	///////////
 	// Controls
 	controls () {
-		this.camera.position.set(-10, 5, 45);
-		this.scene.add(new THREE.AxesHelper(500));
+		this.camera.position.set(0, 1, 2);
+		// this.scene.add(new THREE.AxesHelper(500));
 
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		this.controls.autoRotate = true;
@@ -100,7 +100,7 @@ class Bg3d {
 
 		this.spotLight = new THREE.SpotLight(0xffffff, 4);
 
-		this.spotLight.position.set(-50, 50, 50);
+		this.spotLight.position.set(-10, 10, 10);
 		this.spotLight.castShadow = true;
 		this.spotLight.shadow.bias = -0.0001;
 		this.spotLight.shadow.mapSize.width = 512 * 8;
@@ -111,7 +111,7 @@ class Bg3d {
 		this.scene.add(this.spotLight);
 
 		if (this.config.dev) {
-			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
+			// this.scene.add(new THREE.SpotLightHelper(this.spotLight));
 		}
 	}
 

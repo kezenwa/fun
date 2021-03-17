@@ -1,15 +1,17 @@
 /* Config */
 :root {
+	--body-bg: #020024 radial-gradient(circle farthest-corner at center top,#00d4ff,#020024 100%) no-repeat 50% 0;
 	--spacing-medium: 1.25rem;
 }
 
 /* Normalize */
 html {
-	background: #f90;
+	background: var(--body-bg);
 	font-size: 100%;
 }
 
 body {
+	min-height: 100vh;
 	margin: 0;
 	font: 1rem / 1.6 Helvetica, sans-serif;
 }
@@ -27,7 +29,7 @@ h2 {
 	top: 0;
 	right: 0;
 	bottom: 0;
-	z-index: -1;
+	z-index: 1;
 	margin: 0;
 	/* pointer-events: none; */
 }
