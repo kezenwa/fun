@@ -14,7 +14,7 @@ class Bg3d {
 	constructor (el, conf) {
 		this.el = el;
 		this.config = Object.assign({
-			scene: 'new.glb',
+			scene: 'test.glb',
 			fov: 45,
 			easing: TWEEN.Easing.Quadratic.InOut,
 			dev: true
@@ -22,6 +22,7 @@ class Bg3d {
 
 		this.init();
 		this.load();
+		this.floor();
 		this.lights();
 
 		if (this.config.dev) {
@@ -112,6 +113,21 @@ class Bg3d {
 		if (this.config.dev) {
 			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
 		}
+	}
+
+	////////
+	// Floor
+	floor () {
+		// https://threejs.org/docs/#api/en/materials/ShadowMaterial
+		const geometry = new THREE.PlaneGeometry(2000, 2000);
+		geometry.rotateX(-Math.PI / 2);
+
+		const material = new THREE.ShadowMaterial();
+		material.opacity = 0.2;
+
+		this.floor = new THREE.Mesh(geometry, material);
+		this.floor.receiveShadow = true;
+		this.scene.add(this.floor);
 	}
 
 	/////////
