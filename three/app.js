@@ -20,6 +20,8 @@ class Bg3d {
 			dev: true
 		}, conf);
 
+		console.log('Windows oi');
+
 		this.init();
 		this.load();
 		this.floor();
