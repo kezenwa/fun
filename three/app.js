@@ -23,7 +23,7 @@ class Bg3d {
 		this.load();
 		this.floor();
 		this.lights();
-		// this.controls();
+		this.controls();
 	}
 
 	///////
@@ -91,7 +91,7 @@ class Bg3d {
 	/////////
 	// Lights
 	lights () {
-		this.ambLight = new THREE.AmbientLight(0xffffff, 2.5);
+		this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 		this.scene.add(this.ambLight);
 
 		this.spotLight = new THREE.SpotLight(0xffffff, 2.5);
@@ -124,15 +124,20 @@ class Bg3d {
 
 	/////////
 	// Update
-	update () {
+	animate () {
 		const monitor = this.scene.getObjectByName('monitor');
+		const mouse = this.scene.getObjectByName('mouse');
 
 		if (this.controls && this.controls.update) {
 			this.controls.update();
 		}
 
 		if (monitor) {
-			monitor.position.y = 0.325312 + ((Math.sin(this.clock.getElapsedTime()) / 10) + 0.1);
+			monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
+		}
+
+		if (mouse) {
+			mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
 		}
 
 		TWEEN.update();
@@ -141,7 +146,7 @@ class Bg3d {
 	/////////
 	// Render
 	render () {
-		this.update();
+		this.animate();
 		this.renderer.render(this.scene, this.camera);
 	}
 }
