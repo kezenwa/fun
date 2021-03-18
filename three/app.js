@@ -146,7 +146,7 @@ class Bg3d {
 					new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
 					new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
 				}
-			}), {threshold: 0.25}).observe(el);
+			}), {threshold: 0, rootMargin: '0% 0% -15%'}).observe(el);
 		});
 	}
 
@@ -209,5 +209,5 @@ document.querySelectorAll('section').forEach(el => {
 		else {
 			entry.target.classList.remove('in-view');
 		}
-	}), {threshold: 0.25}).observe(el);
+	}), {threshold: 0, rootMargin: '0% 0% -15%'}).observe(el);
 });
