@@ -14,20 +14,16 @@ class Bg3d {
 	constructor (el, conf) {
 		this.el = el;
 		this.config = Object.assign({
-			scene: 'test.glb',
+			scene: 'alcom.glb',
 			fov: 45,
-			easing: TWEEN.Easing.Quadratic.InOut,
-			dev: true
+			easing: TWEEN.Easing.Quadratic.InOut
 		}, conf);
 
 		this.init();
 		this.load();
 		this.floor();
 		this.lights();
-
-		if (this.config.dev) {
-			this.controls();
-		}
+		// this.controls();
 	}
 
 	///////
@@ -41,6 +37,9 @@ class Bg3d {
 
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 		this.el.appendChild(this.renderer.domElement);
+
+		this.camera.position.set(-0.28510064418506953, 0.7843109750334114, 2.336568471606887);
+		this.camera.rotation.set(-0.16518068085575632, 0.24200931610262907, 0.039928961142229755);
 
 		// Shadows
 		this.renderer.shadowMap.enabled = true;
@@ -58,11 +57,8 @@ class Bg3d {
 	///////////
 	// Controls
 	controls () {
-		this.camera.position.set(0, 1, 2);
-		// this.scene.add(new THREE.AxesHelper(500));
-
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		this.controls.autoRotate = true;
+		// this.controls.autoRotate = true;
 		this.controls.enableDamping = true;
 		this.controls.dampingFactor = 0.05;
 		this.controls.rotateSpeed = 1;
@@ -95,10 +91,10 @@ class Bg3d {
 	/////////
 	// Lights
 	lights () {
-		this.ambLight = new THREE.AmbientLight(0xffffff, 1);
+		this.ambLight = new THREE.AmbientLight(0xffffff, 2.5);
 		this.scene.add(this.ambLight);
 
-		this.spotLight = new THREE.SpotLight(0xffffff, 4);
+		this.spotLight = new THREE.SpotLight(0xffffff, 2.5);
 
 		this.spotLight.position.set(-10, 10, 10);
 		this.spotLight.castShadow = true;
@@ -109,10 +105,6 @@ class Bg3d {
 		this.spotLight.shadow.camera.far = 1000;
 
 		this.scene.add(this.spotLight);
-
-		if (this.config.dev) {
-			// this.scene.add(new THREE.SpotLightHelper(this.spotLight));
-		}
 	}
 
 	////////
@@ -133,8 +125,14 @@ class Bg3d {
 	/////////
 	// Update
 	update () {
+		const monitor = this.scene.getObjectByName('monitor');
+
 		if (this.controls && this.controls.update) {
 			this.controls.update();
+		}
+
+		if (monitor) {
+			monitor.position.y = 0.325312 + ((Math.sin(this.clock.getElapsedTime()) / 10) + 0.1);
 		}
 
 		TWEEN.update();
@@ -150,12 +148,10 @@ class Bg3d {
 
 ///////////
 // Kick off
-const bg3d = new Bg3d(document.getElementById('bg'), {
-
-});
+window.bg3d = new Bg3d(document.getElementById('bg'));
 
 function render () {
-	bg3d.render();
+	window.bg3d.render();
 	requestAnimationFrame(render);
 }
 

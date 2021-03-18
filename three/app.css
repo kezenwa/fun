@@ -1,3 +1,18 @@
+/* Color Theme Swatches in Hex */
+.Blue-Future-1-hex { color: #142553; }
+.Blue-Future-2-hex { color: #0088BA; }
+.Blue-Future-3-hex { color: #82D5F7; }
+.Blue-Future-4-hex { color: #FFFCE4; }
+.Blue-Future-5-hex { color: #F59678; }
+
+/* Color Theme Swatches in Hex */
+/* https://color.adobe.com/Bold%20%20Blue-color-theme-10287008 */
+.Bold--Blue-1-hex { color: #28464B; }
+.Bold--Blue-2-hex { color: #00B2CA; }
+.Bold--Blue-3-hex { color: #15E6CD; }
+.Bold--Blue-4-hex { color: #F46036; }
+.Bold--Blue-5-hex { color: #401F3E; }
+
 /* Config */
 :root {
 	--body-bg: #020024 radial-gradient(circle farthest-corner at center top,#00d4ff,#020024 100%) no-repeat 50% 0;
