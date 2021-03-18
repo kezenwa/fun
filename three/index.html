@@ -1,20 +1,140 @@
 <!doctype html>
-<html>
+
+<html lang="en-GB">
+
 	<head>
+
 		<meta charset="utf8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 		<title>ALCom</title>
+
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link rel="preconnect" href="https://unpkg.com">
+		<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
 		<link rel="stylesheet" href="app.css">
+
 	</head>
+
 	<body>
+
 		<figure id="bg"></figure>
-		<!-- <main>
-			<section id="about">
+
+		<main>
+
+			<section id="about" data-camera-pos='{"x": -4.75, "y": 1.625, "z": 0.25, "rx": 0, "ry": 0, "rz": 0}'>
+
 				<h1>Hi! I'm Andreas</h1>
+
+				<p>I'm a web developer and hobby 3d enthusiast from northern Sweden.</p>
+
+				<ul>
+					<li><a href="https://github.com/powerbuoy/" target="_blank" rel="noopener">GitHub</a></li>
+					<li><a href="https://stackoverflow.com/users/1074594/powerbuoy" target="_blank" rel="noopener">StackOverflow</a></li>
+				</ul>
+
 			</section>
-		</main> -->
+
+			<section id="work" data-camera-pos='{"x": -1, "y": 3, "z": 4, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>Work</h2>
+
+				<p>Check out some of my GitHub projects.</p>
+
+				<article>
+
+					<h3>SleekWP</h3>
+
+					<p>The WordPress Theme for Developers.</p>
+
+					<ul>
+						<li><a href="https://github.com/powerbuoy/sleek/" target="_blank" rel="noopener">GitHub</a></li>
+						<li><a href="https://sleekwp.dev" target="_blank" rel="noopener">Website</a></li>
+					</ul>
+
+				</article>
+
+				<article>
+
+					<h3>SleekUI</h3>
+
+					<p>Lightweight SASS and JS library for common UI elements</p>
+
+					<ul>
+						<li><a href="https://github.com/powerbuoy/sleek-ui/" target="_blank" rel="noopener">GitHub</a></li>
+					</ul>
+
+				</article>
+
+			</section>
+
+			<section id="play" data-camera-pos='{"x": 5, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>Play</h2>
+
+				<figure>
+					<a href="assets/play/robot.png" target="_blank">
+						<img src="assets/play/robot.png" width="2000" height="3000">
+					</a>
+				</figure>
+
+				<figure>
+					<a href="assets/play/schack.png" target="_blank">
+						<img src="assets/play/schack.png" width="3000" height="2000">
+					</a>
+				</figure>
+
+				<figure>
+					<a href="assets/play/penslar.png" target="_blank">
+						<img src="assets/play/penslar.png" width="2000" height="2000">
+					</a>
+				</figure>
+
+				<figure>
+					<a href="assets/play/troll.png" target="_blank">
+						<img src="assets/play/troll.png" width="3000" height="2250">
+					</a>
+				</figure>
+
+				<figure>
+					<a href="assets/play/lamp.png" target="_blank">
+						<img src="assets/play/lampa.png" width="1920" height="1080">
+					</a>
+				</figure>
+
+				<figure>
+					<video autoplay loop muted>
+						<source src="assets/play/lampa.mp4" type="video/mp4"></source>
+					</video>
+				</figure>
+
+			</section>
+
+			<section id="contact" data-camera-pos='{"x": 10, "y": 2, "z": 10, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>Contact</h2>
+
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+			</section>
+
+			<section id="end" data-camera-pos='{"x": 30, "y": 3, "z": 60, "rx": 0, "ry": 0, "rz": 0}'>
+
+				<h2>This is the End</h2>
+
+				<p>This site was built using Blender, ThreeJS, TweenJS, SplittingJS and the code you see if you "view source".</p>
+
+				<a href="#about">Go back to the top</a>
+
+			</section>
+
+		</main>
+
 		<script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
 		<script type="module" src="app.js"></script>
+
 	</body>
+
 </html>

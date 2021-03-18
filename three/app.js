@@ -16,7 +16,8 @@ class Bg3d {
 		this.config = Object.assign({
 			scene: 'alcom.glb',
 			fov: 45,
-			easing: TWEEN.Easing.Quadratic.InOut
+			easing: TWEEN.Easing.Quadratic.InOut,
+			cameraTransitionDuration: 750
 		}, conf);
 
 		this.init();
@@ -24,6 +25,8 @@ class Bg3d {
 		this.floor();
 		this.lights();
 		this.controls();
+		// this.initialCameraPos();
+		// this.scrollCameraPos();
 	}
 
 	///////
@@ -122,6 +125,31 @@ class Bg3d {
 		this.scene.add(this.floor);
 	}
 
+	/////////////////////
+	// Initial camera pos
+	initialCameraPos () {
+		const initialPos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
+
+		this.camera.position.set(initialPos.x, initialPos.y, initialPos.z);
+		this.camera.rotation.set(initialPos.rx, initialPos.ry, initialPos.rz);
+	}
+
+	////////////////////
+	// Scroll camera pos
+	scrollCameraPos () {
+		document.querySelectorAll('[data-camera-pos]').forEach(el => {
+			new IntersectionObserver(entries => entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					const newPos = JSON.parse(entry.target.dataset.cameraPos);
+
+					new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+					new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+					new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+				}
+			}), {threshold: 0.25}).observe(el);
+		});
+	}
+
 	/////////
 	// Update
 	animate () {
@@ -161,3 +189,25 @@ function render () {
 }
 
 render();
+
+////////////
+// Splitting
+Splitting({
+	target: 'h1, h2',
+	by: 'chars'
+});
+
+////////////
+// Scrollspy
+document.querySelectorAll('section').forEach(el => {
+	Array.from(el.children).forEach((child, index) => child.style.setProperty('--scrollspy-el-index', index));
+
+	new IntersectionObserver(entries => entries.forEach(entry => {
+		if (entry.isIntersecting) {
+			entry.target.classList.add('in-view');
+		}
+		else {
+			entry.target.classList.remove('in-view');
+		}
+	}), {threshold: 0.25}).observe(el);
+});
