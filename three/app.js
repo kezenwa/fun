@@ -17,16 +17,23 @@ class Bg3d {
 			scene: 'alcom.glb',
 			fov: 45,
 			easing: TWEEN.Easing.Quadratic.InOut,
-			cameraTransitionDuration: 750
+			cameraTransitionDuration: 750,
+			dev: false
 		}, conf);
 
 		this.init();
 		this.load();
 		this.floor();
 		this.lights();
-		this.controls();
-		// this.initialCameraPos();
-		// this.scrollCameraPos();
+
+		if (this.config.dev) {
+			document.documentElement.classList.add('dev');
+			this.controls();
+		}
+		else {
+			this.initialCameraPos();
+			this.scrollCameraPos();
+		}
 	}
 
 	///////
@@ -101,7 +108,7 @@ class Bg3d {
 
 		this.spotLight.position.set(-10, 10, 10);
 		this.spotLight.castShadow = true;
-		this.spotLight.shadow.bias = -0.0001;
+		this.spotLight.shadow.bias = -0.0002;
 		this.spotLight.shadow.mapSize.width = 512 * 8;
 		this.spotLight.shadow.mapSize.height = 512 * 8;
 		this.spotLight.shadow.camera.near = 1;

@@ -9,6 +9,7 @@
 :root {
 	--body-bg: #020024 radial-gradient(circle farthest-corner at center top,#00d4ff,#020024 100%) no-repeat 50% 0;
 	--spacing-medium: 1.25rem;
+	--spacing-large: 2.5rem;
 	--easing: ease;
 	--scrollspy-duration: 1s;
 	--scrollspy-stagger: 1.5s;
@@ -95,26 +96,32 @@ a {
 	text-decoration: none;
 }
 
-img,
-video {
+img {
 	width: auto;
 	height: auto;
 	max-width: 100%;
 }
 
-/* Scrollspy */
-section > * {
-	transform: translateY(2rem);
-	opacity: 0;
-	transition: transform var(--scrollspy-duration) calc(var(--scrollspy-stagger) * var(--scrollspy-el-index)) var(--easing),
-							opacity var(--scrollspy-duration) calc(var(--scrollspy-stagger) * var(--scrollspy-el-index)) var(--easing);
+video {
+	max-width: 100%;
 }
 
-section.in-view > * {
-	transform: translateY(0);
-	opacity: 1;
+ul,
+ol {
+	margin: 0 0 var(--spacing-medium) var(--spacing-large);
+	padding: 0;
 }
 
+figure {
+	margin: 0 0 var(--spacing-medium);
+}
+
+figure img {
+	display: block;
+	width: 100%;
+}
+
+/* Splitting */
 .splitting {
 	perspective: 300px;
 }
@@ -144,6 +151,11 @@ section.in-view > * {
 	pointer-events: none;
 }
 
+html.dev #bg {
+	pointer-events: all;
+	z-index: 1;
+}
+
 #bg canvas {
 	position: absolute;
 	left: 0;
@@ -166,4 +178,62 @@ section {
 
 	padding: 3rem 5vw;
 	min-height: 100vh;
+}
+
+section > header:first-child {
+	margin-bottom: var(--spacing-large);
+}
+
+section > header:first-child p {
+	font-size: 1.2em;
+}
+
+/* Lists */
+.list\:inline {
+	margin-left: 0;
+	list-style: none;
+}
+
+.list\:inline li {
+	display: inline-block;
+	margin: 0 var(--spacing-medium) 0 0;
+}
+
+/* Grids */
+.grid\:media {
+	display: grid;
+	grid-auto-flow: column;
+}
+
+/* About */
+#about {
+
+}
+
+/* #about ul li a {
+	font-size: 0;
+}
+
+#about ul li a::before {
+
+} */
+
+/* Work */
+#work {
+
+}
+
+/* Play */
+#play {
+
+}
+
+/* Contact */
+#contact {
+
+}
+
+/* The end */
+#end {
+
 }
