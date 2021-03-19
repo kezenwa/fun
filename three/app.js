@@ -144,17 +144,17 @@ class Bg3d {
 	////////////////////
 	// Scroll camera pos
 	scrollCameraPos () {
-		document.querySelectorAll('[data-camera-pos]').forEach(el => {
-			new IntersectionObserver(entries => entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					const newPos = JSON.parse(entry.target.dataset.cameraPos);
+		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
-					new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-					new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-					new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-				}
-			}), {threshold: 0, rootMargin: '0% 0% -15%'}).observe(el);
-		});
+				new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+				new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+				new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+			}
+		}), {threshold: 0.25});
+
+		document.querySelectorAll('[data-camera-pos]').forEach(el => observer.observe(el));
 	}
 
 	/////////
@@ -206,15 +206,54 @@ Splitting({
 
 ////////////
 // Scrollspy
+const scrollspyObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+	if (entry.isIntersecting) {
+		entry.target.classList.add('in-view');
+	}
+	else {
+		entry.target.classList.remove('in-view');
+	}
+}), {threshold: 0.25});
+
 document.querySelectorAll('section').forEach(el => {
 	Array.from(el.children).forEach((child, index) => child.style.setProperty('--scrollspy-el-index', index));
 
-	new IntersectionObserver(entries => entries.forEach(entry => {
+	scrollspyObserver.observe(el);
+});
+
+////////////
+// Set theme
+const allThemes = [];
+const allThemeButtons = document.querySelectorAll('[data-set-theme]');
+
+allThemeButtons.forEach(el => {
+	const theme = el.dataset.setTheme;
+
+	allThemes.push(theme);
+
+	el.addEventListener('click', e => {
+		allThemes.forEach(t => document.documentElement.classList.remove('theme-' + t));
+		allThemeButtons.forEach(tb => tb.classList.remove('active'));
+
+		document.documentElement.classList.add('theme-' + theme);
+		el.classList.add('active');
+	});
+});
+
+////////////////////
+// Highlight visible
+document.querySelectorAll('[data-highlight-visible]').forEach(el => {
+	const links = el.querySelectorAll('a[href^="#"]');
+	const targets = document.querySelectorAll(Array.from(links).map(link => link.getAttribute('href')).join(', '));
+	const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 		if (entry.isIntersecting) {
-			entry.target.classList.add('in-view');
+			links.forEach(l => l.classList.remove('active'));
+			Array.from(links).filter(l => l.getAttribute('href') === '#' + entry.target.id)[0].classList.add('active');
 		}
 		else {
-			entry.target.classList.remove('in-view');
+			Array.from(links).filter(l => l.getAttribute('href') === '#' + entry.target.id)[0].classList.remove('active');
 		}
-	}), {threshold: 0, rootMargin: '0% 0% -15%'}).observe(el);
+	}), {threshold: 0.25});
+
+	targets.forEach(t => observer.observe(t));
 });
