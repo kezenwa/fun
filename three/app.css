@@ -206,8 +206,20 @@ figure img {
 
 /* Grids */
 .grid\:media {
-	display: grid;
-	grid-auto-flow: column;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--spacing-medium);
+}
+
+.grid\:media > * {
+	flex-grow: 1;
+	margin: 0;
+}
+
+.grid\:media img,
+.grid\:media video {
+	width: auto;
+	height: 11vw;
 }
 
 /* 3D Background */
