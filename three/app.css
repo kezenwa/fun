@@ -302,12 +302,18 @@ html.dev #bg {
 
 	font-size: 0;
 
+	opacity: 0.5;
 	border-radius: 50%;
-	transition: opacity 0.25 var(--easing);
+	transition: opacity 0.25s var(--easing);
+}
+
+#themes a:hover,
+#themes a.active {
+	opacity: 1;
 }
 
 #themes a.active {
-	border: 2px solid var(--text-color);
+	border: 1px solid white;
 }
 
 /* Sections */
