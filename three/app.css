@@ -1,6 +1,35 @@
 @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Comfortaa:wght@300&family=Eczar:wght@800&family=Gloria+Hallelujah&family=Montserrat:wght@300&family=Raleway:wght@900&family=Ultra&display=swap");
 @import url("https://unpkg.com/splitting@1.0.6/dist/splitting.css");
 
+/* Icons */
+@font-face {
+	font-family: "icons";
+	src: url("assets/icons.woff2") format("woff2");
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class*="icon-"]:before {
+	font-family: "icons";
+	font-style: normal;
+	font-weight: normal;
+	speak: never;
+	display: inline-block;
+	text-decoration: inherit;
+	font-variant: normal;
+	text-transform: none;
+	margin-right: .5em;
+}
+
+.icon-globe:before { content: "\e800"; }
+.icon-down:before { content: "\e801"; }
+.icon-left:before { content: "\e802"; }
+.icon-right:before { content: "\e803"; }
+.icon-up:before { content: "\e804"; }
+.icon-github:before { content: "\f09b"; }
+.icon-stackoverflow:before { content: "\f16c"; }
+
+/* Box-sizing */
 * {
 	box-sizing: border-box;
 }
@@ -146,6 +175,11 @@ a {
 	transition: color 0.25s var(--easing);
 }
 
+a[class*="icon-"]::before {
+	display: inline-block;
+	text-decoration: none;
+}
+
 a:hover {
 	color: var(--link-color);
 }
@@ -211,7 +245,7 @@ figure img {
 	gap: var(--spacing-medium);
 }
 
-.grid\:media > * {
+.grid\:media figure {
 	flex-grow: 1;
 	margin: 0;
 }
@@ -317,7 +351,7 @@ section {
 	justify-content: center;
 	flex-direction: column;
 
-	padding: 3rem 5vw;
+	padding: 15vh 5vw;
 	min-height: 100vh;
 }
 
