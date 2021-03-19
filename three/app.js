@@ -218,3 +218,22 @@ document.querySelectorAll('section').forEach(el => {
 		}
 	}), {threshold: 0, rootMargin: '0% 0% -15%'}).observe(el);
 });
+
+////////////
+// Set theme
+const allThemes = [];
+const allThemeButtons = document.querySelectorAll('[data-set-theme]');
+
+allThemeButtons.forEach(el => {
+	const theme = el.dataset.setTheme;
+
+	allThemes.push(theme);
+
+	el.addEventListener('click', e => {
+		allThemes.forEach(t => document.documentElement.classList.remove('theme-' + t));
+		allThemeButtons.forEach(tb => tb.classList.remove('active'));
+
+		document.documentElement.classList.add('theme-' + theme);
+		el.classList.add('active');
+	});
+});
