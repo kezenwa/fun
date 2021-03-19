@@ -247,10 +247,11 @@ document.querySelectorAll('[data-highlight-visible]').forEach(el => {
 	const targets = document.querySelectorAll(Array.from(links).map(link => link.getAttribute('href')).join(', '));
 	const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 		if (entry.isIntersecting) {
-			console.log(entry.target.id);
+			links.forEach(l => l.classList.remove('active'));
+			Array.from(links).filter(l => l.getAttribute('href') === '#' + entry.target.id)[0].classList.add('active');
 		}
 		else {
-			console.log('OUT: ' + entry.target.id);
+			Array.from(links).filter(l => l.getAttribute('href') === '#' + entry.target.id)[0].classList.remove('active');
 		}
 	}), {threshold: 0.25});
 
