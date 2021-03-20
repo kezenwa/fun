@@ -31,7 +31,7 @@ export default class Bg3d {
 			this.controls();
 		}
 		else {
-			this.scrollCameraPos();
+			this.cameraPos();
 		}
 	}
 
@@ -132,8 +132,8 @@ export default class Bg3d {
 	}
 
 	////////////////////
-	// Scroll camera pos
-	scrollCameraPos () {
+	// Camera pos
+	cameraPos () {
 		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 			if (entry.isIntersecting) {
 				const newPos = JSON.parse(entry.target.dataset.cameraPos);
