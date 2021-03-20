@@ -61,7 +61,7 @@ a[data-set-theme="e"] {
 // Theme switcher
 @keyframes themes-slide-in {
 	0% {
-		transform: translateY(calc((2vw + 100%) * -1));
+		transform: translateY(calc((var(--spacing-medium) + 100% + 0.5rem) * -1)); // NOTE: 0.5rem because of shadow
 	}
 
 	100% {
@@ -74,10 +74,12 @@ a[data-set-theme="e"] {
 	right: 2vw;
 	top: var(--spacing-medium);
 
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-small);
+
 	a {
-		display: inline-block;
-		vertical-align: middle;
-		margin: 0 0 0 var(--spacing-small);
+		display: block;
 
 		width: 1rem;
 		height: 1rem;
