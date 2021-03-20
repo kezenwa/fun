@@ -102,7 +102,7 @@ a[data-set-theme="e"] {
 }
 
 /* Loading */
-html.loading::before {
+html.loading body::before {
 	content: "Loading...";
 	position: fixed;
 	left: 50%;
@@ -110,7 +110,7 @@ html.loading::before {
 	transform: translate(-50%, -50%);
 }
 
-html.loading * {
+html.loading body * {
 	visibility: hidden;
 }
 
@@ -145,7 +145,7 @@ h3,
 h4,
 h5,
 h6 {
-	font: 2rem/0.9 Raleway, serif;
+	font: 2rem/0.9 Montserrat, serif;
 	letter-spacing: -0.025em;
 	margin: 0 0 var(--spacing-medium);
 	max-width: 36rem;
