@@ -89,6 +89,9 @@ export default class Bg3d {
 				}
 			});
 
+			this.monitor = this.scene.getObjectByName('monitor');
+			this.mouse = this.scene.getObjectByName('mouse');
+
 			this.scene.add(glb.scene);
 			document.documentElement.classList.remove('loading');
 		});
@@ -146,19 +149,16 @@ export default class Bg3d {
 	/////////
 	// Update
 	animate () {
-		const monitor = this.scene.getObjectByName('monitor');
-		const mouse = this.scene.getObjectByName('mouse');
-
 		if (this.controls && this.controls.update) {
 			this.controls.update();
 		}
 
-		if (monitor) {
-			monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
+		if (this.monitor) {
+			this.monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
 		}
 
-		if (mouse) {
-			mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
+		if (this.mouse) {
+			this.mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
 		}
 
 		TWEEN.update();
