@@ -12,8 +12,12 @@
 // Grids
 .grid {
 	display: grid;
-	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
 	gap: var(--spacing-large);
+
+	> * {
+		grid-row: 1;
+	}
 }
 
 .grid\:media {
@@ -31,4 +35,16 @@
 		width: auto;
 		height: 11vw;
 	}
+}
+
+// Card
+.card {
+	--text-color: var(--text-color-inverted);
+	--link-color: var(--text-color-inverted);
+
+	background: var(--accent-color);
+	color: var(--text-color-inverted);
+	padding: var(--spacing-large);
+	box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.25);
+	border-radius: 0.25rem;
 }

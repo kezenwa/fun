@@ -1,6 +1,8 @@
 html.theme-a {
 	--body-bg: #020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0;
 	--text-color: white;
+	--text-color-inverted: white;
+	--accent-color: #f90;
 	--link-color: #f90;
 }
 
@@ -11,6 +13,8 @@ a[data-set-theme="a"] {
 html.theme-b {
 	--body-bg: #FFF6E5;
 	--text-color: #3E454C;
+	--text-color-inverted: #FFF6E5;
+	--accent-color: #FF7F66;
 	--link-color: #FF7F66;
 }
 
@@ -21,6 +25,8 @@ a[data-set-theme="b"] {
 html.theme-c {
 	--body-bg: #FDE792;
 	--text-color: #5A1F00;
+	--text-color-inverted: #FDE792;
+	--accent-color: #477725;
 	--link-color: #477725;
 }
 
@@ -31,6 +37,8 @@ a[data-set-theme="c"] {
 html.theme-d {
 	--body-bg: #2C3E50;
 	--text-color: #ECF0F1;
+	--text-color-inverted: #2C3E50;
+	--accent-color: #E74C3C;
 	--link-color: #E74C3C;
 }
 
@@ -41,6 +49,8 @@ a[data-set-theme="d"] {
 html.theme-e {
 	--body-bg: #F2E638;
 	--text-color: #8C6A03;
+	--text-color-inverted: #F2E638;
+	--accent-color: #F2DD72;
 	--link-color: #F2DD72;
 }
 
