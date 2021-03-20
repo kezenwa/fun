@@ -239,6 +239,12 @@ figure img {
 }
 
 /* Grids */
+.grid {
+	display: grid;
+	grid-auto-flow: column;
+	gap: var(--spacing-large);
+}
+
 .grid\:media {
 	display: flex;
 	flex-wrap: wrap;
