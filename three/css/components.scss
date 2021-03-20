@@ -39,12 +39,9 @@
 
 // Card
 .card {
-	--text-color: var(--text-color-inverted);
-	--link-color: var(--text-color-inverted);
-
-	background: var(--accent-color);
-	color: var(--text-color-inverted);
+	position: relative;
 	padding: var(--spacing-large);
 	box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.25);
 	border-radius: 0.25rem;
+	backdrop-filter: blur(20px);
 }
