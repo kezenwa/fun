@@ -10,8 +10,5 @@
 	--spacing-medium: 1.25rem;
 	--spacing-large: 2.5rem;
 
-	--easing: ease;
-
-	--scrollspy-duration: 1s;
-	--scrollspy-stagger: 0.25s;
+	--easing: cubic-bezier(0.16, 1, 0.3, 1); /* cubic-bezier(0.76, 0, 0.24, 1); /* cubic-bezier(0.68, -0.6, 0.32, 1.6); */
 }

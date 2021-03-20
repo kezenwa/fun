@@ -8,12 +8,54 @@ section {
 	min-height: 100vh;
 }
 
-section > header:first-child {
+section header {
 	margin-bottom: var(--spacing-large);
 }
 
-section > header:first-child p {
+section header p {
 	font-size: 1.2em;
+}
+
+/* Scrollspy headers */
+html.js section header h1,
+html.js section header h2 {
+	opacity: 0;
+	transition: opacity 0.25s var(--easing);
+}
+
+html.js section header p {
+	opacity: 0;
+	transform: translate(0, 2rem);
+	transition: opacity var(--scrollspy-duration) var(--easing), transform var(--scrollspy-duration) var(--easing);
+	transition-delay: 1.5s;
+}
+
+html.js section ul li {
+	opacity: 0;
+	transform: translate(2rem, 0);
+	transition: opacity var(--scrollspy-duration) var(--easing), transform var(--scrollspy-duration) var(--easing);
+}
+
+html.js section ul li:nth-child(1) {
+	transition-delay: 2s;
+}
+
+html.js section ul li:nth-child(2) {
+	transition-delay: 2.25s;
+}
+
+html.js section ul li:nth-child(3) {
+	transition-delay: 2.5s;
+}
+
+html.js section ul li:nth-child(4) {
+	transition-delay: 2.75s;
+}
+
+html.js section.in-view header > *,
+html.js section.in-view ul li {
+	transform: translate(0, 0);
+	opacity: 1;
 }
 
 /* About */

@@ -7,6 +7,8 @@
 	z-index: -1;
 	margin: 0;
 	pointer-events: none;
+	transform: translateX(100%);
+	transition: transform 2.5s 2s var(--easing);
 }
 
 html.dev #bg {
@@ -25,4 +27,8 @@ html.dev #bg {
 
 	object-fit: cover;
 	object-position: center center;
+}
+
+html.loaded #bg {
+	transform: translateX(0);
 }

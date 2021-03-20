@@ -3,6 +3,7 @@
 	src: url("../assets/icons.woff2") format("woff2");
 	font-weight: normal;
 	font-style: normal;
+	font-display: block;
 }
 
 [class*="icon-"]:before {

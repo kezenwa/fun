@@ -1,13 +1,6 @@
-@keyframes scrollspy {
-	0% {
-		transform: translateY(2rem);
-		opacity: 0;
-	}
-
-	100% {
-		transform: translateY(0);
-		opacity: 1;
-	}
+:root {
+	--scrollspy-duration: 0.75s;
+	--scrollspy-stagger: 0.25s;
 }
 
 .splitting {
@@ -24,5 +17,5 @@
 	transform: rotateX(0);
 	opacity: 1;
 	transition: transform 1s ease, opacity 0.25s ease;
-	transition-delay: calc(0.15s * var(--char-index));
+	transition-delay: calc(0.1s * var(--char-index));
 }

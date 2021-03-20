@@ -29,3 +29,35 @@
 	opacity: 1;
 	background: var(--link-color);
 }
+
+/* Animate */
+html.js #navigation a {
+	transform: translateX(0.5rem);
+	opacity: 0;
+	transition: transform 0.75s var(--easing), opacity 0.75s var(--easing);
+}
+
+html.js.loaded #navigation a {
+	transform: translateX(0);
+	opacity: 1;
+}
+
+html.js #navigation a:nth-child(1) {
+	transition-delay: 4s;
+}
+
+html.js #navigation a:nth-child(2) {
+	transition-delay: 4.1s;
+}
+
+html.js #navigation a:nth-child(3) {
+	transition-delay: 4.2s;
+}
+
+html.js #navigation a:nth-child(4) {
+	transition-delay: 4.3s;
+}
+
+html.js #navigation a:nth-child(5) {
+	transition-delay: 4.4s;
+}
