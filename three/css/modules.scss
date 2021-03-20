@@ -1,3 +1,14 @@
+@mixin scrollspy-hide ($x: 0, $y: 2rem) {
+	transform: translate($x, $y);
+	opacity: 0;
+	transition: transform var(--scrollspy-duration) var(--easing), opacity var(--scrollspy-duration) var(--easing);
+}
+
+@mixin scrollspy-show {
+	transform: translate(0, 0);
+	opacity: 1;
+}
+
 section {
 	display: flex;
 	align-items: flex-start;
@@ -14,23 +25,36 @@ section {
 			font-size: 1.2em;
 		}
 	}
+
+	ul {
+		@include list-inline;
+	}
 }
 
 // About
 #about {
-	header {
-		h1 {
+	header p {
+		@include scrollspy-hide;
 
-		}
+		transition-delay: 1.5s;
+	}
 
-		p {
+	ul li {
+		@include scrollspy-hide(2rem, 0);
 
+		transition-delay: 1.75s;
+
+		@for $i from 1 through 5 {
+			&:nth-child(#{$i}) {
+				transition-delay: #{1.75 + ($i * 0.1 - 0.1)}s;
+			}
 		}
 	}
 
-	ul {
-		li {
-			
+	&.in-view {
+		header p,
+		ul li {
+			@include scrollspy-show;
 		}
 	}
 }
