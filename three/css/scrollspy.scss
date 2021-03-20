@@ -20,7 +20,7 @@
 	transition-delay: calc(0.1s * var(--char-index));
 }
 
-/* Hide headings while splitting loads */
+// Hide headings while splitting loads
 html.js h1,
 html.js h2 {
 	opacity: 0;

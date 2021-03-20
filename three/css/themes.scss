@@ -48,7 +48,7 @@ a[data-set-theme="e"] {
 	background: #F2E638;
 }
 
-/* Theme switcher */
+// Theme switcher
 #themes {
 	position: fixed;
 	right: 2vw;
@@ -79,7 +79,7 @@ a[data-set-theme="e"] {
 	}
 }
 
-/* Animate */
+// Animate
 html.js #themes a {
 	transform: scale(0);
 	opacity: 0;
