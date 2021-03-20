@@ -17,7 +17,7 @@ export default class Bg3d {
 			scene: 'assets/alcom.glb',
 			fov: 45,
 			easing: TWEEN.Easing.Quadratic.InOut,
-			cameraTransitionDuration: 750,
+			camTransDur: 750,
 			dev: false
 		}, conf);
 
@@ -31,7 +31,6 @@ export default class Bg3d {
 			this.controls();
 		}
 		else {
-			this.initialCameraPos();
 			this.scrollCameraPos();
 		}
 	}
@@ -47,9 +46,6 @@ export default class Bg3d {
 
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 		this.el.appendChild(this.renderer.domElement);
-
-		this.camera.position.set(-0.28510064418506953, 0.7843109750334114, 2.336568471606887);
-		this.camera.rotation.set(-0.16518068085575632, 0.24200931610262907, 0.039928961142229755);
 
 		// Shadows
 		this.renderer.shadowMap.enabled = true;
@@ -132,15 +128,6 @@ export default class Bg3d {
 		this.scene.add(this.floor);
 	}
 
-	/////////////////////
-	// Initial camera pos
-	initialCameraPos () {
-		const initialPos = JSON.parse(document.querySelector('[data-camera-pos]').dataset.cameraPos);
-
-		this.camera.position.set(initialPos.x, initialPos.y, initialPos.z);
-		this.camera.rotation.set(initialPos.rx, initialPos.ry, initialPos.rz);
-	}
-
 	////////////////////
 	// Scroll camera pos
 	scrollCameraPos () {
@@ -148,9 +135,8 @@ export default class Bg3d {
 			if (entry.isIntersecting) {
 				const newPos = JSON.parse(entry.target.dataset.cameraPos);
 
-				new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-				new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
-				new TWEEN.Tween(this.scene.position).to({x: 0, y: 0}, this.config.cameraTransitionDuration).easing(this.config.easing).start();
+				new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.camTransDur).easing(this.config.easing).start();
+				new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start();
 			}
 		}), {threshold: 0.25});
 
