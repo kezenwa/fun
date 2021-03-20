@@ -1,0 +1,42 @@
+section {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-direction: column;
+
+	padding: 15vh 5vw;
+	min-height: 100vh;
+
+	header {
+		margin-bottom: var(--spacing-large);
+
+		p {
+			font-size: 1.2em;
+		}
+	}
+}
+
+/* About */
+#about {
+
+}
+
+/* Work */
+#work {
+
+}
+
+/* Play */
+#play {
+
+}
+
+/* Contact */
+#contact {
+
+}
+
+/* The end */
+#end {
+
+}

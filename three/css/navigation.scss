@@ -1,0 +1,49 @@
+#navigation {
+	position: fixed;
+	right: 2vw;
+	top: 50%;
+	transform: translateY(-50%);
+
+	a {
+		background: var(--text-color);
+
+		display: block;
+		margin: 0 0 var(--spacing-small);
+
+		width: 0.5rem;
+		height: 0.5rem;
+
+		font-size: 0;
+
+		border-radius: 50%;
+		transition: opacity 0.25 var(--easing), background 0.25 var(--easing);
+		opacity: 0.25;
+
+		&:last-child {
+			margin: 0;
+		}
+
+		&.active {
+			opacity: 1;
+			background: var(--link-color);
+		}
+	}
+}
+
+/* Animate */
+html.js #navigation a {
+	transform: translateX(0.5rem);
+	opacity: 0;
+	transition: transform 0.75s var(--easing), opacity 0.75s var(--easing);
+}
+
+html.js.loaded #navigation a {
+	transform: translateX(0);
+	opacity: 1;
+}
+
+@for $i from 1 through 10 {
+	html.js #navigation a:nth-child(#{$i}) {
+		transition-delay: #{4 + $i * 0.1 - 0.1}s;
+	}
+}
