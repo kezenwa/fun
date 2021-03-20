@@ -89,11 +89,12 @@ export default class Bg3d {
 				}
 			});
 
-			this.monitor = this.scene.getObjectByName('monitor');
-			this.mouse = this.scene.getObjectByName('mouse');
-
 			this.scene.add(glb.scene);
 			document.documentElement.classList.remove('loading');
+
+			// Grab objects
+			this.monitor = this.scene.getObjectByName('monitor');
+			this.mouse = this.scene.getObjectByName('mouse');
 		});
 	}
 
