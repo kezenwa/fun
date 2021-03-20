@@ -132,7 +132,7 @@ export default class Bg3d {
 		this.scene.add(this.floor);
 	}
 
-	////////////////////
+	/////////////
 	// Camera pos
 	cameraPos () {
 		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
