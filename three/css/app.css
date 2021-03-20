@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Comfortaa:wght@300&family=Eczar:wght@800&family=Gloria+Hallelujah&family=Montserrat:wght@300&family=Raleway:wght@900&family=Ultra&display=swap");
+@import url("https://unpkg.com/splitting@1.0.6/dist/splitting.css");
+
+@import "icons.css";
+@import "config.css";
+@import "base.css";
+@import "bg.css";
+@import "components.css";
+@import "loading.css";
+@import "modules.css";
+@import "navigation.css";
+@import "scrollspy.css";
+@import "snap.css";
+@import "themes.css";

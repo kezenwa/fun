@@ -1,0 +1,28 @@
+@keyframes scrollspy {
+	0% {
+		transform: translateY(2rem);
+		opacity: 0;
+	}
+
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}
+
+.splitting {
+	perspective: 300px;
+}
+
+.splitting .char {
+	transform: rotateX(90deg);
+	transform-origin: 50% bottom;
+	opacity: 0;
+}
+
+.in-view .splitting .char {
+	transform: rotateX(0);
+	opacity: 1;
+	transition: transform 1s ease, opacity 0.25s ease;
+	transition-delay: calc(0.15s * var(--char-index));
+}

@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en-GB" class="theme-b">
+<html lang="en-GB" class="no-js theme-b">
 
 	<head>
 
@@ -12,8 +12,12 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com">
 		<link rel="preconnect" href="https://unpkg.com">
 		<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+		<link rel="stylesheet" href="css/app.css">
 
-		<link rel="stylesheet" href="app.css">
+		<script>
+			document.documentElement.classList.remove('no-js');
+			document.documentElement.classList.add('js');
+		</script>
 
 	</head>
 
@@ -45,7 +49,7 @@
 
 					<h1>Hi! I'm Andreas</h1>
 
-					<p>I'm a programmer and 3D enthusiast from Sweden.</p>
+					<p>I'm a web developer and 3D enthusiast from Sweden.</p>
 
 				</header>
 
@@ -153,6 +157,11 @@
 
 				</header>
 
+				<ul class="list:inline">
+					<li><a href="https://github.com/powerbuoy/" target="_blank" rel="noopener" class="icon-github">GitHub</a></li>
+					<li><a href="https://stackoverflow.com/users/1074594/powerbuoy" target="_blank" rel="noopener" class="icon-stackoverflow">StackOverflow</a></li>
+				</ul>
+
 			</section>
 
 			<section id="end" data-camera-pos='{"x": 1.0, "y": 1, "z": 3, "rx": -0.375, "ry": 0.4, "rz": 0.15}'>
@@ -173,7 +182,7 @@
 
 		<script src="https://unpkg.com/splitting@1.0.6/dist/splitting.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/16.3.5/Tween.min.js"></script>
-		<script type="module" src="app.js"></script>
+		<script type="module" src="js/app.js"></script>
 
 	</body>
 

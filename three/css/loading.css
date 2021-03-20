@@ -1,0 +1,11 @@
+html.loading body::before {
+	content: "Loading...";
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+html.loading body * {
+	visibility: hidden;
+}

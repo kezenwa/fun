@@ -1,0 +1,31 @@
+#navigation {
+	position: fixed;
+	right: 2vw;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#navigation a {
+	background: var(--text-color);
+
+	display: block;
+	margin: 0 0 var(--spacing-small);
+
+	width: 0.5rem;
+	height: 0.5rem;
+
+	font-size: 0;
+
+	border-radius: 50%;
+	transition: opacity 0.25 var(--easing), background 0.25 var(--easing);
+	opacity: 0.25;
+}
+
+#navigation a:last-child {
+	margin: 0;
+}
+
+#navigation a.active {
+	opacity: 1;
+	background: var(--link-color);
+}
