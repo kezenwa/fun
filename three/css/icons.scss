@@ -29,6 +29,7 @@
 a[class*="icon-"] {
 	&::before {
 		display: inline-block;
+		color: var(--link-color);
 		text-decoration: none;
 		transform: scale(1);
 		transition: transform 0.5s var(--easing);
