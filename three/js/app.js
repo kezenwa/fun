@@ -45,6 +45,10 @@ allThemeButtons.forEach(el => {
 
 	allThemes.push(theme);
 
+	if (document.documentElement.classList.contains('theme-' + theme)) {
+		el.classList.add('active');
+	}
+
 	el.addEventListener('click', e => {
 		allThemes.forEach(t => document.documentElement.classList.remove('theme-' + t));
 		allThemeButtons.forEach(tb => tb.classList.remove('active'));
