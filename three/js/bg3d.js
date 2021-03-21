@@ -32,6 +32,7 @@ export default class Bg3d {
 		}
 		else {
 			this.cameraPos();
+			this.mousePos();
 		}
 	}
 
@@ -43,6 +44,8 @@ export default class Bg3d {
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
 		this.camera = new THREE.PerspectiveCamera(this.config.fov, this.el.clientWidth / this.el.clientHeight, 0.01, 5000);
+
+		this.camera.position.z = 5;
 
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 		this.el.appendChild(this.renderer.domElement);
@@ -72,6 +75,7 @@ export default class Bg3d {
 
 	///////
 	// Load
+	// Load scene, enable shadows and store references to our objects
 	load () {
 		this.loader = new GLTFLoader();
 
@@ -89,8 +93,8 @@ export default class Bg3d {
 				}
 			});
 
+			// Add scene
 			this.scene.add(glb.scene);
-			document.documentElement.classList.remove('loading');
 
 			// Grab objects
 			this.monitor = this.scene.getObjectByName('monitor');
@@ -119,6 +123,7 @@ export default class Bg3d {
 
 	////////
 	// Floor
+	// Create a transparent shadow catcher
 	floor () {
 		// https://threejs.org/docs/#api/en/materials/ShadowMaterial
 		const geometry = new THREE.PlaneGeometry(2000, 2000);
@@ -134,21 +139,66 @@ export default class Bg3d {
 
 	/////////////
 	// Camera pos
+	// Change position and rotation of camera as user scrolls into a new [data-camera-pos] element
 	cameraPos () {
 		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 			if (entry.isIntersecting) {
-				const newPos = JSON.parse(entry.target.dataset.cameraPos);
-
-				new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.camTransDur).easing(this.config.easing).start();
-				new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start();
+				this.setCameraPos(JSON.parse(entry.target.dataset.cameraPos));
 			}
 		}), {threshold: 0.25});
 
 		document.querySelectorAll('[data-camera-pos]').forEach(el => observer.observe(el));
 	}
 
-	/////////
-	// Update
+	setCameraPos (newPos) {
+		new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.camTransDur).easing(this.config.easing).start();
+		new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
+			this.camera.rotation.x = newPos.rx;
+			this.camera.rotation.y = newPos.ry;
+			this.camera.rotation.z = newPos.rz;
+		});
+
+		// Tween rotation with lookAt
+		// https://stackoverflow.com/a/25278875/1074594
+		/* const initRot = new THREE.Euler().copy(this.camera.rotation);
+
+		console.log('INITIAL:');
+		console.log(initRot);
+
+		// Look at new position temporarily
+		this.camera.lookAt(newPos.lx, newPos.ly, newPos.lz);
+
+		// Copy rotation of new lookAt
+		const newRot = new THREE.Euler().copy(this.camera.rotation);
+
+		console.log('NEW:');
+		console.log(newRot);
+
+		// Go back to initial rotation
+		this.camera.rotation.copy(initRot);
+
+		// Now tween to new rotation
+		// WTF does this not work!?
+		// https://stackoverflow.com/questions/66734479/unable-to-tween-threejs-camera-rotation
+		new TWEEN.Tween(this.camera.rotation).to({x: newRot.x, y: newRot.y, z: newRot.z}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
+			console.log('Setting rotation manually');
+			console.log(newRot);
+
+			this.camera.rotation.x = newRot.x;
+			this.camera.rotation.y = newRot.y;
+			this.camera.rotation.z = newRot.z;
+		}); */
+	}
+
+	////////////
+	// Mouse pos
+	// Change position of camera as mouse moves but always look at target
+	mousePos () {
+		// TODO
+	}
+
+	//////////
+	// Animate
 	animate () {
 		if (this.controls && this.controls.update) {
 			this.controls.update();
