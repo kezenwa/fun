@@ -1,9 +1,14 @@
 $themes: (
 	"a": ("#020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0", "white", "#f90"),
 	"b": ("#FFF6E5", "#3E454C", "#FF7F66"),
-	"c": ("#FDE792", "#5A1F00", "#477725"),
+	"c": ("#D95284", "#F2F2F2", "#F285AD"),
 	"d": ("#2C3E50", "#ECF0F1", "#E74C3C"),
-	"e": ("#F2E638", "#8C6A03", "#F2DD72")
+	"e": ("#E74C3C", "#ECF0F1", "#2C3E50"),
+	"f": ("#395D73", "#FCF5E5", "#FACCD5"),
+	"g": ("#212226", "white", "#71D99E"),
+	"h": ("#16193B", "#ADD5F7", "#4E7AC7"),
+	"i": ("#072026", "#D99F6C", "#D95032"),
+	"j": ("#403C3B", "#F1F2E9", "#A6988D")
 );
 
 @each $name, $colors in $themes {
@@ -33,6 +38,7 @@ $themes: (
 	position: fixed;
 	right: 2vw;
 	top: var(--spacing-medium);
+	z-index: 1;
 
 	display: flex;
 	align-items: center;
@@ -40,22 +46,23 @@ $themes: (
 
 	a {
 		display: block;
-
 		width: 1rem;
 		height: 1rem;
 
 		font-size: 0;
-
 		opacity: 0.5;
+
+		border: 1px solid white;
 		border-radius: 50%;
+
 		transition: opacity 0.25s var(--easing);
 
-		&:hover,
-		&.active {
+		&:hover {
 			opacity: 1;
 		}
 
 		&.active {
+			opacity: 1;
 			box-shadow: 0.1rem 0.1rem 0.25rem rgba(0, 0, 0, 0.25);
 		}
 	}
