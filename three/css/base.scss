@@ -21,7 +21,7 @@ h3,
 h4,
 h5,
 h6 {
-	font: 2rem/0.9 var(--heading-font), serif;
+	font: var(--heading-weight) 2rem/0.9 var(--heading-font), serif;
 	letter-spacing: -0.025em;
 	margin: 0 0 var(--spacing-medium);
 	max-width: 36rem;
@@ -53,11 +53,6 @@ a {
 	&:hover {
 		color: var(--link-color);
 	}
-}
-
-a[class*="icon-"]::before {
-	display: inline-block;
-	text-decoration: none;
 }
 
 img {

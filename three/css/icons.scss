@@ -25,3 +25,16 @@
 .icon-up:before { content: "\e804"; }
 .icon-github:before { content: "\f09b"; }
 .icon-stackoverflow:before { content: "\f16c"; }
+
+a[class*="icon-"] {
+	&::before {
+		display: inline-block;
+		text-decoration: none;
+		transform: scale(1);
+		transition: transform 0.5s var(--easing);
+	}
+
+	&:hover::before {
+		transform: scale(1.5);
+	}
+}

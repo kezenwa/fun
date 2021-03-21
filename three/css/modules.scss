@@ -35,11 +35,24 @@ section {
 	}
 }
 
-// About
-html.js #about {
+html.js section {
 	header p {
 		@include scrollspy-hide;
 
+		transition-delay: 1s;
+	}
+
+	&.in-view {
+		header p {
+			@include scrollspy-show;
+		}
+	}
+}
+
+// About & contact
+html.js #about,
+html.js #contact {
+	header p {
 		transition-delay: 1.5s;
 	}
 
@@ -56,7 +69,6 @@ html.js #about {
 	}
 
 	&.in-view {
-		header p,
 		ul li {
 			@include scrollspy-show;
 		}
@@ -73,6 +85,7 @@ html.js #about {
 		display: grid;
 		gap: var(--spacing-large);
 		grid-auto-columns: 1fr;
+		perspective: 300px;
 
 		> * {
 			grid-row: 1;
@@ -81,30 +94,113 @@ html.js #about {
 }
 
 html.js #work {
-	header p {
-		@include scrollspy-hide;
+	article {
+		opacity: 0;
+		transform-origin: 50% top;
+		transform: rotateX(-90deg);
+		transition: transform var(--scrollspy-duration) var(--easing), opacity var(--scrollspy-duration) var(--easing);
+	}
 
-		transition-delay: 0.5s;
+	@for $i from 1 through 5 {
+		article:nth-child(#{$i}) {
+			transition-delay: #{1.5 + $i * 0.25 - 0.25}s;
+		}
 	}
 
 	&.in-view {
 		header p {
 			@include scrollspy-show;
 		}
+
+		article {
+			opacity: 1;
+			transform: rotateX(0);
+		}
 	}
 }
 
 // Play
 #play {
+	> div {
+		width: 100%;
+		display: flex;
+		gap: var(--spacing-large);
 
+		> * {
+			flex-grow: 1;
+		}
+	}
+
+	figure {
+		position: relative;
+		margin: 0;
+		overflow: hidden;
+		border-radius: 50%;
+		border: 1vw solid white;
+		box-shadow: 0.25rem 0.25rem 0.75rem rgba(0, 0, 0, 0.25);
+
+		a {
+			cursor: zoom-in;
+		}
+
+		&::before {
+			display: block;
+			content: "";
+			padding-bottom: 100%;
+		}
+
+		img,
+		video {
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			bottom: 0;
+
+			object-fit: cover;
+
+			width: 100%;
+			height: 100%;
+
+			transform: scale(1);
+			transition: transform 0.5s ease;
+			border-radius: 50%;
+
+			&:hover {
+				transform: scale(1.25);
+			}
+		}
+	}
 }
 
-// Contact
-#contact {
+html.js #play {
+	figure {
+		transform: scale(0);
+		transition: transform var(--scrollspy-duration) var(--easing);
+	}
 
+	@for $i from 1 through 10 {
+		figure:nth-child(#{$i}) {
+			transition-delay: #{1.5 + $i * 0.1 - 0.1}s;
+		}
+	}
+
+	&.in-view {
+		figure {
+			transform: scale(1);
+		}
+	}
 }
 
 // End
-#end {
+html.js #end {
+	> nav {
+		@include scrollspy-hide;
 
+		transition-delay: 1.5s;
+	}
+
+	&.in-view > nav {
+		@include scrollspy-show;
+	}
 }
