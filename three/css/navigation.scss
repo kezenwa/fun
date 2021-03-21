@@ -8,11 +8,22 @@
 	}
 }
 
+@keyframes navigation-slide-up {
+	0% {
+		transform: translateY(calc(var(--spacing-medium) + 100%));
+	}
+
+	100% {
+		transform: translateX(0);
+	}
+}
+
 #navigation {
 	position: fixed;
 	right: 2vw;
 	top: 50%;
 	transform: translateY(-50%);
+	z-index: 1;
 
 	display: flex;
 	flex-direction: column;
@@ -52,5 +63,20 @@ html.js.loaded #navigation a {
 @for $i from 1 through 10 {
 	html.js #navigation a:nth-child(#{$i}) {
 		animation-delay: #{4 + $i * 0.1 - 0.1}s;
+	}
+}
+
+@media (orientation: portrait) {
+	#navigation {
+		right: auto;
+		top: auto;
+		left: 50%;
+		bottom: var(--spacing-medium);
+		transform: translateX(-50%);
+		flex-direction: row;
+	}
+
+	html.js #navigation a {
+		animation-name: navigation-slide-up;
 	}
 }
