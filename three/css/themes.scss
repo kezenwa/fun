@@ -1,61 +1,21 @@
-html.theme-a {
-	--body-bg: #020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0;
-	--text-color: white;
-	--text-color-inverted: white;
-	--accent-color: #f90;
-	--link-color: #f90;
-}
+$themes: (
+	"a": ("#020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0", "white", "#f90"),
+	"b": ("#FFF6E5", "#3E454C", "#FF7F66"),
+	"c": ("#FDE792", "#5A1F00", "#477725"),
+	"d": ("#2C3E50", "#ECF0F1", "#E74C3C"),
+	"e": ("#F2E638", "#8C6A03", "#F2DD72")
+);
 
-a[data-set-theme="a"] {
-	background: #020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0;
-}
+@each $name, $colors in $themes {
+	html.theme-#{$name} {
+		--body-bg: #{nth($colors, 1)};
+		--text-color: #{nth($colors, 2)};
+		--accent-color: #{nth($colors, 3)};
+	}
 
-html.theme-b {
-	--body-bg: #FFF6E5;
-	--text-color: #3E454C;
-	--text-color-inverted: #FFF6E5;
-	--accent-color: #FF7F66;
-	--link-color: #FF7F66;
-}
-
-a[data-set-theme="b"] {
-	background: #FFF6E5;
-}
-
-html.theme-c {
-	--body-bg: #FDE792;
-	--text-color: #5A1F00;
-	--text-color-inverted: #FDE792;
-	--accent-color: #477725;
-	--link-color: #477725;
-}
-
-a[data-set-theme="c"] {
-	background: #FDE792;
-}
-
-html.theme-d {
-	--body-bg: #2C3E50;
-	--text-color: #ECF0F1;
-	--text-color-inverted: #2C3E50;
-	--accent-color: #E74C3C;
-	--link-color: #E74C3C;
-}
-
-a[data-set-theme="d"] {
-	background: #2C3E50;
-}
-
-html.theme-e {
-	--body-bg: #F2E638;
-	--text-color: #8C6A03;
-	--text-color-inverted: #F2E638;
-	--accent-color: #F2DD72;
-	--link-color: #F2DD72;
-}
-
-a[data-set-theme="e"] {
-	background: #F2E638;
+	a[data-set-theme="#{$name}"] {
+		background: #{nth($colors, 1)};
+	}
 }
 
 // Theme switcher
