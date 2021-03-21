@@ -15,7 +15,7 @@ section {
 	justify-content: center;
 	flex-direction: column;
 
-	padding: 15vh 5vw;
+	padding: 15vh var(--site-padding);
 	min-height: 100vh;
 
 	header {
@@ -83,9 +83,14 @@ html.js #contact {
 
 	> div {
 		display: grid;
-		gap: var(--spacing-large);
+		gap: min(5vw, var(--spacing-large));
 		grid-auto-columns: 1fr;
 		perspective: 300px;
+
+		max-width: calc(100% + var(--site-padding) * 2);
+		padding: var(--spacing-large) var(--site-padding);
+		margin: calc(var(--spacing-large) * -1) calc(var(--site-padding) * -1);
+		overflow: auto;
 
 		> * {
 			grid-row: 1;
@@ -124,7 +129,7 @@ html.js #work {
 	> div {
 		width: 100%;
 		display: flex;
-		gap: var(--spacing-large);
+		gap: 2vw;
 
 		> * {
 			flex-grow: 1;
