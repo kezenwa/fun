@@ -1,6 +1,6 @@
 <!doctype html>
 
-<html lang="en-GB" class="no-js theme-b">
+<html lang="en-GB" class="no-js">
 
 	<head>
 
@@ -19,6 +19,11 @@
 		<script>
 			document.documentElement.classList.remove('no-js');
 			document.documentElement.classList.add('js');
+
+			const themes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+			const theme = themes[Math.floor(Math.random() * themes.length)];
+
+			document.documentElement.classList.add('theme-' + theme);
 		</script>
 
 	</head>
@@ -29,10 +34,15 @@
 
 		<nav id="themes">
 			<a data-set-theme="a">Theme A</a>
-			<a data-set-theme="b" class="active">Theme B</a>
+			<a data-set-theme="b">Theme B</a>
 			<a data-set-theme="c">Theme C</a>
 			<a data-set-theme="d">Theme D</a>
 			<a data-set-theme="e">Theme E</a>
+			<a data-set-theme="f">Theme F</a>
+			<a data-set-theme="g">Theme G</a>
+			<a data-set-theme="h">Theme H</a>
+			<a data-set-theme="i">Theme I</a>
+			<a data-set-theme="j">Theme J</a>
 		</nav>
 
 		<nav id="navigation" data-highlight-visible>
