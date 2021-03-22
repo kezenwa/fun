@@ -157,6 +157,9 @@ export default class Bg3d {
 	setCameraPos (newPos) {
 		new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.camTransDur).easing(this.config.easing).start();
 
+		// NOTE: Instead of just animating the camera.rotation directly,
+		// we need to animate this temporary object and update the camera rotation every time it updates (for some reason...)
+		// https://stackoverflow.com/questions/66734479/unable-to-tween-threejs-camera-rotation
 		const oldRot = {
 			x: this.camera.rotation.x,
 			y: this.camera.rotation.y,
@@ -169,6 +172,7 @@ export default class Bg3d {
 			this.camera.rotation.z = oldRot.z;
 		});
 
+		// NOTE: This doesn't work
 		/* new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
 			this.camera.rotation.x = newPos.rx;
 			this.camera.rotation.y = newPos.ry;
@@ -197,6 +201,7 @@ export default class Bg3d {
 		// Now tween to new rotation
 		// WTF does this not work!?
 		// https://stackoverflow.com/questions/66734479/unable-to-tween-threejs-camera-rotation
+		// NOTE: Could definitely use solution from above here too, but not using lookAt so
 		new TWEEN.Tween(this.camera.rotation).to({x: newRot.x, y: newRot.y, z: newRot.z}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
 			console.log('Setting rotation manually');
 			console.log(newRot);
@@ -209,9 +214,17 @@ export default class Bg3d {
 
 	////////////
 	// Mouse pos
-	// Change position of camera as mouse moves but always look at target
+	// Change position of camera (actually move the scene around)
 	mousePos () {
-		// TODO
+		document.body.addEventListener('mousemove', e => {
+			const halfW = window.innerWidth / 2;
+			const halfH = window.innerHeight / 2;
+			const x = ((e.clientX - halfW) / halfW) * 0.1;
+			const y = ((e.clientY - halfH) / halfH) * 0.1;
+
+			this.scene.rotation.x = y;
+			this.scene.position.x = -x;
+		});
 	}
 
 	//////////
