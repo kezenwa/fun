@@ -39,6 +39,9 @@ export default class Bg3d {
 	///////
 	// Init
 	init () {
+		// Store objects in the scene here later
+		this.objects = {};
+
 		// Create scene, renderer etc
 		this.clock = new THREE.Clock();
 		this.scene = new THREE.Scene();
@@ -97,8 +100,9 @@ export default class Bg3d {
 			this.scene.add(glb.scene);
 
 			// Grab objects
-			this.monitor = this.scene.getObjectByName('monitor');
-			this.mouse = this.scene.getObjectByName('mouse');
+			this.objects.monitor = this.scene.getObjectByName('monitor');
+			this.objects.mouse = this.scene.getObjectByName('mouse');
+			this.objects.globe = this.scene.getObjectByName('globe');
 		});
 	}
 
@@ -204,12 +208,16 @@ export default class Bg3d {
 			this.controls.update();
 		}
 
-		if (this.monitor) {
-			this.monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
+		if (this.objects.monitor) {
+			this.objects.monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
 		}
 
-		if (this.mouse) {
-			this.mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
+		if (this.objects.mouse) {
+			this.objects.mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
+		}
+
+		if (this.objects.globe) {
+			this.objects.globe.rotation.y = this.clock.getElapsedTime() / 4;
 		}
 
 		TWEEN.update();
