@@ -657,7 +657,7 @@ html.js #work.in-view article {
 #play > div {
   width: 100%;
   display: flex;
-  gap: 2vw;
+  gap: min(2vw, var(--spacing-large));
 }
 #play > div > * {
   flex-grow: 1;
