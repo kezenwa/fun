@@ -8,7 +8,10 @@
 	--heading-font: Montserrat; // Montserrat, Raleway, Ubuntu, Quicksand, "Josefin Sans", Cabin
 	--heading-weight: bold;
 
-	--site-padding: 5vw;
+	--site-width-min: 85vw;
+	--site-width-max: 1200px;
+	--site-width: min(var(--site-width-min), var(--site-width-max));
+	--site-padding: calc((100vw - var(--site-width)) / 2);
 
 	--spacing-small: 0.5rem;
 	--spacing-medium: 1.25rem;
