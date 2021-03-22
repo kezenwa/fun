@@ -156,11 +156,24 @@ export default class Bg3d {
 
 	setCameraPos (newPos) {
 		new TWEEN.Tween(this.camera.position).to({x: newPos.x, y: newPos.y, z: newPos.z}, this.config.camTransDur).easing(this.config.easing).start();
-		new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
+
+		const oldRot = {
+			x: this.camera.rotation.x,
+			y: this.camera.rotation.y,
+			z: this.camera.rotation.z
+		};
+
+		new TWEEN.Tween(oldRot).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start().onUpdate(() => {
+			this.camera.rotation.x = oldRot.x;
+			this.camera.rotation.y = oldRot.y;
+			this.camera.rotation.z = oldRot.z;
+		});
+
+		/* new TWEEN.Tween(this.camera.rotation).to({x: newPos.rx, y: newPos.ry, z: newPos.rz}, this.config.camTransDur).easing(this.config.easing).start().onComplete(() => {
 			this.camera.rotation.x = newPos.rx;
 			this.camera.rotation.y = newPos.ry;
 			this.camera.rotation.z = newPos.rz;
-		});
+		}); */
 
 		// Tween rotation with lookAt
 		// https://stackoverflow.com/a/25278875/1074594
