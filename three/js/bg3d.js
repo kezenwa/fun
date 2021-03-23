@@ -136,7 +136,7 @@ export default class Bg3d {
 	// Grab Objects
 	// Save references to our objects and their original positions
 	grabObjects () {
-		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen']
+		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen', 'compass_arrow']
 
 		objects.forEach(objName => {
 			const obj = this.scene.getObjectByName(objName);
@@ -312,6 +312,10 @@ export default class Bg3d {
 
 		if (this.objects.laptop_screen) {
 			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 2) / 5);
+		}
+
+		if (this.objects.compass_arrow) {
+			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
 		}
 
 		TWEEN.update();
