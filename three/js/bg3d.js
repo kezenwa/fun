@@ -16,7 +16,7 @@ export default class Bg3d {
 		this.config = Object.assign({
 			scene: 'assets/alcom.glb',
 			envMap: 'assets/envmap.jpg',
-			fov: 45,
+			fov: 50,
 			easing: TWEEN.Easing.Quadratic.InOut,
 			camTransDur: 1000,
 			dev: false
@@ -86,9 +86,10 @@ export default class Bg3d {
 	controls () {
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		// this.controls.autoRotate = true;
-		this.controls.enableDamping = true;
-		this.controls.dampingFactor = 0.05;
+		// this.controls.enableDamping = true;
+		// this.controls.dampingFactor = 0.05;
 		this.controls.rotateSpeed = 1;
+		this.controls.screenSpacePanning = false;
 	}
 
 	///////
@@ -135,7 +136,7 @@ export default class Bg3d {
 	// Grab Objects
 	// Save references to our objects and their original positions
 	grabObjects () {
-		const objects = ['monitor', 'mouse', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen']
+		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen']
 
 		objects.forEach(objName => {
 			const obj = this.scene.getObjectByName(objName);
