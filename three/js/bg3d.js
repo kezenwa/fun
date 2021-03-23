@@ -315,9 +315,7 @@ export default class Bg3d {
 		}
 
 		if (this.objects.compass_arrow) {
-			if (this.clock.getElapsedTime() % 100 === 0) {
-				console.log(this.clock.getElapsedTime());
-			}
+			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
 		}
 
 		TWEEN.update();
