@@ -36,10 +36,23 @@ export default class Bg3d {
 		}
 	}
 
+	copyCameraPos () {
+		const cameraPos = {
+			x: this.camera.position.x,
+			y: this.camera.position.y,
+			z: this.camera.position.z,
+			rx: this.camera.rotation.x,
+			ry: this.camera.rotation.y,
+			rz: this.camera.rotation.z
+		};
+
+		console.log(JSON.stringify(cameraPos));
+	}
+
 	///////
 	// Init
 	init () {
-		// Store objects in the scene here later
+		// Store references here
 		this.objects = {};
 
 		// Create scene, renderer etc
@@ -100,9 +113,33 @@ export default class Bg3d {
 			this.scene.add(glb.scene);
 
 			// Grab objects
-			this.objects.monitor = this.scene.getObjectByName('monitor');
-			this.objects.mouse = this.scene.getObjectByName('mouse');
-			this.objects.globe = this.scene.getObjectByName('globe');
+			this.grabObjects();
+		});
+	}
+
+	///////////////
+	// Grab Objects
+	// Save references to our objects and their original positions
+	grabObjects () {
+		const objects = ['monitor', 'mouse', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question']
+
+		objects.forEach(objName => {
+			const obj = this.scene.getObjectByName(objName);
+
+			if (obj) {
+				obj.userData.origPos = {
+					x: obj.position.x,
+					y: obj.position.y,
+					z: obj.position.z
+				};
+				obj.userData.origRot = {
+					x: obj.rotation.x,
+					y: obj.rotation.y,
+					z: obj.rotation.z
+				};
+
+				this.objects[objName] = obj;
+			}
 		});
 	}
 
@@ -244,6 +281,17 @@ export default class Bg3d {
 
 		if (this.objects.globe) {
 			this.objects.globe.rotation.y = this.clock.getElapsedTime() / 4;
+		}
+
+		if (this.objects.block_brick && this.objects.block_brick_2 && this.objects.block_question) {
+			this.objects.block_brick_2.position.y = this.objects.block_brick_2.userData.origPos.y + (Math.sin(this.clock.getElapsedTime() * 2) / 500);
+			this.objects.block_question.position.y = this.objects.block_question.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 0.5) * 2) / 500);
+			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 1) * 2) / 500);
+		}
+
+		if (this.objects.flower_enemy) {
+			this.objects.flower_enemy.position.y = this.objects.flower_enemy.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 15 + this.objects.flower_enemy.userData.origPos.y / 3);
+			this.objects.flower_enemy.rotation.y = this.clock.getElapsedTime() / 2;
 		}
 
 		TWEEN.update();
