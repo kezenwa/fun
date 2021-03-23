@@ -38,7 +38,7 @@ export default class Bg3d {
 		}
 		else {
 			this.cameraPos();
-			this.mousePos();
+			// this.mousePos();
 		}
 	}
 
@@ -71,6 +71,7 @@ export default class Bg3d {
 		this.camera.position.z = 5;
 
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.el.appendChild(this.renderer.domElement);
 
 		// Shadows
@@ -289,8 +290,8 @@ export default class Bg3d {
 		document.body.addEventListener('mousemove', e => {
 			const halfW = window.innerWidth / 2;
 			const halfH = window.innerHeight / 2;
-			const x = ((e.clientX - halfW) / halfW) * 0.1;
-			const y = ((e.clientY - halfH) / halfH) * 0.1;
+			const x = ((e.clientX - halfW) / halfW) * 0.025; // NOTE: 0.025 = limit movement a lot
+			const y = ((e.clientY - halfH) / halfH) * 0.025;
 
 			// this.scene.rotation.x = y;
 			this.scene.position.y = y;
