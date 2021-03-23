@@ -5,6 +5,9 @@
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/GLTFLoader.js';
+import { EffectComposer } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/RenderPass.js';
+import { GlitchPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/GlitchPass.js';
 
 //////
 // App
@@ -27,6 +30,7 @@ export default class Bg3d {
 		this.loadEnv();
 		this.floor();
 		this.lights();
+		this.postProcessing();
 
 		if (this.config.dev) {
 			document.documentElement.classList.add('dev');
@@ -38,6 +42,7 @@ export default class Bg3d {
 		}
 	}
 
+	// Utility
 	copyCameraPos () {
 		const cameraPos = {
 			x: this.camera.position.x,
@@ -72,6 +77,9 @@ export default class Bg3d {
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+
+		// Post processing
+		this.composer = new EffectComposer(this.renderer);
 
 		// Resize
 		window.addEventListener('resize', e => {
@@ -136,7 +144,7 @@ export default class Bg3d {
 	// Grab Objects
 	// Save references to our objects and their original positions
 	grabObjects () {
-		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen', 'compass_arrow']
+		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen', 'compass_arrow', 'espresso_crema']
 
 		objects.forEach(objName => {
 			const obj = this.scene.getObjectByName(objName);
@@ -191,6 +199,16 @@ export default class Bg3d {
 		this.floor = new THREE.Mesh(geometry, material);
 		this.floor.receiveShadow = true;
 		this.scene.add(this.floor);
+	}
+
+	//////////////////
+	// Post processing
+	postProcessing () {
+		const renderPass = new RenderPass(this.scene, this.camera);
+		const glitchPass = new GlitchPass();
+
+		this.composer.addPass(renderPass);
+		// this.composer.addPass(glitchPass);
 	}
 
 	/////////////
@@ -318,6 +336,10 @@ export default class Bg3d {
 			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
 		}
 
+		if (this.objects.espresso_crema) {
+			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 5);
+		}
+
 		TWEEN.update();
 	}
 
@@ -325,6 +347,7 @@ export default class Bg3d {
 	// Render
 	render () {
 		this.animate();
-		this.renderer.render(this.scene, this.camera);
+		// this.renderer.render(this.scene, this.camera);
+		this.composer.render();
 	}
 }
