@@ -68,7 +68,7 @@ a[class*=icon-]:hover::before {
   --heading-font: Montserrat;
   --heading-weight: bold;
   --site-width-min: 85vw;
-  --site-width-max: 1200px;
+  --site-width-max: 1360px;
   --site-width: min(var(--site-width-min), var(--site-width-max));
   --site-padding: calc((100vw - var(--site-width)) / 2);
   --spacing-small: 0.5rem;
@@ -607,11 +607,11 @@ html.js #contact.in-view ul li {
 }
 
 #work article {
-  background: var(--body-bg);
   position: relative;
   padding: var(--spacing-large);
   box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.25);
   border-radius: 0.5rem;
+  backdrop-filter: blur(20px);
 }
 #work > div {
   display: grid;
