@@ -274,7 +274,8 @@ export default class Bg3d {
 			const x = ((e.clientX - halfW) / halfW) * 0.1;
 			const y = ((e.clientY - halfH) / halfH) * 0.1;
 
-			this.scene.rotation.x = y;
+			// this.scene.rotation.x = y;
+			this.scene.position.y = y;
 			this.scene.position.x = -x;
 		});
 	}
