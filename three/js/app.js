@@ -37,6 +37,7 @@ document.querySelectorAll('section').forEach(el => {
 
 ////////////
 // Set theme
+var autoThemeEnabled = true;
 const allThemes = [];
 const allThemeButtons = document.querySelectorAll('[data-set-theme]');
 
@@ -50,12 +51,31 @@ allThemeButtons.forEach(el => {
 	}
 
 	el.addEventListener('click', e => {
+		if (e.x !== 0 && e.y !== 0) {
+			autoThemeEnabled = false;
+		}
+
 		allThemes.forEach(t => document.documentElement.classList.remove('theme-' + t));
 		allThemeButtons.forEach(tb => tb.classList.remove('active'));
 
 		document.documentElement.classList.add('theme-' + theme);
 		el.classList.add('active');
 	});
+});
+
+// Auto theme
+const autoThemeObserver = new IntersectionObserver(entries => entries.forEach(entry => {
+	if (entry.isIntersecting && autoThemeEnabled) {
+		const active = Array.from(allThemeButtons).filter(tb => tb.dataset.setTheme === entry.target.dataset.autoTheme);
+
+		if (active) {
+			active[0].click();
+		}
+	}
+}), {threshold: 0.25});
+
+document.querySelectorAll('[data-auto-theme]').forEach(el => {
+	autoThemeObserver.observe(el);
 });
 
 ////////////////////

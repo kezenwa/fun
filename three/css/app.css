@@ -86,6 +86,7 @@ html {
   background-attachment: fixed;
   font-size: 100%;
   color: var(--text-color);
+  transition: background-color 0.75s var(--easing), color 0.75s var(--easing);
 }
 
 body {
@@ -158,13 +159,13 @@ figure img {
 }
 
 html.theme-a {
-  --body-bg: #020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0;
+  --body-bg: #020024;
   --text-color: white;
   --accent-color: #f90;
 }
 
 a[data-set-theme=a] {
-  background: #020024 radial-gradient(circle farthest-corner at center top, #00d4ff, #020024 100%) no-repeat 50% 0;
+  background: #020024;
 }
 
 html.theme-b {
