@@ -15,14 +15,16 @@ export default class Bg3d {
 		this.el = el;
 		this.config = Object.assign({
 			scene: 'assets/alcom.glb',
+			envMap: 'assets/envmap.jpg',
 			fov: 45,
 			easing: TWEEN.Easing.Quadratic.InOut,
-			camTransDur: 750,
+			camTransDur: 1000,
 			dev: false
 		}, conf);
 
 		this.init();
 		this.load();
+		this.loadEnv();
 		this.floor();
 		this.lights();
 
@@ -93,9 +95,9 @@ export default class Bg3d {
 	// Load
 	// Load scene, enable shadows and store references to our objects
 	load () {
-		this.loader = new GLTFLoader();
+		const loader = new GLTFLoader();
 
-		this.loader.load(this.config.scene, glb => {
+		loader.load(this.config.scene, glb => {
 			// Cast shadows on all meshes
 			glb.scene.traverse(node => {
 				if (node.isMesh) {
@@ -114,6 +116,18 @@ export default class Bg3d {
 
 			// Grab objects
 			this.grabObjects();
+		});
+	}
+
+	loadEnv () {
+		const loader = new THREE.TextureLoader();
+
+		loader.load(this.config.envMap, texture => {
+			const renderTarget = new THREE.WebGLCubeRenderTarget(texture.image.height);
+
+			renderTarget.fromEquirectangularTexture(this.renderer, texture);
+
+			this.scene.environment = renderTarget.texture;
 		});
 	}
 
