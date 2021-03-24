@@ -25,6 +25,14 @@ export default class Bg3d {
 			dev: false
 		}, conf);
 
+		// Enable dev through query string
+		const params = new URLSearchParams(window.location.search);
+
+		if (params.get('dev')) {
+			this.config.dev = true;
+		}
+
+		// Kick off
 		this.init();
 		this.load();
 		this.loadEnv();
@@ -93,6 +101,7 @@ export default class Bg3d {
 	///////////
 	// Controls
 	controls () {
+		this.scene.add(new THREE.AxesHelper(500));
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		// this.controls.autoRotate = true;
 		// this.controls.enableDamping = true;
@@ -176,7 +185,7 @@ export default class Bg3d {
 		this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 		this.scene.add(this.ambLight);
 
-		this.spotLight = new THREE.SpotLight(0xffffff, 2.5);
+		this.spotLight = new THREE.SpotLight(0xffffff, 2.5, 0, Math.PI / 10, 0);
 
 		this.spotLight.position.set(-10, 10, 10);
 		this.spotLight.castShadow = true;
@@ -187,6 +196,10 @@ export default class Bg3d {
 		this.spotLight.shadow.camera.far = 1000;
 
 		this.scene.add(this.spotLight);
+
+		if (this.config.dev) {
+			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
+		}
 	}
 
 	////////
