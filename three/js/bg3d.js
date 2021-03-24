@@ -197,7 +197,7 @@ export default class Bg3d {
 
 		this.scene.add(this.spotLight);
 
-		if (this.config.dev) {
+		if (false && this.config.dev) {
 			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
 		}
 	}
@@ -335,8 +335,8 @@ export default class Bg3d {
 		}
 
 		if (this.objects.mushroom) {
-			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 10 + this.objects.mushroom.userData.origPos.y / 2);
-			this.objects.mushroom.rotation.y = this.clock.getElapsedTime();
+			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 30);
+			this.objects.mushroom.rotation.y = this.clock.getElapsedTime() * 4;
 		}
 
 		// Work
