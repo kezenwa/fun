@@ -38,7 +38,7 @@ export default class Bg3d {
 		}
 		else {
 			this.cameraPos();
-			this.mousePos();
+			// this.mousePos();
 		}
 	}
 
@@ -71,6 +71,7 @@ export default class Bg3d {
 		this.camera.position.z = 5;
 
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.el.appendChild(this.renderer.domElement);
 
 		// Shadows
@@ -144,7 +145,10 @@ export default class Bg3d {
 	// Grab Objects
 	// Save references to our objects and their original positions
 	grabObjects () {
-		const objects = ['work', 'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'laptop_screen', 'compass_arrow', 'espresso_crema']
+		const objects = [
+			'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question',
+			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema'
+		];
 
 		objects.forEach(objName => {
 			const obj = this.scene.getObjectByName(objName);
@@ -289,8 +293,8 @@ export default class Bg3d {
 		document.body.addEventListener('mousemove', e => {
 			const halfW = window.innerWidth / 2;
 			const halfH = window.innerHeight / 2;
-			const x = ((e.clientX - halfW) / halfW) * 0.1;
-			const y = ((e.clientY - halfH) / halfH) * 0.1;
+			const x = ((e.clientX - halfW) / halfW) * 0.025; // NOTE: 0.025 = limit movement a lot
+			const y = ((e.clientY - halfH) / halfH) * 0.025;
 
 			// this.scene.rotation.x = y;
 			this.scene.position.y = y;
@@ -305,22 +309,11 @@ export default class Bg3d {
 			this.controls.update();
 		}
 
-		if (this.objects.monitor) {
-			this.objects.monitor.position.y = 0.1 + ((Math.sin(this.clock.getElapsedTime()) / 20) + 0.1);
-		}
-
-		if (this.objects.mouse) {
-			this.objects.mouse.position.z = 0.4 + (Math.sin(this.clock.getElapsedTime() / 2) / 20);
-		}
-
-		if (this.objects.globe) {
-			this.objects.globe.rotation.y = this.clock.getElapsedTime() / 4;
-		}
-
+		// Play
 		if (this.objects.block_brick && this.objects.block_brick_2 && this.objects.block_question) {
-			this.objects.block_brick_2.position.y = this.objects.block_brick_2.userData.origPos.y + (Math.sin(this.clock.getElapsedTime() * 2) / 500);
+			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin(this.clock.getElapsedTime() * 2) / 500);
 			this.objects.block_question.position.y = this.objects.block_question.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 0.5) * 2) / 500);
-			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 1) * 2) / 500);
+			this.objects.block_brick_2.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 1) * 2) / 500);
 		}
 
 		if (this.objects.flower_enemy) {
@@ -328,16 +321,27 @@ export default class Bg3d {
 			this.objects.flower_enemy.rotation.y = this.clock.getElapsedTime() / 2;
 		}
 
+		if (this.objects.mushroom) {
+			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 10 + this.objects.mushroom.userData.origPos.y / 2);
+			this.objects.mushroom.rotation.y = this.clock.getElapsedTime();
+		}
+
+		// Work
 		if (this.objects.laptop_screen) {
 			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 2) / 5);
 		}
 
-		if (this.objects.compass_arrow) {
-			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
-		}
-
 		if (this.objects.espresso_crema) {
 			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 4);
+		}
+
+		// Contact
+		if (this.objects.globe) {
+			this.objects.globe.rotation.y = this.clock.getElapsedTime() / 4;
+		}
+
+		if (this.objects.compass_arrow) {
+			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
 		}
 
 		TWEEN.update();
