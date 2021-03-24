@@ -337,7 +337,7 @@ export default class Bg3d {
 		}
 
 		if (this.objects.espresso_crema) {
-			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 5);
+			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 4);
 		}
 
 		TWEEN.update();
