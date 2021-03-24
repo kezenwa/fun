@@ -4,6 +4,7 @@
 // Vendor
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+import { PointerLockControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/RenderPass.js';
@@ -25,13 +26,6 @@ export default class Bg3d {
 			dev: false
 		}, conf);
 
-		// Enable dev through query string
-		const params = new URLSearchParams(window.location.search);
-
-		if (params.get('dev')) {
-			this.config.dev = true;
-		}
-
 		// Kick off
 		this.init();
 		this.load();
@@ -40,8 +34,16 @@ export default class Bg3d {
 		this.lights();
 		this.postProcessing();
 
+		// Enable dev through query string
+		const params = new URLSearchParams(window.location.search);
+
+		if (params.get('dev')) {
+			this.config.dev = true;
+		}
+
 		if (this.config.dev) {
 			document.documentElement.classList.add('dev');
+			this.scene.add(new THREE.AxesHelper(500));
 			this.controls();
 		}
 		else {
@@ -101,13 +103,12 @@ export default class Bg3d {
 	///////////
 	// Controls
 	controls () {
-		this.scene.add(new THREE.AxesHelper(500));
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		// this.controls.autoRotate = true;
 		// this.controls.enableDamping = true;
 		// this.controls.dampingFactor = 0.05;
-		this.controls.rotateSpeed = 1;
-		this.controls.screenSpacePanning = false;
+		// this.controls.rotateSpeed = 1;
+		// this.controls.screenSpacePanning = false;
 	}
 
 	///////
