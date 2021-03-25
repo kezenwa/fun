@@ -4,7 +4,6 @@
 // Vendor
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
-import { PointerLockControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/GLTFLoader.js';
 import { EffectComposer } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/RenderPass.js';
@@ -23,16 +22,8 @@ export default class Bg3d {
 			fov: 50,
 			easing: TWEEN.Easing.Quadratic.InOut,
 			camTransDur: 1000,
-			dev: false
+			dev: false // NOTE: Dev mode - enables free camera and more
 		}, conf);
-
-		// Kick off
-		this.init();
-		this.load();
-		this.loadEnv();
-		this.floor();
-		this.lights();
-		this.postProcessing();
 
 		// Enable dev through query string
 		const params = new URLSearchParams(window.location.search);
@@ -41,18 +32,27 @@ export default class Bg3d {
 			this.config.dev = true;
 		}
 
+		// Kick off
+		this.init();
+		this.load();
+		this.loadEnv();
+		this.floor();
+		this.postProcessing();
+
 		if (this.config.dev) {
-			document.documentElement.classList.add('dev');
+			document.documentElement.classList.add('dev'); // NOTE: Some CSS differs in dev mode
 			this.scene.add(new THREE.AxesHelper(500));
-			this.controls();
+			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		}
 		else {
 			this.cameraPos();
-			// this.mousePos();
+			// this.mousePos(); // NOTE: Disabled for now... not sure if needed??
 		}
 	}
 
-	// Utility
+	///////////////////////
+	// Copy camera position
+	// Copies current camera position, used from console in dev mode and copied to different sections in index.html
 	copyCameraPos () {
 		const cameraPos = {
 			x: this.camera.position.x,
@@ -69,7 +69,7 @@ export default class Bg3d {
 	///////
 	// Init
 	init () {
-		// Store references here
+		// Store object references here
 		this.objects = {};
 
 		// Create scene, renderer etc
@@ -78,11 +78,10 @@ export default class Bg3d {
 		this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
 		this.camera = new THREE.PerspectiveCamera(this.config.fov, this.el.clientWidth / this.el.clientHeight, 0.01, 5000);
 
-		this.camera.position.z = 5;
-
-		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
-		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.el.appendChild(this.renderer.domElement);
+		if (this.config.dev) {
+			this.camera.position.z = 5;
+			// this.scene.add(new THREE.CameraHelper(this.camera)); // NOTE: Not sure htf this helps??
+		}
 
 		// Shadows
 		this.renderer.shadowMap.enabled = true;
@@ -92,23 +91,17 @@ export default class Bg3d {
 		// Post processing
 		this.composer = new EffectComposer(this.renderer);
 
+		// Render size
+		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
+		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.el.appendChild(this.renderer.domElement);
+
 		// Resize
 		window.addEventListener('resize', e => {
 			this.camera.aspect = this.el.clientWidth / this.el.clientHeight;
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 		});
-	}
-
-	///////////
-	// Controls
-	controls () {
-		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-		// this.controls.autoRotate = true;
-		// this.controls.enableDamping = true;
-		// this.controls.dampingFactor = 0.05;
-		// this.controls.rotateSpeed = 1;
-		// this.controls.screenSpacePanning = false;
 	}
 
 	///////
@@ -118,8 +111,8 @@ export default class Bg3d {
 		const loader = new GLTFLoader();
 
 		loader.load(this.config.scene, glb => {
-			// Cast shadows on all meshes
 			glb.scene.traverse(node => {
+				// Cast shadows on all meshes
 				if (node.isMesh) {
 					node.castShadow = true;
 					node.receiveShadow = true;
@@ -129,6 +122,19 @@ export default class Bg3d {
 						node.material.map.anisotropy = 16;
 					}
 				}
+				// Make lights cast shadows!
+				else if (node.isLight) {
+					node.castShadow = true;
+					node.shadow.bias = -0.0002;
+					node.shadow.mapSize.width = 512 * 8;
+					node.shadow.mapSize.height = 512 * 8;
+					node.shadow.camera.near = 1;
+					node.shadow.camera.far = 1000;
+
+					if (this.config.dev) {
+						this.scene.add(new THREE.SpotLightHelper(node));
+					}
+				}
 			});
 
 			// Add scene
@@ -136,9 +142,20 @@ export default class Bg3d {
 
 			// Grab objects
 			this.grabObjects();
+
+			// Hide dev floor
+			if (!this.config.dev) {
+				const devFloor = this.scene.getObjectByName('dev_floor');
+
+				if (devFloor) {
+					devFloor.visible = false;
+				}
+			}
 		});
 	}
 
+	////////////////////////
+	// Load evnvironment map
 	loadEnv () {
 		const loader = new THREE.TextureLoader();
 
@@ -182,25 +199,10 @@ export default class Bg3d {
 
 	/////////
 	// Lights
+	// NOTE: Lights are included in the scene
 	lights () {
 		this.ambLight = new THREE.AmbientLight(0xffffff, 1);
 		this.scene.add(this.ambLight);
-
-		this.spotLight = new THREE.SpotLight(0xffffff, 2.5, 0, Math.PI / 10, 0);
-
-		this.spotLight.position.set(-10, 10, 10);
-		this.spotLight.castShadow = true;
-		this.spotLight.shadow.bias = -0.0002;
-		this.spotLight.shadow.mapSize.width = 512 * 8;
-		this.spotLight.shadow.mapSize.height = 512 * 8;
-		this.spotLight.shadow.camera.near = 1;
-		this.spotLight.shadow.camera.far = 1000;
-
-		this.scene.add(this.spotLight);
-
-		if (false && this.config.dev) {
-			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
-		}
 	}
 
 	////////
