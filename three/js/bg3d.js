@@ -37,6 +37,7 @@ export default class Bg3d {
 		this.load();
 		this.loadEnv();
 		this.floor();
+		this.lights();
 		this.postProcessing();
 
 		if (this.config.dev) {
@@ -201,7 +202,7 @@ export default class Bg3d {
 	// Lights
 	// NOTE: Lights are included in the scene
 	lights () {
-		this.ambLight = new THREE.AmbientLight(0xffffff, 1);
+		this.ambLight = new THREE.AmbientLight(0xffffff, 0.5);
 		this.scene.add(this.ambLight);
 	}
 
