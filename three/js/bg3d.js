@@ -3,11 +3,15 @@
 /////////
 // Vendor
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
-import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'https://unpkg.com/three@0.126.1/examples/jsm/loaders/GLTFLoader.js';
-import { EffectComposer } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/RenderPass.js';
-import { GlitchPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/GlitchPass.js';
+
+import { OrbitControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
+// import { TransformControls } from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/TransformControls.js';
+// import { EffectComposer } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/EffectComposer.js';
+// import { RenderPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/RenderPass.js';
+// import { GlitchPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/GlitchPass.js';
+// import { BokehPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/BokehPass.js';
+// import { UnrealBloomPass } from 'https://unpkg.com/three@0.126.1/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 //////
 // App
@@ -36,9 +40,8 @@ export default class Bg3d {
 		this.init();
 		this.load();
 		this.loadEnv();
-		this.floor();
 		this.lights();
-		this.postProcessing();
+		// this.postProcessing(); NOTE: Disabled PP for now not sure how to keep BG transparent :/
 
 		if (this.config.dev) {
 			document.documentElement.classList.add('dev'); // NOTE: Some CSS differs in dev mode
@@ -46,6 +49,7 @@ export default class Bg3d {
 			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		}
 		else {
+			this.floor();
 			this.cameraPos();
 			// this.mousePos(); // NOTE: Disabled for now... not sure if needed??
 		}
@@ -89,9 +93,6 @@ export default class Bg3d {
 		this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 		this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
-		// Post processing
-		this.composer = new EffectComposer(this.renderer);
-
 		// Render size
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -134,6 +135,7 @@ export default class Bg3d {
 
 					if (this.config.dev) {
 						this.scene.add(new THREE.SpotLightHelper(node));
+						console.log(node);
 					}
 				}
 			});
@@ -204,13 +206,30 @@ export default class Bg3d {
 	lights () {
 		this.ambLight = new THREE.AmbientLight(0xffffff, 0.5);
 		this.scene.add(this.ambLight);
+
+		this.spotLight = new THREE.SpotLight(0xffffff, 2.5, 0, Math.PI / 10, 1);
+
+		this.spotLight.position.set(-10, 10, 10);
+
+		this.spotLight.castShadow = true;
+		this.spotLight.shadow.bias = -0.0002;
+		this.spotLight.shadow.mapSize.width = 512 * 8;
+		this.spotLight.shadow.mapSize.height = 512 * 8;
+		this.spotLight.shadow.camera.near = 1;
+		this.spotLight.shadow.camera.far = 1000;
+
+		this.scene.add(this.spotLight);
+
+		if (this.config.dev) {
+			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
+		}
 	}
 
 	////////
 	// Floor
 	// Create a transparent shadow catcher
+	// https://threejs.org/docs/#api/en/materials/ShadowMaterial
 	floor () {
-		// https://threejs.org/docs/#api/en/materials/ShadowMaterial
 		const geometry = new THREE.PlaneGeometry(2000, 2000);
 		geometry.rotateX(-Math.PI / 2);
 
@@ -224,13 +243,25 @@ export default class Bg3d {
 
 	//////////////////
 	// Post processing
-	postProcessing () {
-		const renderPass = new RenderPass(this.scene, this.camera);
-		const glitchPass = new GlitchPass();
+	/* postProcessing () {
+		this.composer = new EffectComposer(this.renderer);
 
-		this.composer.addPass(renderPass);
-		// this.composer.addPass(glitchPass);
-	}
+		const render = new RenderPass(this.scene, this.camera);
+		const glitch = new GlitchPass();
+		const bloom = new UnrealBloomPass({x: this.el.clientWidth, y: this.el.clientHeight}, 1.5, 0.5, 0.85);
+		const bokeh = new BokehPass(this.scene, this.camera, {
+			focus: 1.0,
+			aperture: 0.025,
+			maxblur: 1.0,
+			width: this.el.clientWidth,
+			height: this.el.clientHeight
+		});
+
+		this.composer.addPass(render);
+		// this.composer.addPass(bokeh);
+		// this.composer.addPass(glitch);
+		// this.composer.addPass(bloom);
+	} */
 
 	/////////////
 	// Camera pos
@@ -368,7 +399,7 @@ export default class Bg3d {
 	// Render
 	render () {
 		this.animate();
-		// this.renderer.render(this.scene, this.camera);
-		this.composer.render();
+		this.renderer.render(this.scene, this.camera);
+		// this.composer.render();
 	}
 }
