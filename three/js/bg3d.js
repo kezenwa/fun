@@ -72,15 +72,6 @@ export default class Bg3d {
 		console.log(JSON.stringify(cameraPos));
 	}
 
-	forceCameraPos (pos) {
-		this.camera.position.x = pos.x;
-		this.camera.position.x = pos.y;
-		this.camera.position.x = pos.z;
-		this.camera.rotation.x = pos.rx;
-		this.camera.rotation.y = pos.ry;
-		this.camera.rotation.z = pos.rz;
-	}
-
 	///////
 	// Init
 	init () {
@@ -181,7 +172,8 @@ export default class Bg3d {
 	grabObjects () {
 		const objects = [
 			'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question',
-			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema', 'lamp_head'
+			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema', 'lamp_head',
+			'clock_pendulum', 'clock_hour_hand', 'clock_minute_hand'
 		];
 
 		objects.forEach(objName => {
@@ -273,7 +265,6 @@ export default class Bg3d {
 	cameraPos () {
 		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 			if (entry.isIntersecting) {
-				console.log(JSON.parse(entry.target.dataset.cameraPos));
 				this.setCameraPos(JSON.parse(entry.target.dataset.cameraPos));
 			}
 		}), {threshold: 0.25});
@@ -376,7 +367,7 @@ export default class Bg3d {
 
 		if (this.objects.mushroom) {
 			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 30);
-			this.objects.mushroom.rotation.y = this.clock.getElapsedTime() * 4;
+			this.objects.mushroom.rotation.y = -(this.clock.getElapsedTime() * 4);
 		}
 
 		// Work
@@ -399,6 +390,19 @@ export default class Bg3d {
 
 		if (this.objects.compass_arrow) {
 			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
+		}
+
+		// End
+		if (this.objects.clock_pendulum) {
+			this.objects.clock_pendulum.rotation.y = this.objects.clock_pendulum.userData.origRot.y + (Math.sin(this.clock.getElapsedTime() * 2) / 10);
+		}
+
+		if (this.objects.clock_minute_hand) {
+			this.objects.clock_minute_hand.rotation.z = -(this.clock.getElapsedTime());
+		}
+
+		if (this.objects.clock_hour_hand) {
+			this.objects.clock_hour_hand.rotation.z = -(this.clock.getElapsedTime() / 12);
 		}
 
 		TWEEN.update();

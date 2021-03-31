@@ -51,6 +51,7 @@ allThemeButtons.forEach(el => {
 	}
 
 	el.addEventListener('click', e => {
+		// NOTE: If manually triggered click (most likely...)
 		if (e.x !== 0 && e.y !== 0) {
 			autoThemeEnabled = false;
 		}
