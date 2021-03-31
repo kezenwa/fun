@@ -100,7 +100,7 @@ export default class Bg3d {
 
 		// Render size
 		this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+		// this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.el.appendChild(this.renderer.domElement);
 
 		// Resize
