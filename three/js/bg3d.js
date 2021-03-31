@@ -45,6 +45,7 @@ export default class Bg3d {
 
 		if (this.config.dev) {
 			document.documentElement.classList.add('dev'); // NOTE: Some CSS differs in dev mode
+			this.camera.position.z = 10;
 			this.scene.add(new THREE.AxesHelper(500));
 			this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 		}
@@ -71,6 +72,15 @@ export default class Bg3d {
 		console.log(JSON.stringify(cameraPos));
 	}
 
+	forceCameraPos (pos) {
+		this.camera.position.x = pos.x;
+		this.camera.position.x = pos.y;
+		this.camera.position.x = pos.z;
+		this.camera.rotation.x = pos.rx;
+		this.camera.rotation.y = pos.ry;
+		this.camera.rotation.z = pos.rz;
+	}
+
 	///////
 	// Init
 	init () {
@@ -82,11 +92,6 @@ export default class Bg3d {
 		this.scene = new THREE.Scene();
 		this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
 		this.camera = new THREE.PerspectiveCamera(this.config.fov, this.el.clientWidth / this.el.clientHeight, 0.01, 5000);
-
-		if (this.config.dev) {
-			this.camera.position.z = 5;
-			// this.scene.add(new THREE.CameraHelper(this.camera)); // NOTE: Not sure htf this helps??
-		}
 
 		// Shadows
 		this.renderer.shadowMap.enabled = true;
@@ -135,7 +140,6 @@ export default class Bg3d {
 
 					if (this.config.dev) {
 						this.scene.add(new THREE.SpotLightHelper(node));
-						console.log(node);
 					}
 				}
 			});
@@ -177,7 +181,7 @@ export default class Bg3d {
 	grabObjects () {
 		const objects = [
 			'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question',
-			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema'
+			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema', 'lamp_head'
 		];
 
 		objects.forEach(objName => {
@@ -207,7 +211,7 @@ export default class Bg3d {
 		this.ambLight = new THREE.AmbientLight(0xffffff, 0.5);
 		this.scene.add(this.ambLight);
 
-		this.spotLight = new THREE.SpotLight(0xffffff, 2.5, 0, Math.PI / 10, 1);
+		/* this.spotLight = new THREE.SpotLight(0xffffff, 2.5, 0, Math.PI / 10, 1);
 
 		this.spotLight.position.set(-10, 10, 10);
 
@@ -222,7 +226,7 @@ export default class Bg3d {
 
 		if (this.config.dev) {
 			this.scene.add(new THREE.SpotLightHelper(this.spotLight));
-		}
+		} */
 	}
 
 	////////
@@ -243,7 +247,7 @@ export default class Bg3d {
 
 	//////////////////
 	// Post processing
-	/* postProcessing () {
+	postProcessing () {
 		this.composer = new EffectComposer(this.renderer);
 
 		const render = new RenderPass(this.scene, this.camera);
@@ -261,7 +265,7 @@ export default class Bg3d {
 		// this.composer.addPass(bokeh);
 		// this.composer.addPass(glitch);
 		// this.composer.addPass(bloom);
-	} */
+	}
 
 	/////////////
 	// Camera pos
@@ -269,6 +273,7 @@ export default class Bg3d {
 	cameraPos () {
 		const observer = new IntersectionObserver(entries => entries.forEach(entry => {
 			if (entry.isIntersecting) {
+				console.log(JSON.parse(entry.target.dataset.cameraPos));
 				this.setCameraPos(JSON.parse(entry.target.dataset.cameraPos));
 			}
 		}), {threshold: 0.25});
@@ -376,11 +381,15 @@ export default class Bg3d {
 
 		// Work
 		if (this.objects.laptop_screen) {
-			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 2) / 5);
+			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 1) / 5);
 		}
 
 		if (this.objects.espresso_crema) {
 			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 4);
+		}
+
+		if (this.objects.lamp_head) {
+			this.objects.lamp_head.rotation.y = this.objects.lamp_head.userData.origRot.y + (Math.sin(this.clock.getElapsedTime() / 2.5) / 4);
 		}
 
 		// Contact
