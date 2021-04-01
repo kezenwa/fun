@@ -33,3 +33,22 @@ html.dev #bg {
 html.loaded #bg {
 	transform: translateX(0);
 }
+
+[data-toggle-bg3d] {
+	position: fixed;
+	left: 2vw;
+	top: var(--spacing-medium);
+
+	transform: scale(0);
+	transition: transform 0.5s 5s var(--easing);
+}
+
+html.bg3d-disabled [data-toggle-bg3d] {
+	&::before {
+		content: "\e805";
+	}
+}
+
+html.loaded a[data-toggle-bg3d] {
+	transform: scale(1);
+}

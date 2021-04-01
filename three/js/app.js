@@ -6,12 +6,34 @@ import Bg3d from './bg3d.js';
 
 window.bg3d = new Bg3d(document.getElementById('bg'));
 
+var bg3dRunning = true;
+
 function render () {
 	window.bg3d.render();
-	requestAnimationFrame(render);
+
+	if (bg3dRunning) {
+		requestAnimationFrame(render);
+	}
 }
 
 render();
+
+// Allow pausing
+document.querySelectorAll('[data-toggle-bg3d]').forEach(el => {
+	el.addEventListener('click', e => {
+		e.preventDefault();
+
+		bg3dRunning = !bg3dRunning;
+
+		if (bg3dRunning) {
+			document.documentElement.classList.remove('bg3d-disabled');
+			requestAnimationFrame(render);
+		}
+		else {
+			document.documentElement.classList.add('bg3d-disabled');
+		}
+	});
+});
 
 ////////////
 // Splitting
