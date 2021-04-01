@@ -172,7 +172,7 @@ export default class Bg3d {
 		const objects = [
 			'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question',
 			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema', 'lamp_head',
-			'clock_pendulum', 'clock_hour_hand', 'clock_minute_hand'
+			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer'
 		];
 
 		objects.forEach(objName => {
@@ -392,8 +392,8 @@ export default class Bg3d {
 		}
 
 		// End
-		if (this.objects.clock_pendulum) {
-			this.objects.clock_pendulum.rotation.y = this.objects.clock_pendulum.userData.origRot.y + (Math.sin(this.clock.getElapsedTime() * 2) / 10);
+		if (this.objects.clock_bell_hammer) {
+			this.objects.clock_bell_hammer.rotation.z = this.objects.clock_bell_hammer.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 25) / 2);
 		}
 
 		if (this.objects.clock_minute_hand) {
