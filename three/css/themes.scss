@@ -37,7 +37,7 @@ $themes: (
 
 #themes {
 	position: fixed;
-	right: 2vw;
+	right: var(--spacing-medium);
 	top: var(--spacing-medium);
 	z-index: 1;
 

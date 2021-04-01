@@ -36,11 +36,19 @@ html.loaded #bg {
 
 [data-toggle-bg3d] {
 	position: fixed;
-	left: 2vw;
+	left: var(--spacing-medium);
 	top: var(--spacing-medium);
+
+	font-size: 0;
+	line-height: 1;
 
 	transform: scale(0);
 	transition: transform 0.5s 5s var(--easing);
+
+	&::before {
+		font-size: 1rem;
+		margin: 0;
+	}
 }
 
 html.bg3d-disabled [data-toggle-bg3d] {
