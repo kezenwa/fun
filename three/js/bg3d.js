@@ -170,9 +170,10 @@ export default class Bg3d {
 	// Save references to our objects and their original positions
 	grabObjects () {
 		const objects = [
-			'globe', 'flower_enemy', 'block_brick', 'block_brick_2', 'block_question',
-			'mushroom', 'laptop_screen', 'compass_arrow', 'espresso_crema', 'lamp_head',
-			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer'
+			'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'mushroom',
+			'laptop_screen', 'espresso_crema', 'globe_holder', 'compass_arrow',
+			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer', 'clock_bell_left', 'clock_bell_right',
+			'skateboard', 'skateboard_wheel_back_left', 'skateboard_wheel_front_left', 'skateboard_wheel_back_right', 'skateboard_wheel_front_right'
 		];
 
 		objects.forEach(objName => {
@@ -352,6 +353,27 @@ export default class Bg3d {
 			this.controls.update();
 		}
 
+		// About
+		if (this.objects.skateboard) {
+			this.objects.skateboard.rotation.x = this.objects.skateboard.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 2) / 8);
+		}
+
+		if (this.objects.skateboard_wheel_front_left) {
+			this.objects.skateboard_wheel_front_left.rotation.z = this.clock.getElapsedTime() / 2;
+		}
+
+		if (this.objects.skateboard_wheel_front_right) {
+			this.objects.skateboard_wheel_front_right.rotation.z = this.clock.getElapsedTime() / 3;
+		}
+
+		if (this.objects.skateboard_wheel_back_left) {
+			this.objects.skateboard_wheel_back_left.rotation.z = this.clock.getElapsedTime();
+		}
+
+		if (this.objects.skateboard_wheel_back_right) {
+			this.objects.skateboard_wheel_back_right.rotation.z = this.clock.getElapsedTime() * 20;
+		}
+
 		// Play
 		if (this.objects.block_brick && this.objects.block_brick_2 && this.objects.block_question) {
 			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin(this.clock.getElapsedTime() * 2) / 500);
@@ -383,8 +405,8 @@ export default class Bg3d {
 		}
 
 		// Contact
-		if (this.objects.globe) {
-			this.objects.globe.rotation.y = this.clock.getElapsedTime() / 4;
+		if (this.objects.globe_holder) {
+			this.objects.globe_holder.rotation.y = this.clock.getElapsedTime() / 4;
 		}
 
 		if (this.objects.compass_arrow) {
@@ -393,7 +415,12 @@ export default class Bg3d {
 
 		// End
 		if (this.objects.clock_bell_hammer) {
-			this.objects.clock_bell_hammer.rotation.z = this.objects.clock_bell_hammer.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 25) / 2);
+			this.objects.clock_bell_hammer.rotation.z = this.objects.clock_bell_hammer.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 35) / 2);
+		}
+
+		if (this.objects.clock_bell_left && this.objects.clock_bell_right) {
+			this.objects.clock_bell_left.rotation.z = this.objects.clock_bell_left.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 50) / 50);
+			this.objects.clock_bell_right.rotation.z = this.objects.clock_bell_right.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 50) / 50);
 		}
 
 		if (this.objects.clock_minute_hand) {
