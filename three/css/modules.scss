@@ -209,3 +209,45 @@ html.js #end {
 		@include scrollspy-show;
 	}
 }
+
+// Performance notice
+#performance-notice {
+	padding: var(--spacing-medium);
+
+	font-size: 80%;
+	color: white;
+	text-align: center;
+
+	position: fixed;
+	left: 50%;
+	bottom: var(--spacing-medium);
+	z-index: 99;
+
+	transform: translateX(-50%);
+	opacity: 0;
+	transition: opacity 0.5s var(--easing);
+
+	border-radius: 0.5rem;
+
+	&::before {
+		background: var(--accent-color);
+		display: block;
+		content: "";
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		border-radius: 0.5rem;
+		z-index: -1;
+		opacity: 0.75;
+	}
+
+	p {
+		margin: 0;
+	}
+
+	&.active {
+		opacity: 1;
+	}
+}

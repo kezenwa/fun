@@ -40,6 +40,7 @@ export default class Bg3d {
 		this.load();
 		this.loadEnv();
 		this.lights();
+		this.framerate();
 		// this.postProcessing(); NOTE: Disabled PP for now not sure how to keep BG transparent :/
 
 		if (this.config.dev) {
@@ -346,89 +347,121 @@ export default class Bg3d {
 		});
 	}
 
+	///////////////////////////
+	// Keep track of framerate
+	framerate () {
+		this.totalFrames = 0;
+		this.fpsDips = 0;
+		this.fpsThreshold = 30; // Minimum FPS
+		this.fpsDipsThreshold = 120; // Number of times FPS is allowed to dip below threshold
+		this.fps = 0;
+		this.trackFps = true;
+	}
+
+	trackFramerate () {
+		if (this.trackFps) {
+			this.totalFrames++;
+			this.fps = this.totalFrames / this.clock.getElapsedTime();
+
+			if (this.fps < this.fpsThreshold) {
+				this.fpsDips++;
+			}
+
+			if (this.fpsDips > this.fpsDipsThreshold) {
+				this.trackFps = false;
+
+				document.body.dispatchEvent(new Event('bg3d/fps-dip', {
+					bubbles: true
+				}));
+			}
+		}
+	}
+
 	//////////
 	// Animate
 	animate () {
+		const elapsedTime = this.clock.getElapsedTime();
+
 		if (this.controls && this.controls.update) {
 			this.controls.update();
 		}
 
 		// About
 		if (this.objects.skateboard) {
-			this.objects.skateboard.rotation.x = this.objects.skateboard.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 2) / 8);
+			this.objects.skateboard.rotation.x = this.objects.skateboard.userData.origRot.x + (Math.sin(elapsedTime / 2) / 8);
 		}
 
 		if (this.objects.skateboard_wheel_front_left) {
-			this.objects.skateboard_wheel_front_left.rotation.z = this.clock.getElapsedTime() / 2;
+			this.objects.skateboard_wheel_front_left.rotation.z = elapsedTime / 2;
 		}
 
 		if (this.objects.skateboard_wheel_front_right) {
-			this.objects.skateboard_wheel_front_right.rotation.z = this.clock.getElapsedTime() / 3;
+			this.objects.skateboard_wheel_front_right.rotation.z = elapsedTime / 3;
 		}
 
 		if (this.objects.skateboard_wheel_back_left) {
-			this.objects.skateboard_wheel_back_left.rotation.z = this.clock.getElapsedTime();
+			this.objects.skateboard_wheel_back_left.rotation.z = elapsedTime;
 		}
 
 		if (this.objects.skateboard_wheel_back_right) {
-			this.objects.skateboard_wheel_back_right.rotation.z = this.clock.getElapsedTime() * 20;
+			this.objects.skateboard_wheel_back_right.rotation.z = elapsedTime * 20;
 		}
 
 		// Play
 		if (this.objects.block_brick && this.objects.block_brick_2 && this.objects.block_question) {
-			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin(this.clock.getElapsedTime() * 2) / 500);
-			this.objects.block_question.position.y = this.objects.block_question.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 0.5) * 2) / 500);
-			this.objects.block_brick_2.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin((this.clock.getElapsedTime() + 1) * 2) / 500);
+			this.objects.block_brick.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin(elapsedTime * 2) / 500);
+			this.objects.block_question.position.y = this.objects.block_question.userData.origPos.y + (Math.sin((elapsedTime + 0.5) * 2) / 500);
+			this.objects.block_brick_2.position.y = this.objects.block_brick.userData.origPos.y + (Math.sin((elapsedTime + 1) * 2) / 500);
 		}
 
 		if (this.objects.flower_enemy) {
-			this.objects.flower_enemy.position.y = this.objects.flower_enemy.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 15 + this.objects.flower_enemy.userData.origPos.y / 3);
-			this.objects.flower_enemy.rotation.y = this.clock.getElapsedTime() / 2;
+			this.objects.flower_enemy.position.y = this.objects.flower_enemy.userData.origPos.y - (Math.sin(elapsedTime) / 15 + this.objects.flower_enemy.userData.origPos.y / 3);
+			this.objects.flower_enemy.rotation.y = elapsedTime / 2;
 		}
 
 		if (this.objects.mushroom) {
-			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(this.clock.getElapsedTime()) / 30);
-			this.objects.mushroom.rotation.y = -(this.clock.getElapsedTime() * 4);
+			this.objects.mushroom.position.y = this.objects.mushroom.userData.origPos.y - (Math.sin(elapsedTime) / 30);
+			this.objects.mushroom.rotation.y = -(elapsedTime * 4);
 		}
 
 		// Work
 		if (this.objects.laptop_screen) {
-			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(this.clock.getElapsedTime() / 1) / 5);
+			this.objects.laptop_screen.rotation.x = this.objects.laptop_screen.userData.origRot.x + (Math.sin(elapsedTime / 1) / 5);
 		}
 
 		if (this.objects.espresso_crema) {
-			this.objects.espresso_crema.rotation.y = -(this.clock.getElapsedTime() / 4);
+			this.objects.espresso_crema.rotation.y = -(elapsedTime / 4);
 		}
 
 		if (this.objects.lamp_head) {
-			this.objects.lamp_head.rotation.y = this.objects.lamp_head.userData.origRot.y + (Math.sin(this.clock.getElapsedTime() / 2.5) / 4);
+			this.objects.lamp_head.rotation.y = this.objects.lamp_head.userData.origRot.y + (Math.sin(elapsedTime / 2.5) / 4);
 		}
 
 		// Contact
 		if (this.objects.globe_holder) {
-			this.objects.globe_holder.rotation.y = this.clock.getElapsedTime() / 4;
+			this.objects.globe_holder.rotation.y = elapsedTime / 4;
 		}
 
 		if (this.objects.compass_arrow) {
-			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(this.clock.getElapsedTime()));
+			this.objects.compass_arrow.rotation.y = this.objects.compass_arrow.userData.origRot.y + (Math.sin(elapsedTime));
 		}
 
 		// End
 		if (this.objects.clock_bell_hammer) {
-			this.objects.clock_bell_hammer.rotation.z = this.objects.clock_bell_hammer.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 35) / 2);
+			this.objects.clock_bell_hammer.rotation.z = this.objects.clock_bell_hammer.userData.origRot.z + (Math.sin(elapsedTime * 35) / 2);
 		}
 
 		if (this.objects.clock_bell_left && this.objects.clock_bell_right) {
-			this.objects.clock_bell_left.rotation.z = this.objects.clock_bell_left.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 50) / 50);
-			this.objects.clock_bell_right.rotation.z = this.objects.clock_bell_right.userData.origRot.z + (Math.sin(this.clock.getElapsedTime() * 50) / 50);
+			this.objects.clock_bell_left.rotation.z = this.objects.clock_bell_left.userData.origRot.z + (Math.sin(elapsedTime * 50) / 50);
+			this.objects.clock_bell_right.rotation.z = this.objects.clock_bell_right.userData.origRot.z + (Math.sin(elapsedTime * 50) / 50);
 		}
 
 		if (this.objects.clock_minute_hand) {
-			this.objects.clock_minute_hand.rotation.z = -(this.clock.getElapsedTime());
+			this.objects.clock_minute_hand.rotation.z = -(elapsedTime);
 		}
 
 		if (this.objects.clock_hour_hand) {
-			this.objects.clock_hour_hand.rotation.z = -(this.clock.getElapsedTime() / 12);
+			this.objects.clock_hour_hand.rotation.z = -(elapsedTime / 12);
 		}
 
 		TWEEN.update();
@@ -440,5 +473,7 @@ export default class Bg3d {
 		this.animate();
 		this.renderer.render(this.scene, this.camera);
 		// this.composer.render();
+
+		this.trackFramerate();
 	}
 }

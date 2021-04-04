@@ -26,10 +26,12 @@ document.querySelectorAll('[data-toggle-bg3d]').forEach(el => {
 		bg3dRunning = !bg3dRunning;
 
 		if (bg3dRunning) {
+			document.body.dispatchEvent(new Event('bg3d/enabled', {bubbles: true}));
 			document.documentElement.classList.remove('bg3d-disabled');
 			requestAnimationFrame(render);
 		}
 		else {
+			document.body.dispatchEvent(new Event('bg3d/disabled', {bubbles: true}));
 			document.documentElement.classList.add('bg3d-disabled');
 		}
 	});
@@ -126,3 +128,13 @@ document.querySelectorAll('[data-highlight-visible]').forEach(el => {
 });
 
 document.documentElement.classList.add('loaded');
+
+///////////////////////
+// Performance observer
+document.body.addEventListener('bg3d/fps-dip', () => {
+	document.getElementById('performance-notice').classList.add('active');
+});
+
+document.body.addEventListener('bg3d/disabled', () => {
+	document.getElementById('performance-notice').classList.remove('active');
+});
