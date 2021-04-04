@@ -174,7 +174,8 @@ export default class Bg3d {
 			'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'mushroom',
 			'laptop_screen', 'espresso_crema', 'globe_holder', 'compass_arrow',
 			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer', 'clock_bell_left', 'clock_bell_right',
-			'skateboard', 'skateboard_wheel_back_left', 'skateboard_wheel_front_left', 'skateboard_wheel_back_right', 'skateboard_wheel_front_right'
+			'skateboard', 'skateboard_wheel_back_left', 'skateboard_wheel_front_left', 'skateboard_wheel_back_right', 'skateboard_wheel_front_right',
+			'r2d2_controller', 'r2d2_head'
 		];
 
 		objects.forEach(objName => {
@@ -388,7 +389,7 @@ export default class Bg3d {
 
 		// About
 		if (this.objects.skateboard) {
-			this.objects.skateboard.rotation.x = this.objects.skateboard.userData.origRot.x + (Math.sin(elapsedTime / 2) / 8);
+			this.objects.skateboard.rotation.x = this.objects.skateboard.userData.origRot.x + (Math.sin(elapsedTime * 2) / 16);
 		}
 
 		if (this.objects.skateboard_wheel_front_left) {
@@ -405,6 +406,14 @@ export default class Bg3d {
 
 		if (this.objects.skateboard_wheel_back_right) {
 			this.objects.skateboard_wheel_back_right.rotation.z = elapsedTime * 20;
+		}
+
+		if (this.objects.r2d2_controller) {
+			this.objects.r2d2_controller.rotation.y = -(elapsedTime / 3);
+		}
+
+		if (this.objects.r2d2_head) {
+			this.objects.r2d2_head.rotation.y = this.objects.r2d2_head.userData.origRot.y + (Math.sin(elapsedTime));
 		}
 
 		// Play
