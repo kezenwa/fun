@@ -114,6 +114,8 @@ html.js #contact {
 
 html.js #work {
 	article {
+		// @include threed-tilt;
+
 		animation: card-fold-in var(--scrollspy-duration) var(--easing);
 		animation-play-state: paused;
 		animation-fill-mode: backwards;

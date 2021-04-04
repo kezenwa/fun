@@ -37,12 +37,29 @@ document.querySelectorAll('[data-toggle-bg3d]').forEach(el => {
 	});
 });
 
+// Performance observer
+document.body.addEventListener('bg3d/fps-dip', () => {
+	document.getElementById('performance-notice').classList.add('active');
+});
+
+document.body.addEventListener('bg3d/disabled', () => {
+	document.getElementById('performance-notice').classList.remove('active');
+});
+
 ////////////
 // Splitting
 Splitting({
 	target: 'h1, h2',
 	by: 'chars'
 });
+
+//////////
+// 3D Tilt
+/* import ThreedTilt from './threed-tilt.js';
+
+document.querySelectorAll('#work article').forEach(el => {
+	new ThreedTilt(el).mount();
+}); */
 
 ////////////
 // Scrollspy
@@ -128,13 +145,3 @@ document.querySelectorAll('[data-highlight-visible]').forEach(el => {
 });
 
 document.documentElement.classList.add('loaded');
-
-///////////////////////
-// Performance observer
-document.body.addEventListener('bg3d/fps-dip', () => {
-	document.getElementById('performance-notice').classList.add('active');
-});
-
-document.body.addEventListener('bg3d/disabled', () => {
-	document.getElementById('performance-notice').classList.remove('active');
-});
