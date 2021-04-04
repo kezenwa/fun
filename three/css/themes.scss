@@ -27,7 +27,7 @@ $themes: (
 // Theme switcher
 @keyframes themes-slide-in {
 	0% {
-		transform: translateY(calc((var(--spacing-medium) + 100% + 0.5rem) * -1)); // NOTE: 0.5rem because of shadow
+		transform: translateY(calc((var(--spacing-medium) * 2 + 100%) * -1));
 	}
 
 	100% {

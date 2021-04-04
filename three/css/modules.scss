@@ -223,9 +223,8 @@ html.js #end {
 	bottom: var(--spacing-medium);
 	z-index: 99;
 
-	transform: translateX(-50%);
-	opacity: 0;
-	transition: opacity 0.5s var(--easing);
+	transform: translate(-50%, calc(100% + var(--spacing-medium) * 2));
+	transition: transform 1s var(--easing);
 
 	border-radius: 0.5rem;
 
@@ -248,6 +247,6 @@ html.js #end {
 	}
 
 	&.active {
-		opacity: 1;
+		transform: translate(-50%, 0);
 	}
 }

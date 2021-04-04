@@ -1,6 +1,6 @@
 @keyframes navigation-slide-in {
 	0% {
-		transform: translateX(calc(2vw + 100%));
+		transform: translateX(calc(4vw + 100%));
 	}
 
 	100% {
@@ -10,7 +10,7 @@
 
 @keyframes navigation-slide-up {
 	0% {
-		transform: translateY(calc(var(--spacing-medium) + 100%));
+		transform: translateY(calc(var(--spacing-medium) * 2 + 100%));
 	}
 
 	100% {
