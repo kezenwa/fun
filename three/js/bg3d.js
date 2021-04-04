@@ -166,38 +166,6 @@ export default class Bg3d {
 		});
 	}
 
-	///////////////
-	// Grab Objects
-	// Save references to our objects and their original positions
-	grabObjects () {
-		const objects = [
-			'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'mushroom',
-			'laptop_screen', 'espresso_crema', 'globe_holder', 'compass_arrow',
-			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer', 'clock_bell_left', 'clock_bell_right',
-			'skateboard', 'skateboard_wheel_back_left', 'skateboard_wheel_front_left', 'skateboard_wheel_back_right', 'skateboard_wheel_front_right',
-			'r2d2_controller', 'r2d2_head'
-		];
-
-		objects.forEach(objName => {
-			const obj = this.scene.getObjectByName(objName);
-
-			if (obj) {
-				obj.userData.origPos = {
-					x: obj.position.x,
-					y: obj.position.y,
-					z: obj.position.z
-				};
-				obj.userData.origRot = {
-					x: obj.rotation.x,
-					y: obj.rotation.y,
-					z: obj.rotation.z
-				};
-
-				this.objects[objName] = obj;
-			}
-		});
-	}
-
 	/////////
 	// Lights
 	// NOTE: Lights are included in the scene
@@ -378,6 +346,38 @@ export default class Bg3d {
 		}
 	}
 
+	///////////////
+	// Grab Objects
+	// Save references to our objects and their original positions
+	grabObjects () {
+		const objects = [
+			'flower_enemy', 'block_brick', 'block_brick_2', 'block_question', 'mushroom',
+			'laptop_screen', 'espresso_crema', 'globe_holder', 'compass_arrow',
+			'clock_hour_hand', 'clock_minute_hand', 'clock_bell_hammer', 'clock_bell_left', 'clock_bell_right',
+			'skateboard', 'skateboard_wheel_back_left', 'skateboard_wheel_front_left', 'skateboard_wheel_back_right', 'skateboard_wheel_front_right',
+			'r2d2_controller', 'r2d2_head', 'camera_lens'
+		];
+
+		objects.forEach(objName => {
+			const obj = this.scene.getObjectByName(objName);
+
+			if (obj) {
+				obj.userData.origPos = {
+					x: obj.position.x,
+					y: obj.position.y,
+					z: obj.position.z
+				};
+				obj.userData.origRot = {
+					x: obj.rotation.x,
+					y: obj.rotation.y,
+					z: obj.rotation.z
+				};
+
+				this.objects[objName] = obj;
+			}
+		});
+	}
+
 	//////////
 	// Animate
 	animate () {
@@ -414,6 +414,11 @@ export default class Bg3d {
 
 		if (this.objects.r2d2_head) {
 			this.objects.r2d2_head.rotation.y = this.objects.r2d2_head.userData.origRot.y + (Math.sin(elapsedTime));
+		}
+
+		if (this.objects.camera_lens) {
+			this.objects.camera_lens.rotation.z = this.objects.camera_lens.userData.origRot.z + (Math.sin(elapsedTime) / 2);
+			this.objects.camera_lens.position.z = this.objects.camera_lens.userData.origPos.z + (Math.sin(elapsedTime) / 16);
 		}
 
 		// Play
