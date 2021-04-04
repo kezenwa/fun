@@ -98,32 +98,19 @@ html.js #contact {
 	}
 }
 
-@keyframes card-fold-in {
-	0% {
-		opacity: 0;
-		transform-origin: 50% top;
-		transform: rotateX(-90deg);
-	}
-
-	100% {
-		opacity: 1;
-		transform-origin: 50% top;
-		transform: rotateX(0);
-	}
-}
-
 html.js #work {
 	article {
 		// @include threed-tilt;
 
-		animation: card-fold-in var(--scrollspy-duration) var(--easing);
-		animation-play-state: paused;
-		animation-fill-mode: backwards;
+		opacity: 0;
+		transform-origin: 50% top;
+		transform: rotateX(-90deg);
+		transition: transform var(--scrollspy-duration) var(--easing), opacity var(--scrollspy-duration) var(--easing);
 	}
 
 	@for $i from 1 through 5 {
 		article:nth-child(#{$i}) {
-			animation-delay: #{1.5 + $i * 0.25 - 0.25}s;
+			transition-delay: #{1.5 + $i * 0.25 - 0.25}s;
 		}
 	}
 
@@ -133,7 +120,8 @@ html.js #work {
 		}
 
 		article {
-			animation-play-state: running;
+			opacity: 1;
+			transform: rotateX(0);
 		}
 	}
 }
