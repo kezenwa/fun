@@ -89,7 +89,13 @@ allThemeButtons.forEach(el => {
 // Auto theme
 const autoThemeObserver = new IntersectionObserver(entries => entries.forEach(entry => {
 	if (entry.isIntersecting && autoThemeEnabled) {
-		const active = Array.from(allThemeButtons).filter(tb => tb.dataset.setTheme === entry.target.dataset.autoTheme);
+		var theme = entry.target.dataset.autoTheme;
+
+		if (theme === 'random') {
+			theme = allThemes[Math.floor(Math.random() * allThemes.length)]
+		}
+
+		const active = Array.from(allThemeButtons).filter(tb => tb.dataset.setTheme === theme);
 
 		if (active) {
 			active[0].click();
